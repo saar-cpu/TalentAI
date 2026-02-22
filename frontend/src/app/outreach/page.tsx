@@ -1,56 +1,52 @@
 "use client";
 
-import { useState } from "react";
-import type { CandidateProfile, OutreachSequence } from "@/types";
-import { generateOutreach } from "@/lib/api";
+import { useState, useRef, useEffect } from "react";
+import type { ChatMessage } from "@/types";
+import { sendScreeningMessage } from "@/lib/api";
 
-const DEFAULT_CANDIDATE: CandidateProfile = {
-  id: "demo-candidate",
-  name: "Sarah Chen",
-  headline: "Senior Full-Stack Engineer | React & Python",
-  skills: ["React", "TypeScript", "Python", "Node.js", "PostgreSQL", "AWS"],
-  experienceLevel: "senior",
-  yearsOfExperience: 7,
-  interests: ["AI/ML", "developer tools", "open source"],
-  currentRole: "Senior Software Engineer",
-  currentCompany: "Stripe",
-  location: "San Francisco, CA",
-};
-
-const DEFAULT_JOB_DESCRIPTION = `Staff Software Engineer - AI Platform
-
-We're building the next generation of AI-powered developer tools. You'll lead a small team designing and shipping core platform services that thousands of engineers rely on daily.
-
-Requirements:
-- 6+ years of software engineering experience
-- Strong proficiency in Python and TypeScript
-- Experience building and scaling distributed systems
-- Passion for developer experience and tooling
-
-Benefits:
-- Competitive salary ($200k-$280k) + equity
-- Remote-friendly with offices in SF and NYC
-- Generous PTO and learning budget`;
-
-const CHANNEL_STYLES: Record<string, { label: string; bg: string; text: string }> = {
-  linkedin: { label: "LinkedIn", bg: "bg-blue-100", text: "text-blue-700" },
-  email: { label: "Email", bg: "bg-green-100", text: "text-green-700" },
-};
-
-export default function OutreachPage() {
-  const [candidate, setCandidate] = useState(DEFAULT_CANDIDATE);
-  const [jobDescription, setJobDescription] = useState(DEFAULT_JOB_DESCRIPTION);
-  const [result, setResult] = useState<OutreachSequence | null>(null);
+export default function ScreeningChatPage() {
+  const [jobTitle, setJobTitle] = useState("Staff Software Engineer - AI Platform");
+  const [location, setLocation] = useState("San Francisco, CA");
+  const [candidateName, setCandidateName] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [screeningComplete, setScreeningComplete] = useState(false);
+  const [candidateFit, setCandidateFit] = useState<string | null>(null);
 
-  async function handleGenerate() {
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function handleSend() {
+    const text = input.trim();
+    if (!text || loading || screeningComplete) return;
+
+    const userMessage: ChatMessage = { role: "user", content: text };
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInput("");
     setLoading(true);
     setError(null);
-    setResult(null);
+
     try {
-      const seq = await generateOutreach(candidate, jobDescription);
-      setResult(seq);
+      const response = await sendScreeningMessage({
+        chatHistory: messages,
+        latestMessage: text,
+        candidateName: candidateName || undefined,
+        jobTitle,
+        location: location || undefined,
+      });
+
+      setMessages([...updatedMessages, { role: "assistant", content: response.reply }]);
+
+      if (response.screeningComplete) {
+        setScreeningComplete(true);
+        setCandidateFit(response.candidateFit);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -58,158 +54,138 @@ export default function OutreachPage() {
     }
   }
 
-  function updateCandidate<K extends keyof CandidateProfile>(
-    key: K,
-    value: CandidateProfile[K]
-  ) {
-    setCandidate((prev) => ({ ...prev, [key]: value }));
-  }
-
   return (
-    <main className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-50 py-12 px-4">
-      <div className="mx-auto max-w-4xl">
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <a
-            href="/"
-            className="text-sm text-brand-600 hover:underline"
-          >
-            &larr; Back to Home
-          </a>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-brand-900">
-            Outreach Generator
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Generate a personalized 3-step outreach sequence for any candidate.
-          </p>
+    <main className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50">
+      {/* Header */}
+      <div className="border-b border-gray-200 bg-white px-4 py-4 text-center">
+        <a href="/" className="text-sm text-brand-600 hover:underline">
+          &larr; Back to Home
+        </a>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900">
+          Screening Chat
+        </h1>
+        <p className="mt-1 text-sm text-gray-600">
+          WhatsApp-style candidate screening powered by AI.
+        </p>
+      </div>
+
+      {/* Config bar */}
+      <div className="border-b border-gray-100 bg-white px-4 py-3">
+        <div className="mx-auto flex max-w-2xl flex-wrap gap-3">
+          <label className="flex-1 min-w-[160px]">
+            <span className="text-xs font-medium text-gray-600">Job Title</span>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+            />
+          </label>
+          <label className="flex-1 min-w-[140px]">
+            <span className="text-xs font-medium text-gray-600">Location</span>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </label>
+          <label className="flex-1 min-w-[140px]">
+            <span className="text-xs font-medium text-gray-600">Candidate Name</span>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              placeholder="Optional"
+              value={candidateName}
+              onChange={(e) => setCandidateName(e.target.value)}
+            />
+          </label>
         </div>
+      </div>
 
-        {/* Form */}
-        <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-100">
-          <h2 className="text-lg font-semibold text-brand-900 mb-4">
-            Candidate Profile
-          </h2>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Name" value={candidate.name} onChange={(v) => updateCandidate("name", v)} />
-            <Field label="Headline" value={candidate.headline} onChange={(v) => updateCandidate("headline", v)} />
-            <Field label="Current Role" value={candidate.currentRole ?? ""} onChange={(v) => updateCandidate("currentRole", v)} />
-            <Field label="Current Company" value={candidate.currentCompany ?? ""} onChange={(v) => updateCandidate("currentCompany", v)} />
-            <Field label="Location" value={candidate.location ?? ""} onChange={(v) => updateCandidate("location", v)} />
-            <Field
-              label="Experience Level"
-              value={candidate.experienceLevel}
-              onChange={(v) => updateCandidate("experienceLevel", v as CandidateProfile["experienceLevel"])}
-            />
-            <Field
-              label="Years of Experience"
-              value={String(candidate.yearsOfExperience)}
-              onChange={(v) => updateCandidate("yearsOfExperience", Number(v) || 0)}
-            />
-            <Field
-              label="Skills (comma-separated)"
-              value={candidate.skills.join(", ")}
-              onChange={(v) => updateCandidate("skills", v.split(",").map((s) => s.trim()).filter(Boolean))}
-            />
-            <div className="sm:col-span-2">
-              <Field
-                label="Interests (comma-separated)"
-                value={candidate.interests.join(", ")}
-                onChange={(v) => updateCandidate("interests", v.split(",").map((s) => s.trim()).filter(Boolean))}
-              />
+      {/* Chat area */}
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="mx-auto max-w-2xl space-y-3">
+          {messages.length === 0 && (
+            <p className="text-center text-sm text-gray-400 py-12">
+              Start the conversation by sending a message below.
+            </p>
+          )}
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                  msg.role === "user"
+                    ? "bg-green-500 text-white rounded-br-md"
+                    : "bg-gray-100 text-gray-800 rounded-bl-md"
+                }`}
+              >
+                {msg.content}
+              </div>
             </div>
-          </div>
-
-          <h2 className="text-lg font-semibold text-brand-900 mt-6 mb-4">
-            Job Description
-          </h2>
-          <textarea
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-            rows={8}
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-          />
-
-          <button
-            onClick={handleGenerate}
-            disabled={loading}
-            className="mt-6 w-full rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {loading && <Spinner />}
-            {loading ? "Generating…" : "Generate Outreach"}
-          </button>
+          ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="rounded-2xl rounded-bl-md bg-gray-100 px-4 py-2.5 text-sm text-gray-400 flex items-center gap-2">
+                <Spinner /> Typing…
+              </div>
+            </div>
+          )}
+          <div ref={chatEndRef} />
         </div>
+      </div>
 
-        {/* Error */}
-        {error && (
-          <div className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            <strong>Error:</strong> {error}
-          </div>
-        )}
+      {/* Result banner */}
+      {screeningComplete && (
+        <div
+          className={`border-t px-4 py-3 text-center text-sm font-semibold ${
+            candidateFit === "good_fit"
+              ? "border-green-200 bg-green-50 text-green-700"
+              : "border-red-200 bg-red-50 text-red-700"
+          }`}
+        >
+          Screening complete —{" "}
+          {candidateFit === "good_fit" ? "Good fit!" : "Not a fit."}
+        </div>
+      )}
 
-        {/* Results */}
-        {result && (
-          <div className="mt-8 space-y-4">
-            <h2 className="text-xl font-semibold text-brand-900">
-              Outreach Sequence
-            </h2>
-            {result.steps.map((step) => {
-              const ch = CHANNEL_STYLES[step.channel] ?? CHANNEL_STYLES.email;
-              return (
-                <div
-                  key={step.stepNumber}
-                  className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-100"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
-                      {step.stepNumber}
-                    </span>
-                    <span
-                      className={`rounded-full px-3 py-0.5 text-xs font-medium ${ch.bg} ${ch.text}`}
-                    >
-                      {ch.label}
-                    </span>
-                    <span className="ml-auto text-xs text-gray-400">
-                      Send after {step.sendAfterDays} day{step.sendAfterDays !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  {step.subject && (
-                    <p className="mb-2 text-sm font-semibold text-gray-800">
-                      Subject: {step.subject}
-                    </p>
-                  )}
-                  <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
-                    {step.body}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+      {/* Error */}
+      {error && (
+        <div className="border-t border-red-200 bg-red-50 px-4 py-2 text-center text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {/* Input bar */}
+      <div className="border-t border-gray-200 bg-white px-4 py-3">
+        <form
+          className="mx-auto flex max-w-2xl gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSend();
+          }}
+        >
+          <input
+            type="text"
+            className="flex-1 rounded-full border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+            placeholder={screeningComplete ? "Screening complete" : "Type a message…"}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={screeningComplete || loading}
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() || loading || screeningComplete}
+            className="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Send
+          </button>
+        </form>
       </div>
     </main>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <label className="block">
-      <span className="text-xs font-medium text-gray-600">{label}</span>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </label>
   );
 }
 

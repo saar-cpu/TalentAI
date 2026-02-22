@@ -19,7 +19,7 @@ export default function HomePage() {
           href="/outreach"
           className="rounded-lg border-2 border-brand-600 px-6 py-3 text-sm font-semibold text-brand-600 hover:bg-brand-50 transition-colors"
         >
-          Try Outreach Generator
+          Try Screening Chat
         </a>
       </div>
     </main>

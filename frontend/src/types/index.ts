@@ -33,18 +33,23 @@ export interface PersonalizedLandingData {
   tone: string;
 }
 
-export interface OutreachSequence {
-  candidateId: string;
-  jobId: string;
-  steps: OutreachStep[];
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
 }
 
-export interface OutreachStep {
-  stepNumber: number;
-  channel: "email" | "linkedin";
-  subject?: string;
-  body: string;
-  sendAfterDays: number;
+export interface ScreeningChatRequest {
+  chatHistory: ChatMessage[];
+  latestMessage: string;
+  candidateName?: string;
+  jobTitle: string;
+  location?: string;
+}
+
+export interface ScreeningChatResponse {
+  reply: string;
+  screeningComplete: boolean;
+  candidateFit: "good_fit" | "not_a_fit" | null;
 }
 
 export interface EngagementEvent {
