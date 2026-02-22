@@ -14,23 +14,23 @@ class CandidateProfile(BaseModel):
     location: str | None = None
 
 
-class OutreachRequest(BaseModel):
-    candidate_profile: CandidateProfile
-    job_description: str
+class ChatMessage(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
 
 
-class OutreachStep(BaseModel):
-    step_number: int
-    channel: str  # email | linkedin
-    subject: str | None = None
-    body: str
-    send_after_days: int
+class ScreeningChatRequest(BaseModel):
+    chat_history: list[ChatMessage] = []
+    latest_message: str
+    candidate_name: str | None = None
+    job_title: str
+    location: str | None = None
 
 
-class OutreachSequence(BaseModel):
-    candidate_id: str
-    job_id: str
-    steps: list[OutreachStep]
+class ScreeningChatResponse(BaseModel):
+    reply: str
+    screening_complete: bool
+    candidate_fit: str | None = None  # "good_fit" | "not_a_fit" | null
 
 
 class LandingPageData(BaseModel):

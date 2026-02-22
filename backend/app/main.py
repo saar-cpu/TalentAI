@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(outreach_router, tags=["outreach"])
+app.include_router(outreach_router, tags=["screening"])
 app.include_router(landing_page_router, tags=["landing-page"])
 
 

@@ -1,18 +1,21 @@
 from fastapi import APIRouter, HTTPException
 
-from app.models.schemas import OutreachRequest, OutreachSequence
-from app.services.outreach_agent import generate_outreach_sequence
+from app.models.schemas import ScreeningChatRequest, ScreeningChatResponse
+from app.services.outreach_agent import screen_candidate
 
 router = APIRouter()
 
 
-@router.post("/generate-outreach", response_model=OutreachSequence)
-async def generate_outreach(request: OutreachRequest):
+@router.post("/screen", response_model=ScreeningChatResponse)
+async def screen(request: ScreeningChatRequest):
     try:
-        sequence = await generate_outreach_sequence(
-            candidate=request.candidate_profile,
-            job_description=request.job_description,
+        response = await screen_candidate(
+            chat_history=request.chat_history,
+            latest_message=request.latest_message,
+            job_title=request.job_title,
+            candidate_name=request.candidate_name,
+            location=request.location,
         )
-        return sequence
+        return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

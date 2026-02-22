@@ -3,118 +3,70 @@ import json
 import anthropic
 
 from app.config import settings
-from app.models.schemas import CandidateProfile, OutreachSequence
+from app.models.schemas import ChatMessage, ScreeningChatResponse
 
-SYSTEM_PROMPT = """You are TalentAI, an expert recruitment marketing strategist.
-Given a candidate profile and job description, generate a personalized 3-step
-outreach sequence. Each step should feel authentic, reference specific details
-from the candidate's background, and progressively build interest.
+SYSTEM_PROMPT = """You are a friendly, fast, and highly efficient WhatsApp AI Recruiter for a restaurant/retail chain. You are chatting via SMS/WhatsApp with a candidate who just clicked on a social media job ad.
 
-Rules:
-- Step 1: Initial outreach (LinkedIn connection request or short email). Warm, concise, reference one specific thing about them.
-- Step 2: Value-add follow-up (2-3 days later). Share a relevant insight, article, or project detail. No hard sell.
-- Step 3: Soft close (5-7 days later). Direct but respectful ask for a conversation. Include a specific reason this role fits them.
+CRITICAL RULES:
+1. Platform: This is WhatsApp. Keep it extremely short (1-2 sentences max per message). Use emojis natively but don't overdo it.
+2. No Resumes: Never ask for a CV or resume. These candidates hate paperwork.
+3. Goal: Your objective is to ask ONE screening question at a time to check basic fit (e.g., availability for evening shifts, or previous experience).
+4. Tone: Casual, energetic, and highly approachable. Speak like a cool shift manager, not a corporate HR bot.
+5. Action-Oriented: If they answer the screening question positively, immediately offer them a specific time for a short phone call or an in-person trial shift.
 
-Return ONLY valid JSON matching this schema (no markdown fences):
+You MUST respond with ONLY valid JSON (no markdown fences) matching this schema:
 {
-  "candidate_id": "string",
-  "job_id": "string",
-  "steps": [
-    {
-      "step_number": 1,
-      "channel": "linkedin" | "email",
-      "subject": "string or null",
-      "body": "string",
-      "send_after_days": 0
-    }
-  ]
-}"""
+  "reply": "your WhatsApp message to the candidate",
+  "screening_complete": false,
+  "candidate_fit": null
+}
+
+- Set screening_complete to true when you have enough info to make a fit decision.
+- Set candidate_fit to "good_fit" or "not_a_fit" only when screening_complete is true. Otherwise keep it null."""
 
 
-async def generate_outreach_sequence(
-    candidate: CandidateProfile,
-    job_description: str,
-    job_id: str = "unknown",
-) -> OutreachSequence:
+async def screen_candidate(
+    chat_history: list[ChatMessage],
+    latest_message: str,
+    job_title: str,
+    candidate_name: str | None = None,
+    location: str | None = None,
+) -> ScreeningChatResponse:
     if not settings.anthropic_api_key:
-        return _mock_outreach(candidate, job_id)
+        return _mock_screening(latest_message, candidate_name)
 
     client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
 
-    user_message = f"""
-CANDIDATE PROFILE:
-{candidate.model_dump_json(indent=2)}
+    context = f"Job title: {job_title}"
+    if candidate_name:
+        context += f"\nCandidate name: {candidate_name}"
+    if location:
+        context += f"\nLocation: {location}"
 
-JOB DESCRIPTION:
-{job_description}
-"""
+    messages = []
+    for msg in chat_history:
+        messages.append({"role": msg.role, "content": msg.content})
+    messages.append({"role": "user", "content": latest_message})
 
     message = await client.messages.create(
         model="claude-sonnet-4-20250514",
-        max_tokens=2048,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
+        max_tokens=512,
+        system=SYSTEM_PROMPT + f"\n\nContext:\n{context}",
+        messages=messages,
     )
 
     raw = message.content[0].text
     data = json.loads(raw)
 
-    # Ensure IDs are set correctly
-    data["candidate_id"] = candidate.id
-    data["job_id"] = job_id
-
-    return OutreachSequence(**data)
+    return ScreeningChatResponse(**data)
 
 
-def _mock_outreach(candidate: CandidateProfile, job_id: str) -> OutreachSequence:
-    first_name = candidate.name.split()[0]
-    top_skill = candidate.skills[0] if candidate.skills else "engineering"
-    company = candidate.current_company or "your company"
-
-    return OutreachSequence(
-        candidate_id=candidate.id,
-        job_id=job_id,
-        steps=[
-            {
-                "step_number": 1,
-                "channel": "linkedin",
-                "subject": None,
-                "body": (
-                    f"Hi {first_name}, I came across your work in {top_skill} at {company} "
-                    f"and was genuinely impressed. We're building something at TalentAI that "
-                    f"I think would resonate with your background — would love to connect."
-                ),
-                "send_after_days": 0,
-            },
-            {
-                "step_number": 2,
-                "channel": "email",
-                "subject": f"A quick read on scaling {top_skill} systems",
-                "body": (
-                    f"Hi {first_name},\n\n"
-                    f"I wanted to share an article our engineering team published on scaling "
-                    f"{top_skill} infrastructure to 1M+ req/sec — given your experience at "
-                    f"{company}, I thought you'd find the trade-offs interesting.\n\n"
-                    f"No pitch, just thought you'd appreciate the read.\n\n"
-                    f"Best,\nTalentAI Recruiting"
-                ),
-                "send_after_days": 3,
-            },
-            {
-                "step_number": 3,
-                "channel": "email",
-                "subject": f"{first_name}, a role that fits your trajectory",
-                "body": (
-                    f"Hi {first_name},\n\n"
-                    f"I'll be direct — we have a Staff Platform Engineer role that maps "
-                    f"remarkably well to your {candidate.years_of_experience}+ years of "
-                    f"{top_skill} experience. The team works on distributed systems at "
-                    f"serious scale, fully remote, with top-tier equity.\n\n"
-                    f"Would you be open to a quick 15-minute chat this week? No pressure, "
-                    f"just a conversation.\n\n"
-                    f"Best,\nTalentAI Recruiting"
-                ),
-                "send_after_days": 7,
-            },
-        ],
+def _mock_screening(
+    latest_message: str, candidate_name: str | None
+) -> ScreeningChatResponse:
+    name = candidate_name.split()[0] if candidate_name else "there"
+    return ScreeningChatResponse(
+        reply=f"Hey {name}! 👋 Thanks for reaching out! Have you worked in a restaurant or retail before?",
+        screening_complete=False,
+        candidate_fit=None,
     )
