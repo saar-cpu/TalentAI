@@ -1,4 +1,8 @@
-import type { PersonalizedLandingData, OutreachSequence } from "@/types";
+import type {
+  PersonalizedLandingData,
+  OutreachSequence,
+  CandidateProfile,
+} from "@/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -27,17 +31,49 @@ export async function fetchLandingPageData(
 }
 
 export async function generateOutreach(
-  candidateProfile: Record<string, unknown>,
+  candidateProfile: CandidateProfile,
   jobDescription: string
 ): Promise<OutreachSequence> {
   const res = await fetch(`${API_BASE}/generate-outreach`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      candidate_profile: candidateProfile,
+      candidate_profile: {
+        id: candidateProfile.id,
+        name: candidateProfile.name,
+        headline: candidateProfile.headline,
+        skills: candidateProfile.skills,
+        experience_level: candidateProfile.experienceLevel,
+        years_of_experience: candidateProfile.yearsOfExperience,
+        interests: candidateProfile.interests,
+        current_role: candidateProfile.currentRole ?? null,
+        current_company: candidateProfile.currentCompany ?? null,
+        location: candidateProfile.location ?? null,
+      },
       job_description: jobDescription,
     }),
   });
-  if (!res.ok) throw new Error(`Outreach generation failed: ${res.status}`);
-  return res.json();
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const detail = body?.detail ?? `Outreach generation failed: ${res.status}`;
+    throw new Error(detail);
+  }
+
+  const raw = await res.json();
+
+  // Backend returns snake_case; map to camelCase
+  return {
+    candidateId: raw.candidate_id,
+    jobId: raw.job_id,
+    steps: raw.steps.map(
+      (s: { step_number: number; channel: string; subject?: string; body: string; send_after_days: number }) => ({
+        stepNumber: s.step_number,
+        channel: s.channel,
+        subject: s.subject,
+        body: s.body,
+        sendAfterDays: s.send_after_days,
+      })
+    ),
+  };
 }
