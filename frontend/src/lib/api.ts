@@ -11,7 +11,19 @@ export async function fetchLandingPageData(
     { next: { revalidate: 3600 } }
   );
   if (!res.ok) throw new Error(`Failed to fetch landing data: ${res.status}`);
-  return res.json();
+  const raw = await res.json();
+
+  // Backend returns snake_case; map to camelCase for the frontend
+  return {
+    jobId: raw.job_id,
+    candidateId: raw.candidate_id,
+    headline: raw.headline,
+    subheadline: raw.subheadline,
+    whyYouFit: raw.why_you_fit,
+    personalizedBenefits: raw.personalized_benefits,
+    callToAction: raw.call_to_action,
+    tone: raw.tone,
+  };
 }
 
 export async function generateOutreach(

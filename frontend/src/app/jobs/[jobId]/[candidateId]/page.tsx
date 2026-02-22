@@ -60,7 +60,7 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
           Why You&apos;re a Great Fit
         </h2>
         <ul className="mt-6 space-y-4">
-          {data.whyYouFit.map((point, i) => (
+          {(data.whyYouFit ?? []).map((point, i) => (
             <li key={i} className="flex items-start gap-3">
               <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
                 {i + 1}
@@ -77,7 +77,7 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
           What&apos;s In It For You
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-1">
-          {data.personalizedBenefits.map((benefit, i) => (
+          {(data.personalizedBenefits ?? []).map((benefit, i) => (
             <div
               key={i}
               className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
