@@ -52,6 +52,15 @@ export interface ScreeningChatResponse {
   candidateFit: "good_fit" | "not_a_fit" | null;
 }
 
+export interface FbPostRequest {
+  postText: string;
+}
+
+export interface FbPostResponse {
+  isRelevant: boolean;
+  response: string;
+}
+
 export interface EngagementEvent {
   candidateId: string;
   jobId: string;

@@ -1,4 +1,5 @@
 import type {
+  FbPostResponse,
   PersonalizedLandingData,
   ScreeningChatRequest,
   ScreeningChatResponse,
@@ -60,5 +61,26 @@ export async function sendScreeningMessage(
     reply: raw.reply,
     screeningComplete: raw.screening_complete,
     candidateFit: raw.candidate_fit,
+  };
+}
+
+export async function analyzeFbPost(postText: string): Promise<FbPostResponse> {
+  const res = await fetch(`${API_BASE}/analyze-fb-post`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ post_text: postText }),
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const detail = body?.detail ?? `FB analysis failed: ${res.status}`;
+    throw new Error(detail);
+  }
+
+  const raw = await res.json();
+
+  return {
+    isRelevant: raw.is_relevant,
+    response: raw.response,
   };
 }

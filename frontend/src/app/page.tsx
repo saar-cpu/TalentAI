@@ -12,7 +12,13 @@ export default function HomePage() {
           href="/outreach"
           className="rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
         >
-          התחל צ׳אט סינון
+          צ׳אט סינון
+        </a>
+        <a
+          href="/fb-hunter"
+          className="rounded-lg border-2 border-brand-600 px-6 py-3 text-sm font-semibold text-brand-600 hover:bg-brand-50 transition-colors"
+        >
+          Facebook Hunter
         </a>
       </div>
     </main>
