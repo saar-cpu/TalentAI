@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime, timezone
 
 from app.config import settings
 
@@ -26,25 +25,23 @@ async def save_lead_to_supabase(
     phone: str,
     desired_role: str | None = None,
     location: str | None = None,
-    start_date: str | None = None,
-    needs_housing: bool | None = None,
     source: str = "whatsapp_screening",
 ) -> bool:
     """Insert a qualified lead into the Supabase `leads` table.
 
+    Matches the existing CRM schema: id (uuid auto), name, phone, location,
+    source, status, job_title, recruitment_status, etc.
+
     Returns True on success, False on failure (never raises).
-    Falls back to logging if Supabase is not configured.
     """
     lead_data = {
         "name": name or "לא צוין",
         "phone": phone,
-        "desired_role": desired_role,
+        "job_title": desired_role,
         "location": location or "אילת",
-        "start_date": start_date,
-        "needs_housing": needs_housing,
         "source": source,
-        "status": "New Lead",
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "status": "חדש",
+        "recruitment_status": "active",
     }
 
     client = _get_supabase()
@@ -58,7 +55,7 @@ async def save_lead_to_supabase(
 
     try:
         result = client.table("leads").insert(lead_data).execute()
-        logger.info("Lead saved to Supabase: %s (%s) → id=%s", name, phone, result.data)
+        logger.info("Lead saved to Supabase: %s (%s) → %s", name, phone, result.data)
         return True
     except Exception as e:
         logger.error("Failed to save lead to Supabase: %s", e)
