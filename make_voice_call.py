@@ -50,7 +50,8 @@ payload = {
         "firstMessage": "אהלן, מדבר תומר מברק שירותים, מה קורה?",
         "transcriber": {
             "provider": "deepgram",
-            "language": "multi",
+            "model": "nova-2",
+            "language": "he",
         },
     },
     "phoneNumberId": None,  # Uses Vapi's default outbound number
