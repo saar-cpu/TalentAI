@@ -1,5 +1,7 @@
 import type {
   FbPostResponse,
+  Lead,
+  LeadsResponse,
   PersonalizedLandingData,
   ScreeningChatRequest,
   ScreeningChatResponse,
@@ -82,5 +84,46 @@ export async function analyzeFbPost(postText: string): Promise<FbPostResponse> {
   return {
     isRelevant: raw.is_relevant,
     response: raw.response,
+  };
+}
+
+export async function fetchLeads(
+  limit = 50,
+  offset = 0,
+  status?: string
+): Promise<LeadsResponse> {
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+  if (status) params.set("status", status);
+
+  const res = await fetch(`${API_BASE}/leads?${params}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const detail = body?.detail ?? `Failed to fetch leads: ${res.status}`;
+    throw new Error(detail);
+  }
+
+  const raw = await res.json();
+
+  return {
+    leads: raw.leads.map(
+      (l: Record<string, unknown>): Lead => ({
+        id: l.id as string,
+        name: l.name as string,
+        phone: l.phone as string,
+        jobTitle: (l.job_title as string) ?? null,
+        location: (l.location as string) ?? null,
+        source: (l.source as string) ?? null,
+        status: (l.status as string) ?? null,
+        recruitmentStatus: (l.recruitment_status as string) ?? null,
+        createdAt: l.created_at as string,
+      })
+    ),
+    count: raw.count,
   };
 }

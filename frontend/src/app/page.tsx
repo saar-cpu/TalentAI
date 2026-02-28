@@ -7,10 +7,16 @@ export default function HomePage() {
       <p className="mt-4 max-w-xl text-center text-lg text-gray-600">
         הסוכנות המובילה להשמה באילת. עבודה מיידית, מגורים מסובסדים, ארוחות והסעות בחינם.
       </p>
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex flex-wrap justify-center gap-4">
+        <a
+          href="/dashboard"
+          className="rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+        >
+          לוח בקרה
+        </a>
         <a
           href="/outreach"
-          className="rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+          className="rounded-lg border-2 border-brand-600 px-6 py-3 text-sm font-semibold text-brand-600 hover:bg-brand-50 transition-colors"
         >
           צ׳אט סינון
         </a>

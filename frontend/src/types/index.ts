@@ -61,6 +61,23 @@ export interface FbPostResponse {
   response: string;
 }
 
+export interface Lead {
+  id: string;
+  name: string;
+  phone: string;
+  jobTitle: string | null;
+  location: string | null;
+  source: string | null;
+  status: string | null;
+  recruitmentStatus: string | null;
+  createdAt: string;
+}
+
+export interface LeadsResponse {
+  leads: Lead[];
+  count: number;
+}
+
 export interface EngagementEvent {
   candidateId: string;
   jobId: string;
