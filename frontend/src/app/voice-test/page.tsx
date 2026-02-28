@@ -62,7 +62,6 @@ const ASSISTANT_CONFIG = {
   firstMessage: "אהלן, מדבר תומר מברק שירותים, מה קורה?",
   transcriber: {
     provider: "deepgram" as const,
-    model: "nova-2" as const,
     language: "he" as const,
   },
 };

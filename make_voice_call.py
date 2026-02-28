@@ -50,7 +50,6 @@ payload = {
         "firstMessage": "אהלן, מדבר תומר מברק שירותים, מה קורה?",
         "transcriber": {
             "provider": "deepgram",
-            "model": "nova-2",
             "language": "he",
         },
     },
