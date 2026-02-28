@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tomer — Voice AI Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 40px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 { font-size: 28px; color: #1e3a5f; margin-bottom: 6px; }
+    .subtitle { color: #64748b; font-size: 14px; margin-bottom: 28px; }
+    .key-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 14px;
+      text-align: center;
+      direction: ltr;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .key-input:focus { border-color: #3b82f6; }
+    .call-btn {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: none;
+      background: #22c55e;
+      color: white;
+      font-size: 52px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
+    .call-btn:hover { background: #16a34a; transform: scale(1.05); }
+    .call-btn.active {
+      background: #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+    .call-btn.active:hover { background: #dc2626; }
+    .call-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+      50% { box-shadow: 0 0 0 20px rgba(239,68,68,0); }
+    }
+    .status {
+      margin-top: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      min-height: 24px;
+    }
+    .status.idle { color: #64748b; }
+    .status.connecting { color: #f59e0b; }
+    .status.active { color: #22c55e; }
+    .status.ended { color: #64748b; }
+    .status.error { color: #ef4444; }
+    .transcript-box {
+      margin-top: 24px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 250px;
+      overflow-y: auto;
+      text-align: right;
+      display: none;
+    }
+    .transcript-box.visible { display: block; }
+    .transcript-box h3 { font-size: 13px; color: #94a3b8; margin-bottom: 10px; }
+    .msg { margin-bottom: 8px; font-size: 14px; line-height: 1.5; }
+    .msg .role { font-weight: 700; }
+    .msg .role.assistant { color: #3b82f6; }
+    .msg .role.user { color: #22c55e; }
+    .hint { margin-top: 20px; font-size: 12px; color: #94a3b8; }
+    .hint a { color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>תומר — ברק שירותים</h1>
+    <p class="subtitle">Voice AI Re-activation Agent — Web Test</p>
+
+    <input
+      type="text"
+      id="publicKey"
+      class="key-input"
+      placeholder="Paste your Vapi Public Key here"
+      dir="ltr"
+    />
+
+    <div>
+      <button class="call-btn" id="callBtn" onclick="toggleCall()">📞</button>
+    </div>
+
+    <div class="status idle" id="status">לחץ להתחיל שיחה עם תומר</div>
+
+    <div class="transcript-box" id="transcript">
+      <h3>תמלול שיחה</h3>
+      <div id="messages"></div>
+    </div>
+
+    <p class="hint">
+      Public Key נמצא ב-<a href="https://dashboard.vapi.ai" target="_blank">dashboard.vapi.ai</a>
+      → Organization Settings
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js" defer></script>
+  <script>
+    let vapi = null;
+    let callActive = false;
+
+    const systemPrompt = `You are Tomer, a young, energetic Israeli recruiter for "Barak Services" (ברק שירותים). Your job is to call past leads who showed interest in relocating to Eilat for work a few months ago, and see if they are relevant now.
+
+VOICE AI CRITICAL RULES:
+1. Speak in spoken, natural Hebrew. Use light slang ("אהלן", "מה קורה", "בכיף").
+2. Keep responses extremely short (1-2 sentences maximum). Wait for the user to reply.
+3. If the user interrupts you, stop talking immediately and listen.
+4. Never sound scripted or robotic. You are Tomer — a real person making a real call.
+5. Match the caller's energy. If they sound busy, be brief. If they're chatty, be warm.
+
+CONVERSATION FLOW:
+
+Step 1 (Opening):
+"אהלן, מדבר תומר מברק שירותים, מה קורה?"
+→ WAIT FOR REPLY.
+
+Step 2 (The Hook):
+"אני מתקשר כי התעניינת אצלנו בעבר לגבי עבודה באילת. לקראת העונה פתחנו מלא תקנים חדשים במלונות עם אחלה מגורים מסובסדים. רציתי לשאול אם אתה עדיין מחפש משהו או שכבר הסתדרת?"
+→ WAIT FOR REPLY.
+
+Step 3 (Handling objections/answers):
+
+If YES (Still looking):
+"איזה יופי. תראה, כדי לא לחפור לך עכשיו בטלפון, אני אשלח לך הודעה לוואטסאפ עם כל הפרטים והמשרות הפנויות, סגור?"
+→ WAIT FOR REPLY.
+
+If NO (Found a job / Not relevant):
+"וואלה מעולה אחי, שיהיה המון בהצלחה! אם תצטרך משהו בעתיד אנחנו פה. יום טוב!"
+→ END CALL.
+
+If MAYBE / UNSURE:
+"בלי לחץ, אני רק אשלח לך הודעה בוואטסאפ עם הפרטים ותסתכל כשנוח לך. זה בסדר?"
+→ WAIT FOR REPLY.
+
+If ANNOYED / BAD TIMING:
+"סליחה על ההפרעה, אחי. בהצלחה ויום טוב!"
+→ END CALL.
+
+Step 4 (Closing — agreed to WhatsApp):
+"יאללה, שולח לך עכשיו. נדבר שם!"
+→ END CALL.`;
+
+    const assistantConfig = {
+      model: {
+        provider: "anthropic",
+        model: "claude-sonnet-4-20250514",
+        messages: [{ role: "system", content: systemPrompt }],
+      },
+      voice: {
+        provider: "azure",
+        voiceId: "he-IL-AvriNeural",
+      },
+      firstMessage: "אהלן, מדבר תומר מברק שירותים, מה קורה?",
+      transcriber: {
+        provider: "deepgram",
+        language: "multi",
+      },
+    };
+
+    function setStatus(text, cls) {
+      const el = document.getElementById("status");
+      el.textContent = text;
+      el.className = "status " + cls;
+    }
+
+    function addMessage(role, text) {
+      const box = document.getElementById("transcript");
+      const msgs = document.getElementById("messages");
+      box.classList.add("visible");
+      const div = document.createElement("div");
+      div.className = "msg";
+      const label = role === "assistant" ? "תומר" : "אתה";
+      div.innerHTML = `<span class="role ${role}">${label}:</span> ${text}`;
+      msgs.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function toggleCall() {
+      if (callActive) {
+        stopCall();
+      } else {
+        startCall();
+      }
+    }
+
+    function startCall() {
+      const key = document.getElementById("publicKey").value.trim();
+      if (!key) {
+        setStatus("הכנס Vapi Public Key קודם", "error");
+        document.getElementById("publicKey").focus();
+        return;
+      }
+
+      const btn = document.getElementById("callBtn");
+      btn.disabled = true;
+      setStatus("מתחבר...", "connecting");
+
+      // Initialize Vapi SDK
+      try {
+        vapi = new window.Vapi(key);
+      } catch (e) {
+        setStatus("שגיאה באתחול SDK: " + e.message, "error");
+        btn.disabled = false;
+        return;
+      }
+
+      vapi.on("call-start", () => {
+        callActive = true;
+        btn.disabled = false;
+        btn.classList.add("active");
+        btn.textContent = "🔴";
+        setStatus("שיחה פעילה — תומר מדבר!", "active");
+      });
+
+      vapi.on("call-end", () => {
+        callActive = false;
+        btn.classList.remove("active");
+        btn.textContent = "📞";
+        btn.disabled = false;
+        setStatus("השיחה הסתיימה", "ended");
+      });
+
+      vapi.on("message", (msg) => {
+        if (msg.type === "transcript" && msg.transcriptType === "final") {
+          addMessage(msg.role, msg.transcript);
+        }
+      });
+
+      vapi.on("error", (err) => {
+        console.error("Vapi error:", err);
+        setStatus("שגיאה: " + (err.message || JSON.stringify(err)), "error");
+        callActive = false;
+        btn.classList.remove("active");
+        btn.textContent = "📞";
+        btn.disabled = false;
+      });
+
+      vapi.start(assistantConfig).catch((err) => {
+        setStatus("שגיאה בהתחלת שיחה: " + (err.message || err), "error");
+        btn.disabled = false;
+      });
+    }
+
+    function stopCall() {
+      if (vapi) {
+        vapi.stop();
+      }
+    }
+  </script>
+</body>
+</html>
