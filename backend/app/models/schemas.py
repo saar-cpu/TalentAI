@@ -33,6 +33,15 @@ class ScreeningChatResponse(BaseModel):
     candidate_fit: str | None = None  # "good_fit" | "not_a_fit" | null
 
 
+class FbPostRequest(BaseModel):
+    post_text: str
+
+
+class FbPostResponse(BaseModel):
+    is_relevant: bool
+    response: str
+
+
 class LandingPageData(BaseModel):
     job_id: str
     candidate_id: str
