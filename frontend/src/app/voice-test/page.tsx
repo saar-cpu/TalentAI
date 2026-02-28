@@ -56,12 +56,13 @@ const ASSISTANT_CONFIG = {
     messages: [{ role: "system" as const, content: SYSTEM_PROMPT }],
   },
   voice: {
-    provider: "azure" as const,
-    voiceId: "he-IL-AvriNeural",
+    provider: "openai" as const,
+    voiceId: "onyx",
   },
   firstMessage: "אהלן, מדבר תומר מברק שירותים, מה קורה?",
   transcriber: {
-    provider: "gladia" as const,
+    provider: "openai" as const,
+    model: "whisper-1" as const,
     language: "he" as const,
   },
 };

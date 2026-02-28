@@ -44,12 +44,13 @@ payload = {
             ],
         },
         "voice": {
-            "provider": "azure",
-            "voiceId": "he-IL-AvriNeural",
+            "provider": "openai",
+            "voiceId": "onyx",
         },
         "firstMessage": "אהלן, מדבר תומר מברק שירותים, מה קורה?",
         "transcriber": {
-            "provider": "gladia",
+            "provider": "openai",
+            "model": "whisper-1",
             "language": "he",
         },
     },
