@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TalentAI - Recruitment Marketing Ecosystem",
-  description: "AI-powered hyper-personalized recruitment marketing",
+  title: "ברק שירותים - גיוס והשמה באילת",
+  description: "מערכת גיוס חכמה מבוססת AI להשמת עובדים באילת",
 };
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="he" dir="rtl">
       <body>{children}</body>
     </html>
   );

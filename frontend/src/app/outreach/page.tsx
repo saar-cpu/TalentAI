@@ -5,8 +5,8 @@ import type { ChatMessage } from "@/types";
 import { sendScreeningMessage } from "@/lib/api";
 
 export default function ScreeningChatPage() {
-  const [jobTitle, setJobTitle] = useState("Staff Software Engineer - AI Platform");
-  const [location, setLocation] = useState("San Francisco, CA");
+  const [jobTitle, setJobTitle] = useState("עבודה באילת");
+  const [location, setLocation] = useState("אילת");
   const [candidateName, setCandidateName] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -48,24 +48,24 @@ export default function ScreeningChatPage() {
         setCandidateFit(response.candidateFit);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : "משהו השתבש");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50">
+    <main dir="rtl" className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50">
       {/* Header */}
       <div className="border-b border-gray-200 bg-white px-4 py-4 text-center">
         <a href="/" className="text-sm text-brand-600 hover:underline">
-          &larr; Back to Home
+          &rarr; חזרה לדף הראשי
         </a>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900">
-          Screening Chat
+          צ׳אט סינון מועמדים
         </h1>
         <p className="mt-1 text-sm text-gray-600">
-          WhatsApp-style candidate screening powered by AI.
+          סינון מועמדים בסגנון WhatsApp מבוסס AI
         </p>
       </div>
 
@@ -73,7 +73,7 @@ export default function ScreeningChatPage() {
       <div className="border-b border-gray-100 bg-white px-4 py-3">
         <div className="mx-auto flex max-w-2xl flex-wrap gap-3">
           <label className="flex-1 min-w-[160px]">
-            <span className="text-xs font-medium text-gray-600">Job Title</span>
+            <span className="text-xs font-medium text-gray-600">תפקיד</span>
             <input
               type="text"
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
@@ -82,7 +82,7 @@ export default function ScreeningChatPage() {
             />
           </label>
           <label className="flex-1 min-w-[140px]">
-            <span className="text-xs font-medium text-gray-600">Location</span>
+            <span className="text-xs font-medium text-gray-600">מיקום</span>
             <input
               type="text"
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
@@ -91,11 +91,11 @@ export default function ScreeningChatPage() {
             />
           </label>
           <label className="flex-1 min-w-[140px]">
-            <span className="text-xs font-medium text-gray-600">Candidate Name</span>
+            <span className="text-xs font-medium text-gray-600">שם המועמד/ת</span>
             <input
               type="text"
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              placeholder="Optional"
+              placeholder="לא חובה"
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
             />
@@ -108,19 +108,19 @@ export default function ScreeningChatPage() {
         <div className="mx-auto max-w-2xl space-y-3">
           {messages.length === 0 && (
             <p className="text-center text-sm text-gray-400 py-12">
-              Start the conversation by sending a message below.
+              שלח/י הודעה כדי להתחיל את השיחה
             </p>
           )}
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex ${msg.role === "user" ? "justify-start" : "justify-end"}`}
             >
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"
-                    ? "bg-green-500 text-white rounded-br-md"
-                    : "bg-gray-100 text-gray-800 rounded-bl-md"
+                    ? "bg-green-500 text-white rounded-bl-md"
+                    : "bg-gray-100 text-gray-800 rounded-br-md"
                 }`}
               >
                 {msg.content}
@@ -128,9 +128,9 @@ export default function ScreeningChatPage() {
             </div>
           ))}
           {loading && (
-            <div className="flex justify-start">
-              <div className="rounded-2xl rounded-bl-md bg-gray-100 px-4 py-2.5 text-sm text-gray-400 flex items-center gap-2">
-                <Spinner /> Typing…
+            <div className="flex justify-end">
+              <div className="rounded-2xl rounded-br-md bg-gray-100 px-4 py-2.5 text-sm text-gray-400 flex items-center gap-2">
+                <Spinner /> מקליד/ה…
               </div>
             </div>
           )}
@@ -147,8 +147,9 @@ export default function ScreeningChatPage() {
               : "border-red-200 bg-red-50 text-red-700"
           }`}
         >
-          Screening complete —{" "}
-          {candidateFit === "good_fit" ? "Good fit!" : "Not a fit."}
+          {candidateFit === "good_fit"
+            ? "הסינון הושלם — מתאים!"
+            : "הסינון הושלם — לא מתאים."}
         </div>
       )}
 
@@ -171,7 +172,7 @@ export default function ScreeningChatPage() {
           <input
             type="text"
             className="flex-1 rounded-full border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
-            placeholder={screeningComplete ? "Screening complete" : "Type a message…"}
+            placeholder={screeningComplete ? "הסינון הושלם" : "כתוב/י הודעה…"}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={screeningComplete || loading}
@@ -181,7 +182,7 @@ export default function ScreeningChatPage() {
             disabled={!input.trim() || loading || screeningComplete}
             className="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send
+            שלח
           </button>
         </form>
       </div>
