@@ -33,7 +33,7 @@ async def screen_candidate(
     location: str | None = None,
 ) -> ScreeningChatResponse:
     if not settings.anthropic_api_key:
-        return _mock_screening(latest_message, candidate_name)
+        return _mock_screening(chat_history, latest_message, candidate_name)
 
     client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
 
@@ -62,11 +62,28 @@ async def screen_candidate(
 
 
 def _mock_screening(
-    latest_message: str, candidate_name: str | None
+    chat_history: list[ChatMessage],
+    latest_message: str,
+    candidate_name: str | None,
 ) -> ScreeningChatResponse:
     name = candidate_name.split()[0] if candidate_name else "there"
+    turn = len([m for m in chat_history if m.role == "user"]) + 1
+
+    if turn == 1:
+        reply = f"Hey {name}! 👋 Thanks for reaching out! Have you worked in a restaurant or retail before?"
+    elif turn == 2:
+        reply = "Nice! 💪 Are you available for evening/weekend shifts?"
+    elif turn == 3:
+        reply = "Love it! 🙌 When could you start?"
+    else:
+        return ScreeningChatResponse(
+            reply=f"Awesome {name}! You sound like a great fit 🎉 I'll have our manager call you tomorrow to set up a trial shift!",
+            screening_complete=True,
+            candidate_fit="good_fit",
+        )
+
     return ScreeningChatResponse(
-        reply=f"Hey {name}! 👋 Thanks for reaching out! Have you worked in a restaurant or retail before?",
+        reply=reply,
         screening_complete=False,
         candidate_fit=None,
     )
