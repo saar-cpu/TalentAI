@@ -126,8 +126,9 @@
     </p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js" defer></script>
-  <script>
+  <script type="module">
+    import Vapi from "https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/+esm";
+
     let vapi = null;
     let callActive = false;
 
@@ -207,14 +208,6 @@ Step 4 (Closing — agreed to WhatsApp):
       box.scrollTop = box.scrollHeight;
     }
 
-    function toggleCall() {
-      if (callActive) {
-        stopCall();
-      } else {
-        startCall();
-      }
-    }
-
     function startCall() {
       const key = document.getElementById("publicKey").value.trim();
       if (!key) {
@@ -227,9 +220,8 @@ Step 4 (Closing — agreed to WhatsApp):
       btn.disabled = true;
       setStatus("מתחבר...", "connecting");
 
-      // Initialize Vapi SDK
       try {
-        vapi = new window.Vapi(key);
+        vapi = new Vapi(key);
       } catch (e) {
         setStatus("שגיאה באתחול SDK: " + e.message, "error");
         btn.disabled = false;
@@ -278,6 +270,15 @@ Step 4 (Closing — agreed to WhatsApp):
         vapi.stop();
       }
     }
+
+    // Expose toggleCall globally for the onclick handler
+    window.toggleCall = function () {
+      if (callActive) {
+        stopCall();
+      } else {
+        startCall();
+      }
+    };
   </script>
 </body>
 </html>
