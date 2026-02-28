@@ -26,6 +26,12 @@ export default function HomePage() {
         >
           Facebook Hunter
         </a>
+        <a
+          href="/voice-test"
+          className="rounded-lg border-2 border-brand-600 px-6 py-3 text-sm font-semibold text-brand-600 hover:bg-brand-50 transition-colors"
+        >
+          Voice AI Test
+        </a>
       </div>
     </main>
   );
