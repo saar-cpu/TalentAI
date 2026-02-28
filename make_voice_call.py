@@ -49,7 +49,7 @@ payload = {
         },
         "firstMessage": "אהלן, מדבר תומר מברק שירותים, מה קורה?",
         "transcriber": {
-            "provider": "deepgram",
+            "provider": "gladia",
             "language": "he",
         },
     },
