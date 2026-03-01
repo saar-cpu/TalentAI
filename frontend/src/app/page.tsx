@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, useRef, useCallback, FormEvent } from "react";
+import { motion, useInView } from "framer-motion";
 import AnimatedCard from "@/components/AnimatedCard";
 import { Skeleton } from "@/components/Skeleton";
+import { submitQuickApply, sendScreeningMessage } from "@/lib/api";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -206,6 +208,13 @@ const BLOG_POSTS = [
 const WHATSAPP_URL = "https://wa.me/9720738020145";
 const PHONE_NUMBER = "073-802-0145";
 const PHONE_URL = "tel:+9720738020145";
+const VAPI_PUBLIC_KEY = "ae93dc6a-a162-4357-b9c2-dfb0561fe3d1";
+
+const DEMO_MATCH_JOBS = [
+  { title: "פקיד/ת קבלה", employer: "מלון רויאל ביץ׳", score: 95, salary: "8,200-9,500 ₪" },
+  { title: "מאבטח/ת", employer: "קניון מול הים", score: 87, salary: "7,800-8,400 ₪" },
+  { title: "מלצר/ית", employer: "מסעדת פאגו פאגו", score: 78, salary: "7,000-9,000 ₪" },
+];
 
 // ─── Components ──────────────────────────────────────────────────────────────
 
@@ -325,38 +334,358 @@ function Header() {
   );
 }
 
+function HeroCvWidget() {
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [form, setForm] = useState({ name: "", phone: "", field: "" });
+
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      setStatus("loading");
+      try {
+        await submitQuickApply({
+          name: form.name,
+          phone: form.phone,
+          field: form.field,
+          relocate: true,
+          housing: "need",
+          startDate: "this_week",
+        });
+        setStatus("done");
+      } catch {
+        setStatus("error");
+      }
+    },
+    [form]
+  );
+
+  return (
+    <div className="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
+      <div className="mb-4 flex items-center gap-2">
+        <svg className="h-5 w-5 text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <h3 className="text-base font-bold">הגשה מהירה</h3>
+      </div>
+
+      {status === "done" ? (
+        <div className="py-6 text-center">
+          <span className="text-4xl">✅</span>
+          <p className="mt-2 text-sm font-semibold">קיבלנו! נחזור תוך שעות</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-2.5">
+          <input
+            type="text"
+            required
+            placeholder="שם מלא"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-white/40 focus:outline-none"
+          />
+          <input
+            type="tel"
+            required
+            placeholder="מספר טלפון"
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-white/40 focus:outline-none"
+          />
+          <select
+            required
+            value={form.field}
+            onChange={(e) => setForm({ ...form, field: e.target.value })}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/70 focus:border-white/40 focus:outline-none [&>option]:text-slate-900"
+          >
+            <option value="">בחרו תחום</option>
+            <option value="hotels">מלונאות</option>
+            <option value="retail">קמעונאות</option>
+            <option value="fashion">אופנה</option>
+            <option value="security">אבטחה</option>
+            <option value="restaurants">מסעדנות</option>
+            <option value="gas">תחנות דלק</option>
+          </select>
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="w-full rounded-lg bg-white py-2.5 text-sm font-bold text-brand-700 transition-transform hover:scale-[1.02] disabled:opacity-60"
+          >
+            {status === "loading" ? "שולח..." : status === "error" ? "שגיאה — נסו שוב" : "שלחו מועמדות"}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+function HeroChatWidget() {
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "replied">("idle");
+  const [reply, setReply] = useState("");
+
+  const handleSend = useCallback(async () => {
+    if (!input.trim() || status !== "idle") return;
+    const msg = input.trim();
+    setInput("");
+    setStatus("loading");
+    try {
+      const res = await sendScreeningMessage({
+        chatHistory: [],
+        latestMessage: msg,
+        jobTitle: "עבודה באילת",
+      });
+      setReply(res.reply);
+      setStatus("replied");
+    } catch {
+      setReply("שגיאה בחיבור — נסו שוב מאוחר יותר");
+      setStatus("replied");
+    }
+  }, [input, status]);
+
+  return (
+    <div className="flex flex-col rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
+      <div className="mb-4 flex items-center gap-2">
+        <svg className="h-5 w-5 text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <h3 className="text-base font-bold">צ׳אט מהיר</h3>
+      </div>
+
+      <div className="flex-1 space-y-2 overflow-y-auto max-h-[200px] mb-3">
+        {/* Static greeting */}
+        <div className="rounded-lg rounded-tr-none bg-white/15 px-3 py-2 text-sm">
+          היי! מחפשים עבודה באילת? ספרו לי באיזה תחום אתם מתעניינים 😊
+        </div>
+
+        {status !== "idle" && (
+          <div className="rounded-lg rounded-tl-none bg-brand-400/30 px-3 py-2 text-sm text-end">
+            {input || "..."}
+          </div>
+        )}
+
+        {status === "loading" && (
+          <div className="rounded-lg rounded-tr-none bg-white/15 px-3 py-2 text-sm">
+            <span className="inline-flex gap-1">
+              <span className="animate-bounce">.</span>
+              <span className="animate-bounce" style={{ animationDelay: "0.1s" }}>.</span>
+              <span className="animate-bounce" style={{ animationDelay: "0.2s" }}>.</span>
+            </span>
+          </div>
+        )}
+
+        {status === "replied" && (
+          <div className="rounded-lg rounded-tr-none bg-white/15 px-3 py-2 text-sm">
+            {reply.slice(0, 120)}{reply.length > 120 ? "..." : ""}
+          </div>
+        )}
+      </div>
+
+      {status === "replied" ? (
+        <a
+          href="/outreach"
+          className="block rounded-lg bg-white py-2.5 text-center text-sm font-bold text-brand-700 transition-transform hover:scale-[1.02]"
+        >
+          המשיכו בצ׳אט המלא &larr;
+        </a>
+      ) : (
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="כתבו הודעה..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            disabled={status === "loading"}
+            className="flex-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-white/40 focus:outline-none disabled:opacity-50"
+          />
+          <button
+            onClick={handleSend}
+            disabled={!input.trim() || status === "loading"}
+            className="rounded-lg bg-white/20 px-3 py-2 text-sm font-bold transition-colors hover:bg-white/30 disabled:opacity-40"
+          >
+            &larr;
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HeroVoiceWidget() {
+  const [callStatus, setCallStatus] = useState<"idle" | "connecting" | "active" | "ended">("idle");
+  const vapiRef = useRef<ReturnType<typeof Object> | null>(null);
+
+  const startCall = useCallback(async () => {
+    if (callStatus !== "idle") return;
+    setCallStatus("connecting");
+    try {
+      const { default: Vapi } = await import("@vapi-ai/web");
+      const vapi = new Vapi(VAPI_PUBLIC_KEY);
+      vapiRef.current = vapi;
+
+      vapi.on("call-start", () => setCallStatus("active"));
+      vapi.on("call-end", () => setCallStatus("ended"));
+
+      await vapi.start({
+        model: {
+          provider: "anthropic",
+          model: "claude-sonnet-4-20250514",
+          messages: [
+            {
+              role: "system",
+              content:
+                "אתה תומר, נציג דיגיטלי של ברק שירותים באילת. דבר בעברית בלבד. עזור למועמד למצוא עבודה באילת. שאל שם, תחום עיסוק מועדף, ומתי יכול להתחיל.",
+            },
+          ],
+        },
+        voice: { provider: "openai", voiceId: "onyx" },
+        transcriber: { provider: "gladia", language: "he" },
+      });
+    } catch {
+      setCallStatus("idle");
+    }
+  }, [callStatus]);
+
+  const endCall = useCallback(() => {
+    if (vapiRef.current && typeof (vapiRef.current as { stop?: () => void }).stop === "function") {
+      (vapiRef.current as { stop: () => void }).stop();
+    }
+    setCallStatus("ended");
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
+      <div className="mb-4 flex w-full items-center gap-2">
+        <svg className="h-5 w-5 text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+        <h3 className="text-base font-bold">שיחה קולית</h3>
+      </div>
+
+      <div className="flex flex-1 flex-col items-center justify-center py-4">
+        {callStatus === "ended" ? (
+          <div className="text-center">
+            <span className="text-4xl">✅</span>
+            <p className="mt-2 text-sm font-semibold">תודה! נחזור אליכם בקרוב</p>
+          </div>
+        ) : (
+          <>
+            <button
+              onClick={callStatus === "active" ? endCall : startCall}
+              disabled={callStatus === "connecting"}
+              className={`flex h-16 w-16 items-center justify-center rounded-full transition-all ${
+                callStatus === "active"
+                  ? "bg-red-500 animate-pulse hover:bg-red-600"
+                  : "bg-white/20 hover:bg-white/30"
+              } disabled:opacity-50`}
+            >
+              {callStatus === "active" ? (
+                <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="6" y="6" width="12" height="12" rx="2" />
+                </svg>
+              ) : (
+                <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              )}
+            </button>
+            <p className="mt-3 text-center text-sm text-indigo-100/80">
+              {callStatus === "connecting"
+                ? "מתחבר..."
+                : callStatus === "active"
+                ? "מדברים עם תומר..."
+                : "לחצו לשיחה עם תומר, הנציג הדיגיטלי שלנו"}
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MatchScorePreview() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+
+  return (
+    <div ref={ref} className="mt-10">
+      <p className="mb-4 text-center text-xs font-medium text-indigo-200/70">
+        התאמה חכמה — לדוגמה בלבד
+      </p>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {DEMO_MATCH_JOBS.map((job, i) => (
+          <div
+            key={job.title}
+            className="rounded-xl border border-white/15 bg-white/5 p-4 backdrop-blur-sm"
+          >
+            <p className="text-sm font-bold">{job.title}</p>
+            <p className="text-xs text-indigo-200/70">{job.employer}</p>
+            <p className="mt-1 text-xs text-indigo-100/60">{job.salary}</p>
+            <div className="mt-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-indigo-200/70">התאמה</span>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={inView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.5, delay: i * 0.2 + 0.8 }}
+                  className="font-bold text-brand-300"
+                >
+                  {job.score}%
+                </motion.span>
+              </div>
+              <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/10">
+                <motion.div
+                  className="h-full rounded-full bg-brand-400"
+                  initial={{ width: 0 }}
+                  animate={inView ? { width: `${job.score}%` } : { width: 0 }}
+                  transition={{ duration: 1, delay: i * 0.2, ease: "easeOut" }}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function HeroSection() {
   return (
-    <section className="bg-gradient-to-bl from-brand-900 to-brand-700 px-4 py-20 text-center text-white md:py-28">
-      <div className="mx-auto max-w-3xl">
-        <span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium backdrop-blur">
-          20+ שנה, 1,000+ עובדים, סוכנות #1 באילת
-        </span>
-        <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl lg:text-6xl">
-          עבודה, דירה, ארוחות והסעות —
-          <br className="hidden md:block" />
-          תוך 3 ימים באילת
-        </h1>
-        <p className="mt-4 text-lg text-indigo-100 md:text-xl">
-          דירה מרוהטת מ-400 ש״ח. 3 ארוחות ב-5 ש״ח ליום. הסעות מהדלת.
-          מענק 9,550 ש״ח. ואנחנו מסדרים הכל — אתם רק צריכים להגיע.
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="#apply"
-            className="w-full rounded-lg bg-white px-8 py-3.5 text-base font-bold text-brand-700 shadow-lg transition-transform hover:scale-105 sm:w-auto"
-          >
-            רוצה הצעת עבודה תוך 24 שעות
-          </a>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full rounded-lg border-2 border-white/40 px-8 py-3.5 text-base font-bold text-white transition-colors hover:bg-white/10 sm:w-auto"
-          >
-            שאלות? דברו איתנו עכשיו 💬
-          </a>
+    <section className="relative overflow-hidden bg-gradient-to-bl from-brand-900 via-brand-800 to-brand-700 px-4 py-16 text-white md:py-24">
+      {/* Decorative blur circles */}
+      <div className="absolute -top-24 -end-24 h-72 w-72 rounded-full bg-brand-500/20 blur-3xl" />
+      <div className="absolute -bottom-32 -start-32 h-96 w-96 rounded-full bg-brand-400/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-6xl">
+        {/* Badge */}
+        <div className="text-center">
+          <span className="inline-block rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+            20+ שנה, 1,000+ עובדים, סוכנות #1 באילת
+          </span>
         </div>
+
+        {/* Headline */}
+        <h1 className="mt-6 text-center text-4xl font-black leading-tight tracking-tight md:text-5xl lg:text-6xl">
+          עבודה, דירה וארוחות —{" "}
+          <span className="bg-gradient-to-l from-indigo-200 to-white bg-clip-text text-transparent">
+            תוך 3 ימים באילת
+          </span>
+        </h1>
+
+        <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-indigo-100/90 md:text-xl">
+          דירה מרוהטת מ-400 ₪. ארוחות ב-5 ₪ ליום. הסעות חינם. מענק 9,550 ₪.
+          בחרו איך להגיש מועמדות:
+        </p>
+
+        {/* 3-widget grid */}
+        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <HeroCvWidget />
+          <HeroChatWidget />
+          <HeroVoiceWidget />
+        </div>
+
+        {/* Match Score Preview */}
+        <MatchScorePreview />
       </div>
     </section>
   );
