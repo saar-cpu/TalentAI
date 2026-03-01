@@ -15,6 +15,9 @@ class Settings(BaseSettings):
         "https://lead-management-umber.vercel.app",
     ]
 
+    vapi_api_key: str = ""
+    my_phone_number: str = ""
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 
