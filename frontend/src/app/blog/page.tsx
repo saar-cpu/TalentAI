@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import AnimatedCard from "@/components/AnimatedCard";
 
 export const metadata: Metadata = {
   title: "בלוג — מדריכים לעבודה ומעבר לאילת | ברק שירותים",
@@ -83,7 +84,7 @@ export default function BlogPage() {
 
         {/* Article cards */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {BLOG_POSTS.map((post) => {
+          {BLOG_POSTS.map((post, i) => {
             const content = (
               <div className="group rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div className="flex items-center gap-2">
@@ -106,20 +107,23 @@ export default function BlogPage() {
 
             if (post.ready) {
               return (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="block"
-                >
-                  {content}
-                </Link>
+                <AnimatedCard key={post.slug} index={i}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="block"
+                  >
+                    {content}
+                  </Link>
+                </AnimatedCard>
               );
             }
 
             return (
-              <div key={post.slug} className="opacity-75 cursor-default">
-                {content}
-              </div>
+              <AnimatedCard key={post.slug} index={i}>
+                <div className="opacity-75 cursor-default">
+                  {content}
+                </div>
+              </AnimatedCard>
             );
           })}
         </div>

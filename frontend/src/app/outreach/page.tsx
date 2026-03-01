@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { ChatMessage, MatchedJob, QuickApplyResponse } from "@/types";
 import { sendScreeningMessage, submitQuickApply, submitVoiceApply } from "@/lib/api";
+import AnimatedCard from "@/components/AnimatedCard";
 import Vapi from "@vapi-ai/web";
 
 type Mode = "quick" | "chat" | "voice";
@@ -161,29 +162,30 @@ function QuickApplyForm() {
             <div className="mt-6">
               <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
               <div className="grid gap-2 sm:grid-cols-3">
-                {result.matchedJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
-                  >
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
-                    <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
-                    {job.match_score != null && (
-                      <div className="mt-2 flex items-center gap-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
-                          <div
-                            className={`h-1.5 rounded-full ${
-                              job.match_score >= 80 ? "bg-green-500" :
-                              job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
-                            }`}
-                            style={{ width: `${job.match_score}%` }}
-                          />
+                {result.matchedJobs.map((job, i) => (
+                  <AnimatedCard key={job.id} index={i}>
+                    <div
+                      className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
+                    >
+                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+                      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+                      <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
+                      {job.match_score != null && (
+                        <div className="mt-2 flex items-center gap-1.5">
+                          <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
+                            <div
+                              className={`h-1.5 rounded-full ${
+                                job.match_score >= 80 ? "bg-green-500" :
+                                job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
+                              }`}
+                              style={{ width: `${job.match_score}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                         </div>
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  </AnimatedCard>
                 ))}
               </div>
             </div>
@@ -491,29 +493,30 @@ function ChatMode() {
           <div className="mx-auto max-w-2xl">
             <p className="mb-3 text-center text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
             <div className="grid gap-2 sm:grid-cols-3">
-              {matchedJobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
-                >
-                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
-                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
-                  <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
-                  {job.match_score != null && (
-                    <div className="mt-2 flex items-center gap-1.5">
-                      <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
-                        <div
-                          className={`h-1.5 rounded-full ${
-                            job.match_score >= 80 ? "bg-green-500" :
-                            job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
-                          }`}
-                          style={{ width: `${job.match_score}%` }}
-                        />
+              {matchedJobs.map((job, i) => (
+                <AnimatedCard key={job.id} index={i}>
+                  <div
+                    className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
+                  >
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+                    <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
+                    {job.match_score != null && (
+                      <div className="mt-2 flex items-center gap-1.5">
+                        <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
+                          <div
+                            className={`h-1.5 rounded-full ${
+                              job.match_score >= 80 ? "bg-green-500" :
+                              job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
+                            }`}
+                            style={{ width: `${job.match_score}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                       </div>
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                </AnimatedCard>
               ))}
             </div>
           </div>
@@ -731,29 +734,30 @@ function VoiceApplyMode() {
             <div className="mt-6">
               <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
               <div className="grid gap-2 sm:grid-cols-3">
-                {result.matchedJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
-                  >
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
-                    <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
-                    {job.match_score != null && (
-                      <div className="mt-2 flex items-center gap-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
-                          <div
-                            className={`h-1.5 rounded-full ${
-                              job.match_score >= 80 ? "bg-green-500" :
-                              job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
-                            }`}
-                            style={{ width: `${job.match_score}%` }}
-                          />
+                {result.matchedJobs.map((job, i) => (
+                  <AnimatedCard key={job.id} index={i}>
+                    <div
+                      className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
+                    >
+                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+                      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+                      <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
+                      {job.match_score != null && (
+                        <div className="mt-2 flex items-center gap-1.5">
+                          <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
+                            <div
+                              className={`h-1.5 rounded-full ${
+                                job.match_score >= 80 ? "bg-green-500" :
+                                job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
+                              }`}
+                              style={{ width: `${job.match_score}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                         </div>
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  </AnimatedCard>
                 ))}
               </div>
             </div>

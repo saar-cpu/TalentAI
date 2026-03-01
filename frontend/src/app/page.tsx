@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import AnimatedCard from "@/components/AnimatedCard";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -410,14 +411,15 @@ function JobCategories() {
           50+ מעסיקים פעילים. משרות פתוחות עכשיו. בחרו תחום — ונתאים לכם עבודה.
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {JOB_CATEGORIES.map((cat) => (
-            <JobCategoryCard
-              key={cat.title}
-              emoji={cat.emoji}
-              title={cat.title}
-              roles={cat.roles}
-              hook={cat.hook}
-            />
+          {JOB_CATEGORIES.map((cat, i) => (
+            <AnimatedCard key={cat.title} index={i}>
+              <JobCategoryCard
+                emoji={cat.emoji}
+                title={cat.title}
+                roles={cat.roles}
+                hook={cat.hook}
+              />
+            </AnimatedCard>
           ))}
         </div>
       </div>
@@ -456,13 +458,14 @@ function WhyBarak() {
           מה שמעסיקים אחרים מבטיחים, אנחנו מסדרים עוד לפני שמגיעים
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {BENEFITS.map((b) => (
-            <BenefitCard
-              key={b.title}
-              emoji={b.emoji}
-              title={b.title}
-              description={b.description}
-            />
+          {BENEFITS.map((b, i) => (
+            <AnimatedCard key={b.title} index={i}>
+              <BenefitCard
+                emoji={b.emoji}
+                title={b.title}
+                description={b.description}
+              />
+            </AnimatedCard>
           ))}
         </div>
       </div>
@@ -506,14 +509,15 @@ function Testimonials() {
           עובדים אמיתיים, מספרים אמיתיים, בלי פילטרים
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((t) => (
-            <TestimonialCard
-              key={t.name}
-              name={t.name}
-              role={t.role}
-              quote={t.quote}
-              stars={t.stars}
-            />
+          {TESTIMONIALS.map((t, i) => (
+            <AnimatedCard key={t.name} index={i}>
+              <TestimonialCard
+                name={t.name}
+                role={t.role}
+                quote={t.quote}
+                stars={t.stars}
+              />
+            </AnimatedCard>
           ))}
         </div>
       </div>
@@ -607,14 +611,15 @@ function BlogPreview() {
           מה שהיינו רוצים שמישהו יספר לנו לפני שעברנו לאילת
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {BLOG_POSTS.map((post) => (
-            <BlogPreviewCard
-              key={post.slug}
-              title={post.title}
-              excerpt={post.excerpt}
-              date={post.date}
-              href={post.slug === "guide-moving-to-eilat" ? `/blog/${post.slug}` : undefined}
-            />
+          {BLOG_POSTS.map((post, i) => (
+            <AnimatedCard key={post.slug} index={i}>
+              <BlogPreviewCard
+                title={post.title}
+                excerpt={post.excerpt}
+                date={post.date}
+                href={post.slug === "guide-moving-to-eilat" ? `/blog/${post.slug}` : undefined}
+              />
+            </AnimatedCard>
           ))}
         </div>
         <div className="mt-8 text-center">
