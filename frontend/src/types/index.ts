@@ -46,10 +46,21 @@ export interface ScreeningChatRequest {
   location?: string;
 }
 
+export interface MatchedJob {
+  id: string;
+  title: string;
+  field: string;
+  employer: string;
+  salary_range: string;
+  housing: boolean;
+  urgency: string;
+}
+
 export interface ScreeningChatResponse {
   reply: string;
   screeningComplete: boolean;
   candidateFit: "good_fit" | "not_a_fit" | null;
+  matchedJobs: MatchedJob[] | null;
 }
 
 export interface FbPostRequest {

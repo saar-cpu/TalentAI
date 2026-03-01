@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import type { ChatMessage } from "@/types";
+import type { ChatMessage, MatchedJob } from "@/types";
 import { sendScreeningMessage } from "@/lib/api";
 
 export default function ScreeningChatPage() {
@@ -14,6 +14,7 @@ export default function ScreeningChatPage() {
   const [error, setError] = useState<string | null>(null);
   const [screeningComplete, setScreeningComplete] = useState(false);
   const [candidateFit, setCandidateFit] = useState<string | null>(null);
+  const [matchedJobs, setMatchedJobs] = useState<MatchedJob[] | null>(null);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +47,9 @@ export default function ScreeningChatPage() {
       if (response.screeningComplete) {
         setScreeningComplete(true);
         setCandidateFit(response.candidateFit);
+        if (response.matchedJobs) {
+          setMatchedJobs(response.matchedJobs);
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "משהו השתבש");
@@ -150,6 +154,27 @@ export default function ScreeningChatPage() {
           {candidateFit === "good_fit"
             ? "הסינון הושלם — מתאים!"
             : "הסינון הושלם — לא מתאים."}
+        </div>
+      )}
+
+      {/* Matched job cards */}
+      {screeningComplete && candidateFit === "good_fit" && matchedJobs && matchedJobs.length > 0 && (
+        <div className="border-t border-green-100 bg-green-50/50 px-4 py-4">
+          <div className="mx-auto max-w-2xl">
+            <p className="mb-3 text-center text-xs font-medium text-gray-500">משרות מתאימות שנמצאו</p>
+            <div className="grid gap-2 sm:grid-cols-3">
+              {matchedJobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="rounded-xl border border-green-200 bg-white p-3 text-right shadow-sm"
+                >
+                  <p className="text-sm font-semibold text-gray-900">{job.title}</p>
+                  <p className="mt-0.5 text-xs text-gray-500">{job.employer}</p>
+                  <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

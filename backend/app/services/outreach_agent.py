@@ -5,6 +5,7 @@ import anthropic
 
 from app.config import settings
 from app.models.schemas import ChatMessage, ScreeningChatResponse
+from app.services.job_matcher import match_jobs, normalize_field, FIELD_KEYWORDS
 
 SYSTEM_PROMPT = """You are an energetic, sharp, and highly efficient WhatsApp Recruiter for "Barak Services" (ברק שירותים), the leading job placement agency in Eilat, Israel. You help young people and discharged soldiers relocate to Eilat for work.
 
@@ -54,7 +55,20 @@ You MUST respond with ONLY valid JSON (no markdown fences) matching this schema:
 
 - Set screening_complete to true ONLY when: (a) all 4 questions are answered clearly AND you collected their phone number, OR (b) a disqualifying answer triggers early rejection.
 - Set candidate_fit to "good_fit" or "not_a_fit" only when screening_complete is true. Otherwise keep it null.
-- "not_a_fit" is a valid and expected outcome. Do not try to force every candidate into "good_fit"."""
+- "not_a_fit" is a valid and expected outcome. Do not try to force every candidate into "good_fit".
+
+10. Job Matching: When you complete the screening successfully (good_fit), you will receive a "matched_jobs" list in the system context with specific open positions for the candidate's field. Mention 2-3 specific job titles and employer names in your closing message to make the offer more concrete. Example: "יש לנו כרגע פקיד/ת קבלה ברויאל ביץ׳ ומלצר/ית בדן אילת — המגייס/ת יציע לך את מה שהכי מתאים."
+    Include the matched_jobs array in your JSON response when available."""
+
+
+def extract_field_from_history(chat_history: list[ChatMessage]) -> str | None:
+    """Scan user messages for field keywords and return the canonical field name."""
+    for msg in chat_history:
+        if msg.role == "user":
+            field = normalize_field(msg.content)
+            if field:
+                return field
+    return None
 
 
 async def screen_candidate(
@@ -74,6 +88,15 @@ async def screen_candidate(
         context += f"\nCandidate name: {candidate_name}"
     if location:
         context += f"\nLocation: {location}"
+
+    # Inject matched jobs if we can detect the candidate's field
+    all_messages = list(chat_history) + [ChatMessage(role="user", content=latest_message)]
+    field = extract_field_from_history(all_messages)
+    if field:
+        jobs = match_jobs(field)
+        if jobs:
+            context += f"\n\nmatched_jobs for field '{field}':\n"
+            context += json.dumps(jobs, ensure_ascii=False, indent=2)
 
     messages = []
     for msg in chat_history:
@@ -202,10 +225,28 @@ def _mock_screening(
         # Check if the message looks like a phone number
         phone_match = re.search(r"[\d\-+()]{7,}", latest_message)
         if phone_match:
+            # Extract field and match jobs
+            all_messages = list(chat_history) + [ChatMessage(role="user", content=latest_message)]
+            field = extract_field_from_history(all_messages)
+            jobs = match_jobs(field or "") if field else []
+
+            if jobs:
+                job_mentions = " ו".join(
+                    f"{j['title']} ב{j['employer']}" for j in jobs[:2]
+                )
+                reply = (
+                    f"תודה רבה {name}! 🎉 יש לנו כרגע {job_mentions} — "
+                    "המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב ויציע/תציע לך את מה שהכי מתאים. "
+                    "להתראות באילת! 🌴"
+                )
+            else:
+                reply = f"תודה רבה {name}! 🎉 המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב לסגור את כל הפרטים. להתראות באילת! 🌴"
+
             return ScreeningChatResponse(
-                reply=f"תודה רבה {name}! 🎉 המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב לסגור את כל הפרטים. להתראות באילת! 🌴",
+                reply=reply,
                 screening_complete=True,
                 candidate_fit="good_fit",
+                matched_jobs=jobs if jobs else None,
             )
         if sentiment == "vague" or sentiment == "negative":
             return _reject("הבנתי. אם תרצה/י להתקדם בעתיד, שלח/י לנו הודעה. בהצלחה! 🙏")

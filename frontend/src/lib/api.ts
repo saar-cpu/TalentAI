@@ -63,6 +63,7 @@ export async function sendScreeningMessage(
     reply: raw.reply,
     screeningComplete: raw.screening_complete,
     candidateFit: raw.candidate_fit,
+    matchedJobs: raw.matched_jobs ?? null,
   };
 }
 

@@ -31,6 +31,7 @@ class ScreeningChatResponse(BaseModel):
     reply: str
     screening_complete: bool
     candidate_fit: str | None = None  # "good_fit" | "not_a_fit" | null
+    matched_jobs: list[dict] | None = None
 
 
 class FbPostRequest(BaseModel):
