@@ -82,6 +82,7 @@ export async function submitQuickApply(
       housing: request.housing,
       field: request.field,
       start_date: request.startDate,
+      cv_text: request.cvText || "",
     }),
   });
 

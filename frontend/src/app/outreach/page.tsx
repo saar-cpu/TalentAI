@@ -79,6 +79,7 @@ function QuickApplyForm() {
   const [relocate, setRelocate] = useState<boolean | null>(null);
   const [housing, setHousing] = useState("");
   const [field, setField] = useState("");
+  const [cvText, setCvText] = useState("");
   const [startDate, setStartDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -106,6 +107,7 @@ function QuickApplyForm() {
         housing: housing as "need" | "have" | "flexible",
         field,
         startDate: startDate as "this_week" | "two_weeks" | "this_month" | "not_sure",
+        cvText,
       });
       setResult(response);
     } catch (err) {
@@ -154,6 +156,20 @@ function QuickApplyForm() {
                     <p className="text-sm font-semibold text-gray-900">{job.title}</p>
                     <p className="mt-0.5 text-xs text-gray-500">{job.employer}</p>
                     <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
+                    {job.match_score != null && (
+                      <div className="mt-2 flex items-center gap-1.5">
+                        <div className="h-1.5 flex-1 rounded-full bg-gray-200">
+                          <div
+                            className={`h-1.5 rounded-full ${
+                              job.match_score >= 80 ? "bg-green-500" :
+                              job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
+                            }`}
+                            style={{ width: `${job.match_score}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-bold text-gray-700">{job.match_score}%</span>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -280,6 +296,18 @@ function QuickApplyForm() {
                 </option>
               ))}
             </select>
+          </label>
+
+          {/* CV / Skills (optional) */}
+          <label>
+            <span className="text-sm font-medium text-gray-700">כישורים וניסיון <span className="text-gray-400 font-normal">(לא חובה)</span></span>
+            <textarea
+              rows={3}
+              value={cvText}
+              onChange={(e) => setCvText(e.target.value)}
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              placeholder="ספר/י בקצרה על ניסיון עבודה, כישורים, שפות..."
+            />
           </label>
 
           {/* Start date */}
@@ -456,6 +484,20 @@ function ChatMode() {
                   <p className="text-sm font-semibold text-gray-900">{job.title}</p>
                   <p className="mt-0.5 text-xs text-gray-500">{job.employer}</p>
                   <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
+                  {job.match_score != null && (
+                    <div className="mt-2 flex items-center gap-1.5">
+                      <div className="h-1.5 flex-1 rounded-full bg-gray-200">
+                        <div
+                          className={`h-1.5 rounded-full ${
+                            job.match_score >= 80 ? "bg-green-500" :
+                            job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
+                          }`}
+                          style={{ width: `${job.match_score}%` }}
+                        />
+                      </div>
+                      <span className="text-xs font-bold text-gray-700">{job.match_score}%</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

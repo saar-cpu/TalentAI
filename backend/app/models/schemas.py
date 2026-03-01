@@ -41,6 +41,7 @@ class QuickApplyRequest(BaseModel):
     housing: str  # "need" | "have" | "flexible"
     field: str  # מלונאות | מכירות | אבטחה | מסעדנות | תחנות דלק | אחר
     start_date: str  # "this_week" | "two_weeks" | "this_month" | "not_sure"
+    cv_text: str = ""  # Optional free-text CV/skills for match scoring
 
 
 class QuickApplyResponse(BaseModel):

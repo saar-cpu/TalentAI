@@ -9,6 +9,7 @@ from app.models.schemas import (
     ScreeningChatResponse,
 )
 from app.services.crm import save_lead_to_supabase
+from app.services.cv_scorer import score_cv_match
 from app.services.job_matcher import match_jobs, normalize_field
 from app.services.outreach_agent import screen_candidate, extract_field_from_history
 
@@ -43,6 +44,10 @@ async def quick_apply(request: QuickApplyRequest):
         # Match jobs based on field
         field = normalize_field(request.field) or request.field
         jobs = match_jobs(field)
+
+        # Score CV match if candidate provided skills text
+        if jobs and request.cv_text.strip():
+            jobs = await score_cv_match(request.cv_text, jobs)
 
         # Build success message
         if jobs:
@@ -88,7 +93,7 @@ async def screen(request: ScreeningChatRequest):
             location=request.location,
         )
 
-        # On successful screening, save lead to Supabase
+        # On successful screening, save lead to Supabase + score CV match
         if response.screening_complete and response.candidate_fit == "good_fit":
             phone = _extract_phone(request.latest_message)
             if phone:
@@ -101,6 +106,13 @@ async def screen(request: ScreeningChatRequest):
                     desired_role=desired_role,
                     location=request.location,
                 )
+
+            # Score matched jobs against candidate's chat messages
+            if response.matched_jobs:
+                skills_text = " ".join(
+                    msg.content for msg in request.chat_history if msg.role == "user"
+                ) + " " + request.latest_message
+                response.matched_jobs = await score_cv_match(skills_text, response.matched_jobs)
 
         return response
     except Exception as e:

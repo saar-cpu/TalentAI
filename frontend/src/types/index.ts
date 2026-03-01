@@ -54,6 +54,7 @@ export interface MatchedJob {
   salary_range: string;
   housing: boolean;
   urgency: string;
+  match_score?: number;
 }
 
 export interface ScreeningChatResponse {
@@ -70,6 +71,7 @@ export interface QuickApplyRequest {
   housing: "need" | "have" | "flexible";
   field: string;
   startDate: "this_week" | "two_weeks" | "this_month" | "not_sure";
+  cvText?: string;
 }
 
 export interface QuickApplyResponse {
