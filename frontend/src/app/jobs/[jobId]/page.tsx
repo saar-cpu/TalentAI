@@ -11,7 +11,7 @@ import SeoJobsGrid from "./SeoJobsGrid";
 // ─── Static Params ───────────────────────────────────────────────────────────
 
 export function generateStaticParams() {
-  return SEO_PAGES.map((p) => ({ slug: p.slug }));
+  return SEO_PAGES.map((p) => ({ jobId: p.slug }));
 }
 
 // ─── Dynamic Metadata ────────────────────────────────────────────────────────
@@ -19,10 +19,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ jobId: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const page = getPageBySlug(slug);
+  const { jobId } = await params;
+  const page = getPageBySlug(jobId);
   if (!page) return {};
 
   return {
@@ -46,10 +46,10 @@ export async function generateMetadata({
 export default async function SeoPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ jobId: string }>;
 }) {
-  const { slug } = await params;
-  const page = getPageBySlug(slug);
+  const { jobId } = await params;
+  const page = getPageBySlug(jobId);
   if (!page) notFound();
 
   const jobs = getJobsForPage(page);
