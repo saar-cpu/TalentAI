@@ -63,6 +63,22 @@ export interface ScreeningChatResponse {
   matchedJobs: MatchedJob[] | null;
 }
 
+export interface QuickApplyRequest {
+  name: string;
+  phone: string;
+  relocate: boolean;
+  housing: "need" | "have" | "flexible";
+  field: string;
+  startDate: "this_week" | "two_weeks" | "this_month" | "not_sure";
+}
+
+export interface QuickApplyResponse {
+  success: boolean;
+  fit: "good_fit" | "not_a_fit";
+  message: string;
+  matchedJobs: MatchedJob[] | null;
+}
+
 export interface FbPostRequest {
   postText: string;
 }

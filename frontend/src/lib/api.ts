@@ -3,6 +3,8 @@ import type {
   Lead,
   LeadsResponse,
   PersonalizedLandingData,
+  QuickApplyRequest,
+  QuickApplyResponse,
   ScreeningChatRequest,
   ScreeningChatResponse,
 } from "@/types";
@@ -63,6 +65,38 @@ export async function sendScreeningMessage(
     reply: raw.reply,
     screeningComplete: raw.screening_complete,
     candidateFit: raw.candidate_fit,
+    matchedJobs: raw.matched_jobs ?? null,
+  };
+}
+
+export async function submitQuickApply(
+  request: QuickApplyRequest
+): Promise<QuickApplyResponse> {
+  const res = await fetch(`${API_BASE}/quick-apply`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: request.name,
+      phone: request.phone,
+      relocate: request.relocate,
+      housing: request.housing,
+      field: request.field,
+      start_date: request.startDate,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const detail = body?.detail ?? `Quick apply failed: ${res.status}`;
+    throw new Error(detail);
+  }
+
+  const raw = await res.json();
+
+  return {
+    success: raw.success,
+    fit: raw.fit,
+    message: raw.message,
     matchedJobs: raw.matched_jobs ?? null,
   };
 }

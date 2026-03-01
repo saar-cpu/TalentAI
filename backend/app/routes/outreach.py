@@ -2,8 +2,14 @@ import re
 
 from fastapi import APIRouter, HTTPException
 
-from app.models.schemas import ScreeningChatRequest, ScreeningChatResponse
+from app.models.schemas import (
+    QuickApplyRequest,
+    QuickApplyResponse,
+    ScreeningChatRequest,
+    ScreeningChatResponse,
+)
 from app.services.crm import save_lead_to_supabase
+from app.services.job_matcher import match_jobs, normalize_field
 from app.services.outreach_agent import screen_candidate, extract_field_from_history
 
 router = APIRouter()
@@ -13,6 +19,62 @@ def _extract_phone(text: str) -> str | None:
     """Try to pull an Israeli phone number from the message."""
     match = re.search(r"[\d\-+()]{7,}", text)
     return match.group(0) if match else None
+
+
+@router.post("/quick-apply", response_model=QuickApplyResponse)
+async def quick_apply(request: QuickApplyRequest):
+    try:
+        # Disqualify if not willing to relocate
+        if not request.relocate:
+            return QuickApplyResponse(
+                success=True,
+                fit="not_a_fit",
+                message="תודה על ההתעניינות! כרגע אנחנו מגייסים לעבודה באילת. אם זה יהיה רלוונטי בעתיד, נשמח לשמוע ממך!",
+            )
+
+        # Disqualify vague start date
+        if request.start_date == "not_sure":
+            return QuickApplyResponse(
+                success=True,
+                fit="not_a_fit",
+                message="תודה על ההתעניינות! כשתדע/י מתי את/ה יכול/ה להגיע, חזור/י אלינו ונסדר הכל.",
+            )
+
+        # Match jobs based on field
+        field = normalize_field(request.field) or request.field
+        jobs = match_jobs(field)
+
+        # Build success message
+        if jobs:
+            job_mentions = " ו".join(
+                f"{j['title']} ב{j['employer']}" for j in jobs[:2]
+            )
+            message = (
+                f"מעולה {request.name}! יש לנו כרגע {job_mentions} — "
+                "המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב לסגור פרטים. להתראות באילת!"
+            )
+        else:
+            message = (
+                f"תודה {request.name}! קיבלנו את הפרטים. "
+                "המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב לסגור פרטים. להתראות באילת!"
+            )
+
+        # Save to CRM (fire-and-forget)
+        await save_lead_to_supabase(
+            name=request.name,
+            phone=request.phone,
+            desired_role=field,
+            location="אילת",
+        )
+
+        return QuickApplyResponse(
+            success=True,
+            fit="good_fit",
+            message=message,
+            matched_jobs=jobs if jobs else None,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/screen", response_model=ScreeningChatResponse)

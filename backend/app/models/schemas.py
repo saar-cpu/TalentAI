@@ -34,6 +34,22 @@ class ScreeningChatResponse(BaseModel):
     matched_jobs: list[dict] | None = None
 
 
+class QuickApplyRequest(BaseModel):
+    name: str
+    phone: str
+    relocate: bool
+    housing: str  # "need" | "have" | "flexible"
+    field: str  # מלונאות | מכירות | אבטחה | מסעדנות | תחנות דלק | אחר
+    start_date: str  # "this_week" | "two_weeks" | "this_month" | "not_sure"
+
+
+class QuickApplyResponse(BaseModel):
+    success: bool
+    fit: str  # "good_fit" | "not_a_fit"
+    message: str
+    matched_jobs: list[dict] | None = None
+
+
 class FbPostRequest(BaseModel):
     post_text: str
 
