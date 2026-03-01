@@ -27,16 +27,16 @@ export default function OutreachPage() {
   const [mode, setMode] = useState<Mode>("quick");
 
   return (
-    <main dir="rtl" className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50">
+    <main dir="rtl" className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white px-4 py-4 text-center">
-        <a href="/" className="text-sm text-brand-600 hover:underline">
+      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-4 text-center">
+        <a href="/" className="text-sm text-brand-600 dark:text-brand-400 hover:underline">
           &rarr; חזרה לדף הראשי
         </a>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900 dark:text-white">
           {mode === "quick" ? "הגשה מהירה" : mode === "chat" ? "צ׳אט סינון מועמדים" : "שיחה קולית"}
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
           {mode === "quick"
             ? "מלא/י פרטים ונמצא לך עבודה באילת תוך שניות"
             : mode === "chat"
@@ -45,13 +45,13 @@ export default function OutreachPage() {
         </p>
 
         {/* Mode toggle */}
-        <div className="mt-3 inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+        <div className="mt-3 inline-flex rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-0.5">
           <button
             onClick={() => setMode("quick")}
             className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
               mode === "quick"
-                ? "bg-white text-brand-700 shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-white dark:bg-slate-900 text-brand-700 shadow-sm"
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
             הגשה מהירה
@@ -60,8 +60,8 @@ export default function OutreachPage() {
             onClick={() => setMode("chat")}
             className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
               mode === "chat"
-                ? "bg-white text-brand-700 shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-white dark:bg-slate-900 text-brand-700 shadow-sm"
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
             צ׳אט עם מגייס/ת
@@ -70,8 +70,8 @@ export default function OutreachPage() {
             onClick={() => setMode("voice")}
             className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
               mode === "voice"
-                ? "bg-white text-brand-700 shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-white dark:bg-slate-900 text-brand-700 shadow-sm"
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
             שיחה קולית
@@ -136,42 +136,42 @@ function QuickApplyForm() {
         <div className="mx-auto w-full max-w-md text-center">
           {result.fit === "good_fit" ? (
             <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
                 <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">הפרטים התקבלו!</h2>
-              <p className="mt-2 text-sm text-slate-600">{result.message}</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">הפרטים התקבלו!</h2>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
             </>
           ) : (
             <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
                 <svg className="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">תודה על ההתעניינות</h2>
-              <p className="mt-2 text-sm text-slate-600">{result.message}</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">תודה על ההתעניינות</h2>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
             </>
           )}
 
           {/* Matched job cards */}
           {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
             <div className="mt-6">
-              <p className="mb-3 text-xs font-medium text-slate-500">משרות מתאימות שנמצאו</p>
+              <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
               <div className="grid gap-2 sm:grid-cols-3">
                 {result.matchedJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="rounded-xl border border-green-200 bg-white p-3 text-right shadow-sm"
+                    className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
                   >
-                    <p className="text-sm font-semibold text-slate-900">{job.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500">{job.employer}</p>
-                    <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+                    <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
                     {job.match_score != null && (
                       <div className="mt-2 flex items-center gap-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-slate-200">
+                        <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
                           <div
                             className={`h-1.5 rounded-full ${
                               job.match_score >= 80 ? "bg-green-500" :
@@ -180,7 +180,7 @@ function QuickApplyForm() {
                             style={{ width: `${job.match_score}%` }}
                           />
                         </div>
-                        <span className="text-xs font-bold text-slate-700">{job.match_score}%</span>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                       </div>
                     )}
                   </div>
@@ -198,11 +198,11 @@ function QuickApplyForm() {
       <div className="mx-auto w-full max-w-md">
         {/* Progress bar */}
         <div className="mb-6">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
             <span>{filledSteps} מתוך {totalSteps} שלבים</span>
             <span>{Math.round((filledSteps / totalSteps) * 100)}%</span>
           </div>
-          <div className="h-2 rounded-full bg-slate-200">
+          <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700">
             <div
               className="h-2 rounded-full bg-brand-500 transition-all duration-300"
               style={{ width: `${(filledSteps / totalSteps) * 100}%` }}
@@ -214,22 +214,22 @@ function QuickApplyForm() {
           {/* Name + Phone */}
           <div className="grid grid-cols-2 gap-3">
             <label>
-              <span className="text-sm font-medium text-slate-700">שם מלא *</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">שם מלא *</span>
               <input
                 type="text"
                 required
-                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="ישראל ישראלי"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-slate-700">טלפון *</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">טלפון *</span>
               <input
                 type="tel"
                 required
-                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="050-1234567"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -239,15 +239,15 @@ function QuickApplyForm() {
 
           {/* Relocate */}
           <fieldset>
-            <legend className="text-sm font-medium text-slate-700">מוכן/ה לעבור לאילת? *</legend>
+            <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">מוכן/ה לעבור לאילת? *</legend>
             <div className="mt-2 flex gap-3">
               <button
                 type="button"
                 onClick={() => setRelocate(true)}
                 className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                   relocate === true
-                    ? "border-brand-500 bg-brand-50 text-brand-700"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                    ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
+                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
                 }`}
               >
                 כן, בהחלט
@@ -257,8 +257,8 @@ function QuickApplyForm() {
                 onClick={() => setRelocate(false)}
                 className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                   relocate === false
-                    ? "border-red-300 bg-red-50 text-red-700"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                    ? "border-red-300 bg-red-50 dark:bg-red-950 text-red-700"
+                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
                 }`}
               >
                 לא כרגע
@@ -269,7 +269,7 @@ function QuickApplyForm() {
           {/* Housing — only show if relocate=true */}
           {relocate === true && (
             <fieldset>
-              <legend className="text-sm font-medium text-slate-700">צריך/ה מגורים מסובסדים? *</legend>
+              <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">צריך/ה מגורים מסובסדים? *</legend>
               <div className="mt-2 flex gap-2">
                 {[
                   { value: "need", label: "כן, צריך/ה" },
@@ -282,8 +282,8 @@ function QuickApplyForm() {
                     onClick={() => setHousing(opt.value)}
                     className={`flex-1 rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
                       housing === opt.value
-                        ? "border-brand-500 bg-brand-50 text-brand-700"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                        ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
+                        : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
                     }`}
                   >
                     {opt.label}
@@ -295,12 +295,12 @@ function QuickApplyForm() {
 
           {/* Field of interest */}
           <label>
-            <span className="text-sm font-medium text-slate-700">תחום עבודה מועדף *</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">תחום עבודה מועדף *</span>
             <select
               required
               value={field}
               onChange={(e) => setField(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white"
+              className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             >
               <option value="">בחר/י תחום...</option>
               {FIELD_OPTIONS.map((opt) => (
@@ -313,19 +313,19 @@ function QuickApplyForm() {
 
           {/* CV / Skills (optional) */}
           <label>
-            <span className="text-sm font-medium text-slate-700">כישורים וניסיון <span className="text-slate-400 font-normal">(לא חובה)</span></span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">כישורים וניסיון <span className="text-slate-400 font-normal">(לא חובה)</span></span>
             <textarea
               rows={3}
               value={cvText}
               onChange={(e) => setCvText(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               placeholder="ספר/י בקצרה על ניסיון עבודה, כישורים, שפות..."
             />
           </label>
 
           {/* Start date */}
           <fieldset>
-            <legend className="text-sm font-medium text-slate-700">מתי יכול/ה להגיע? *</legend>
+            <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">מתי יכול/ה להגיע? *</legend>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {START_OPTIONS.map((opt) => (
                 <button
@@ -334,8 +334,8 @@ function QuickApplyForm() {
                   onClick={() => setStartDate(opt.value)}
                   className={`rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
                     startDate === opt.value
-                      ? "border-brand-500 bg-brand-50 text-brand-700"
-                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                      ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
+                      : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
                   }`}
                 >
                   {opt.label}
@@ -346,7 +346,7 @@ function QuickApplyForm() {
 
           {/* Error */}
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-center text-sm text-red-700">
+            <div className="rounded-lg bg-red-50 dark:bg-red-950 p-3 text-center text-sm text-red-700">
               {error}
             </div>
           )}
@@ -450,7 +450,7 @@ function ChatMode() {
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"
                     ? "bg-green-500 text-white rounded-bl-md"
-                    : "bg-slate-100 text-slate-800 rounded-br-md"
+                    : "bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-br-md"
                 }`}
               >
                 {msg.content}
@@ -459,10 +459,10 @@ function ChatMode() {
           ))}
           {loading && (
             <div className="flex justify-end">
-              <div className="w-[60%] space-y-2 rounded-2xl rounded-br-md bg-slate-100 px-4 py-3">
-                <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
-                <div className="h-3 w-4/5 animate-pulse rounded bg-slate-200" />
-                <div className="h-3 w-2/3 animate-pulse rounded bg-slate-200" />
+              <div className="w-[60%] space-y-2 rounded-2xl rounded-br-md bg-slate-100 dark:bg-slate-700 px-4 py-3">
+                <div className="h-3 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-600" />
+                <div className="h-3 w-4/5 animate-pulse rounded bg-slate-200 dark:bg-slate-600" />
+                <div className="h-3 w-2/3 animate-pulse rounded bg-slate-200 dark:bg-slate-600" />
               </div>
             </div>
           )}
@@ -475,8 +475,8 @@ function ChatMode() {
         <div
           className={`border-t px-4 py-3 text-center text-sm font-semibold ${
             candidateFit === "good_fit"
-              ? "border-green-200 bg-green-50 text-green-700"
-              : "border-red-200 bg-red-50 text-red-700"
+              ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 text-green-700"
+              : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 text-red-700"
           }`}
         >
           {candidateFit === "good_fit"
@@ -487,21 +487,21 @@ function ChatMode() {
 
       {/* Matched job cards */}
       {screeningComplete && candidateFit === "good_fit" && matchedJobs && matchedJobs.length > 0 && (
-        <div className="border-t border-green-100 bg-green-50/50 px-4 py-4">
+        <div className="border-t border-green-100 dark:border-green-800 bg-green-50/50 dark:bg-green-950/50 px-4 py-4">
           <div className="mx-auto max-w-2xl">
-            <p className="mb-3 text-center text-xs font-medium text-slate-500">משרות מתאימות שנמצאו</p>
+            <p className="mb-3 text-center text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
             <div className="grid gap-2 sm:grid-cols-3">
               {matchedJobs.map((job) => (
                 <div
                   key={job.id}
-                  className="rounded-xl border border-green-200 bg-white p-3 text-right shadow-sm"
+                  className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
                 >
-                  <p className="text-sm font-semibold text-slate-900">{job.title}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">{job.employer}</p>
-                  <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+                  <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
                   {job.match_score != null && (
                     <div className="mt-2 flex items-center gap-1.5">
-                      <div className="h-1.5 flex-1 rounded-full bg-slate-200">
+                      <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
                         <div
                           className={`h-1.5 rounded-full ${
                             job.match_score >= 80 ? "bg-green-500" :
@@ -510,7 +510,7 @@ function ChatMode() {
                           style={{ width: `${job.match_score}%` }}
                         />
                       </div>
-                      <span className="text-xs font-bold text-slate-700">{job.match_score}%</span>
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                     </div>
                   )}
                 </div>
@@ -522,13 +522,13 @@ function ChatMode() {
 
       {/* Error */}
       {error && (
-        <div className="border-t border-red-200 bg-red-50 px-4 py-2 text-center text-sm text-red-700">
+        <div className="border-t border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-2 text-center text-sm text-red-700">
           {error}
         </div>
       )}
 
       {/* Input bar */}
-      <div className="border-t border-slate-200 bg-white px-4 py-3">
+      <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3">
         <form
           className="mx-auto flex max-w-2xl gap-2"
           onSubmit={(e) => {
@@ -538,7 +538,7 @@ function ChatMode() {
         >
           <input
             type="text"
-            className="flex-1 rounded-full border border-slate-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+            className="flex-1 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
             placeholder={screeningComplete ? "הסינון הושלם" : "כתוב/י הודעה…"}
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -706,42 +706,42 @@ function VoiceApplyMode() {
         <div className="mx-auto w-full max-w-md text-center">
           {result.fit === "good_fit" ? (
             <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
                 <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">הפרטים התקבלו!</h2>
-              <p className="mt-2 text-sm text-slate-600">{result.message}</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">הפרטים התקבלו!</h2>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
             </>
           ) : (
             <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
                 <svg className="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">תודה על השיחה</h2>
-              <p className="mt-2 text-sm text-slate-600">{result.message}</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">תודה על השיחה</h2>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
             </>
           )}
 
           {/* Matched job cards */}
           {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
             <div className="mt-6">
-              <p className="mb-3 text-xs font-medium text-slate-500">משרות מתאימות שנמצאו</p>
+              <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
               <div className="grid gap-2 sm:grid-cols-3">
                 {result.matchedJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="rounded-xl border border-green-200 bg-white p-3 text-right shadow-sm"
+                    className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
                   >
-                    <p className="text-sm font-semibold text-slate-900">{job.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500">{job.employer}</p>
-                    <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+                    <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
                     {job.match_score != null && (
                       <div className="mt-2 flex items-center gap-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-slate-200">
+                        <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
                           <div
                             className={`h-1.5 rounded-full ${
                               job.match_score >= 80 ? "bg-green-500" :
@@ -750,7 +750,7 @@ function VoiceApplyMode() {
                             style={{ width: `${job.match_score}%` }}
                           />
                         </div>
-                        <span className="text-xs font-bold text-slate-700">{job.match_score}%</span>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                       </div>
                     )}
                   </div>
@@ -787,7 +787,7 @@ function VoiceApplyMode() {
           status.type === "active" ? "text-green-500" :
           status.type === "error" ? "text-red-500" :
           status.type === "connecting" || status.type === "processing" ? "text-yellow-500" :
-          "text-slate-500"
+          "text-slate-500 dark:text-slate-400"
         }`}>
           {status.text}
         </p>
@@ -795,22 +795,22 @@ function VoiceApplyMode() {
         {/* Loading skeleton */}
         {loading && (
           <div className="mt-6 space-y-2">
-            <div className="h-4 w-3/4 mx-auto animate-pulse rounded bg-slate-200" />
-            <div className="h-4 w-1/2 mx-auto animate-pulse rounded bg-slate-200" />
-            <div className="h-4 w-2/3 mx-auto animate-pulse rounded bg-slate-200" />
+            <div className="h-4 w-3/4 mx-auto animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+            <div className="h-4 w-1/2 mx-auto animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+            <div className="h-4 w-2/3 mx-auto animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="mt-4 rounded-lg bg-red-50 p-3 text-center text-sm text-red-700">
+          <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-950 p-3 text-center text-sm text-red-700">
             {error}
           </div>
         )}
 
         {/* Live transcript */}
         {messages.length > 0 && (
-          <div className="mt-6 rounded-xl bg-slate-100 p-4 text-right" style={{ maxHeight: 300, overflowY: "auto" }}>
+          <div className="mt-6 rounded-xl bg-slate-100 dark:bg-slate-700 p-4 text-right" style={{ maxHeight: 300, overflowY: "auto" }}>
             <h3 className="mb-3 text-xs text-slate-400">תמלול שיחה</h3>
             {messages.map((msg, i) => (
               <div key={i} className="mb-2 text-sm leading-relaxed">

@@ -46,13 +46,13 @@ export default function EmployerFaq() {
   return (
     <div>
       {FAQ_ITEMS.map((item, i) => (
-        <div key={i} className="border-b border-slate-200">
+        <div key={i} className="border-b border-slate-200 dark:border-slate-700">
           <button
             className="flex w-full items-center justify-between py-4 text-right"
             onClick={() => setOpenIndex(openIndex === i ? null : i)}
             aria-expanded={openIndex === i}
           >
-            <span className="text-base font-semibold text-brand-900">
+            <span className="text-base font-semibold text-brand-900 dark:text-white">
               {item.question}
             </span>
             <span className="ms-4 shrink-0 text-xl text-slate-400">
@@ -60,7 +60,7 @@ export default function EmployerFaq() {
             </span>
           </button>
           {openIndex === i && (
-            <p className="pb-4 text-sm leading-relaxed text-slate-600">
+            <p className="pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
               {item.answer}
             </p>
           )}

@@ -142,14 +142,14 @@ export default function VoiceTestPage() {
   };
 
   return (
-    <main dir="rtl" className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-10 text-center shadow-lg">
-        <a href="/" className="text-sm text-brand-600 hover:underline">
+    <main dir="rtl" className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-800 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-10 text-center shadow-lg">
+        <a href="/" className="text-sm text-brand-600 dark:text-brand-400 hover:underline">
           &rarr; חזרה לדף הראשי
         </a>
 
-        <h1 className="mt-3 text-3xl font-bold text-brand-900">תומר — ברק שירותים</h1>
-        <p className="mt-1 text-sm text-slate-500">Voice AI Re-activation Agent</p>
+        <h1 className="mt-3 text-3xl font-bold text-brand-900 dark:text-white">תומר — ברק שירותים</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Voice AI Re-activation Agent</p>
 
         <div className="mt-8">
           <button
@@ -172,7 +172,7 @@ export default function VoiceTestPage() {
         </p>
 
         {messages.length > 0 && (
-          <div className="mt-6 rounded-xl bg-slate-100 p-4 text-right" style={{ maxHeight: 250, overflowY: "auto" }}>
+          <div className="mt-6 rounded-xl bg-slate-100 dark:bg-slate-700 p-4 text-right" style={{ maxHeight: 250, overflowY: "auto" }}>
             <h3 className="mb-3 text-xs text-slate-400">תמלול שיחה</h3>
             {messages.map((msg, i) => (
               <div key={i} className="mb-2 text-sm leading-relaxed">

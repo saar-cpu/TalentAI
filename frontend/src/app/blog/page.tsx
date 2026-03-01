@@ -41,19 +41,19 @@ export default function BlogPage() {
   return (
     <>
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-slate-100 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link href="/" className="text-xl font-bold text-brand-900">
+          <Link href="/" className="text-xl font-bold text-brand-900 dark:text-white">
             ברק שירותים
           </Link>
           <nav className="hidden items-center gap-6 md:flex">
             <Link
               href="/"
-              className="text-sm font-medium text-slate-600 hover:text-brand-600"
+              className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400"
             >
               ראשי
             </Link>
-            <span className="text-sm font-medium text-brand-600">בלוג</span>
+            <span className="text-sm font-medium text-brand-600 dark:text-brand-400">בלוג</span>
             <Link
               href="/outreach"
               className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
@@ -73,10 +73,10 @@ export default function BlogPage() {
       <main className="mx-auto max-w-6xl px-4 py-12">
         {/* Page header */}
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold text-brand-900 md:text-4xl">
+          <h1 className="text-3xl font-extrabold text-brand-900 dark:text-white md:text-4xl">
             מדריכים שחוסכים טעויות
           </h1>
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-slate-500 dark:text-slate-400">
             מה שהיינו רוצים שמישהו יספר לנו לפני שעברנו לאילת
           </p>
         </div>
@@ -85,20 +85,20 @@ export default function BlogPage() {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {BLOG_POSTS.map((post) => {
             const content = (
-              <div className="group rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+              <div className="group rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div className="flex items-center gap-2">
-                  <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-600">
+                  <span className="inline-block rounded-full bg-brand-50 dark:bg-slate-800 px-2.5 py-0.5 text-xs font-semibold text-brand-600 dark:text-brand-400">
                     {post.tag}
                   </span>
                   <span className="text-xs text-slate-400">{post.date}</span>
                 </div>
-                <h2 className="mt-3 text-lg font-bold text-brand-900 group-hover:text-brand-600 transition-colors">
+                <h2 className="mt-3 text-lg font-bold text-brand-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                   {post.title}
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
                   {post.excerpt}
                 </p>
-                <span className="mt-4 inline-block text-sm font-semibold text-brand-600">
+                <span className="mt-4 inline-block text-sm font-semibold text-brand-600 dark:text-brand-400">
                   {post.ready ? "קראו עוד ←" : "בקרוב"}
                 </span>
               </div>

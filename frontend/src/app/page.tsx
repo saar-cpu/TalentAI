@@ -211,10 +211,10 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-100 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
-        <a href="#" className="text-xl font-bold text-brand-900">
+        <a href="#" className="text-xl font-bold text-brand-900 dark:text-white">
           ברק שירותים
         </a>
 
@@ -224,22 +224,22 @@ function Header() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-brand-600"
+              className="text-sm font-medium text-slate-600 dark:text-slate-400 transition-colors hover:text-brand-600 dark:hover:text-brand-400"
             >
               {link.label}
             </a>
           ))}
           {/* Tools dropdown */}
           <div className="group relative">
-            <button className="text-sm font-medium text-slate-600 transition-colors hover:text-brand-600">
+            <button className="text-sm font-medium text-slate-600 dark:text-slate-400 transition-colors hover:text-brand-600 dark:hover:text-brand-400">
               כלים ▾
             </button>
-            <div className="invisible absolute start-0 top-full w-44 rounded-lg border border-slate-100 bg-white py-1 shadow-lg group-hover:visible">
+            <div className="invisible absolute start-0 top-full w-44 rounded-lg border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 py-1 shadow-lg group-hover:visible">
               {TOOL_LINKS.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="block px-4 py-2 text-sm text-slate-600 hover:bg-brand-50 hover:text-brand-600"
+                  className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-brand-50 dark:hover:bg-brand-900 hover:text-brand-600 dark:hover:text-brand-400"
                 >
                   {link.label}
                 </a>
@@ -252,7 +252,7 @@ function Header() {
         <div className="hidden items-center gap-3 md:flex">
           <a
             href={PHONE_URL}
-            className="text-sm font-medium text-slate-600 hover:text-brand-600"
+            className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400"
           >
             📞 {PHONE_NUMBER}
           </a>
@@ -278,24 +278,24 @@ function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-slate-100 bg-white px-4 pb-4 md:hidden">
+        <div className="border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 pb-4 md:hidden">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="block py-2 text-sm text-slate-700 hover:text-brand-600"
+              className="block py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400"
               onClick={() => setMobileMenuOpen(false)}
             >
               {link.label}
             </a>
           ))}
-          <div className="mt-2 border-t border-slate-100 pt-2">
+          <div className="mt-2 border-t border-slate-100 dark:border-slate-700 pt-2">
             <p className="pb-1 text-xs font-semibold text-slate-400">כלים</p>
             {TOOL_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="block py-2 text-sm text-slate-700 hover:text-brand-600"
+                className="block py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400"
               >
                 {link.label}
               </a>
@@ -304,7 +304,7 @@ function Header() {
           <div className="mt-3 flex gap-2">
             <a
               href={PHONE_URL}
-              className="flex-1 rounded-lg border border-slate-200 py-2 text-center text-sm font-medium text-slate-700"
+              className="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 py-2 text-center text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               📞 {PHONE_NUMBER}
             </a>
@@ -362,15 +362,15 @@ function HeroSection() {
 
 function TrustBar() {
   return (
-    <section className="bg-brand-50 px-4 py-10">
+    <section className="bg-brand-50 dark:bg-slate-800 px-4 py-10">
       <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 md:grid-cols-4">
         {TRUST_STATS.map((stat) => (
           <div key={stat.label} className="text-center">
             <span className="text-2xl">{stat.emoji}</span>
-            <p className="mt-1 text-3xl font-extrabold text-brand-900">
+            <p className="mt-1 text-3xl font-extrabold text-brand-900 dark:text-white">
               {stat.value}
             </p>
-            <p className="text-sm text-slate-600">{stat.label}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -390,10 +390,10 @@ function JobCategoryCard({
   hook: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+    <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-shadow hover:shadow-md">
       <span className="text-3xl">{emoji}</span>
-      <h3 className="mt-3 text-lg font-bold text-brand-900">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-slate-600">{hook}</p>
+      <h3 className="mt-3 text-lg font-bold text-brand-900 dark:text-white">{title}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{hook}</p>
       <p className="mt-2 text-xs text-slate-400">{roles.join(" · ")}</p>
     </div>
   );
@@ -403,10 +403,10 @@ function JobCategories() {
   return (
     <section id="jobs" className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-center text-3xl font-extrabold text-brand-900">
+        <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
           באיזה תחום תרצו לעבוד?
         </h2>
-        <p className="mt-2 text-center text-slate-500">
+        <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
           50+ מעסיקים פעילים. משרות פתוחות עכשיו. בחרו תחום — ונתאים לכם עבודה.
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -435,10 +435,10 @@ function BenefitCard({
   description: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
       <span className="text-3xl">{emoji}</span>
-      <h3 className="mt-3 text-lg font-bold text-brand-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-slate-500">
+      <h3 className="mt-3 text-lg font-bold text-brand-900 dark:text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
         {description}
       </p>
     </div>
@@ -447,12 +447,12 @@ function BenefitCard({
 
 function WhyBarak() {
   return (
-    <section id="about" className="bg-slate-50 px-4 py-16">
+    <section id="about" className="bg-slate-50 dark:bg-slate-800 px-4 py-16">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-center text-3xl font-extrabold text-brand-900">
+        <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
           לא רק עבודה — חבילה שלמה לחיים באילת
         </h2>
-        <p className="mt-2 text-center text-slate-500">
+        <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
           מה שמעסיקים אחרים מבטיחים, אנחנו מסדרים עוד לפני שמגיעים
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -482,13 +482,13 @@ function TestimonialCard({
   stars: number;
 }) {
   return (
-    <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
       <div className="mb-3 text-yellow-400">{"★".repeat(stars)}</div>
-      <p className="text-sm leading-relaxed text-slate-600">
+      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
         &ldquo;{quote}&rdquo;
       </p>
-      <div className="mt-4 border-t border-slate-100 pt-3">
-        <p className="font-bold text-brand-900">{name}</p>
+      <div className="mt-4 border-t border-slate-100 dark:border-slate-700 pt-3">
+        <p className="font-bold text-brand-900 dark:text-white">{name}</p>
         <p className="text-xs text-slate-400">{role}</p>
       </div>
     </div>
@@ -499,10 +499,10 @@ function Testimonials() {
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-center text-3xl font-extrabold text-brand-900">
+        <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
           הם הגיעו בלי לדעת אף אחד. תשמעו מה קרה.
         </h2>
-        <p className="mt-2 text-center text-slate-500">
+        <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
           עובדים אמיתיים, מספרים אמיתיים, בלי פילטרים
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -525,13 +525,13 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-slate-200">
+    <div className="border-b border-slate-200 dark:border-slate-700">
       <button
         className="flex w-full items-center justify-between py-4 text-right"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
       >
-        <span className="text-base font-semibold text-brand-900">
+        <span className="text-base font-semibold text-brand-900 dark:text-white">
           {question}
         </span>
         <span className="ms-4 shrink-0 text-xl text-slate-400">
@@ -539,7 +539,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         </span>
       </button>
       {open && (
-        <p className="pb-4 text-sm leading-relaxed text-slate-600">{answer}</p>
+        <p className="pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{answer}</p>
       )}
     </div>
   );
@@ -547,12 +547,12 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 
 function FaqSection() {
   return (
-    <section id="faq" className="bg-slate-50 px-4 py-16">
+    <section id="faq" className="bg-slate-50 dark:bg-slate-800 px-4 py-16">
       <div className="mx-auto max-w-3xl">
-        <h2 className="text-center text-3xl font-extrabold text-brand-900">
+        <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
           שאלות ששואלים כל יום (ותשובות כנות)
         </h2>
-        <p className="mt-2 text-center text-slate-500">
+        <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
           הכל שקוף — מחירים, תנאים ומה שבאמת חשוב לדעת לפני שמגיעים
         </p>
         <div className="mt-10">
@@ -581,11 +581,11 @@ function BlogPreviewCard({
   href?: string;
 }) {
   const card = (
-    <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+    <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-shadow hover:shadow-md">
       <p className="text-xs text-slate-400">{date}</p>
-      <h3 className="mt-2 text-lg font-bold text-brand-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-slate-500">{excerpt}</p>
-      <span className="mt-3 inline-block text-sm font-semibold text-brand-600">
+      <h3 className="mt-2 text-lg font-bold text-brand-900 dark:text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{excerpt}</p>
+      <span className="mt-3 inline-block text-sm font-semibold text-brand-600 dark:text-brand-400">
         קראו עוד ←
       </span>
     </div>
@@ -600,10 +600,10 @@ function BlogPreview() {
   return (
     <section id="blog" className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-center text-3xl font-extrabold text-brand-900">
+        <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
           מדריכים שחוסכים טעויות
         </h2>
-        <p className="mt-2 text-center text-slate-500">
+        <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
           מה שהיינו רוצים שמישהו יספר לנו לפני שעברנו לאילת
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -620,7 +620,7 @@ function BlogPreview() {
         <div className="mt-8 text-center">
           <a
             href="/blog"
-            className="text-sm font-semibold text-brand-600 hover:text-brand-700"
+            className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700"
           >
             כל המדריכים ←
           </a>
@@ -645,13 +645,13 @@ function QuickApplicationForm() {
 
   if (submitted) {
     return (
-      <section id="apply" className="bg-brand-50 px-4 py-16">
+      <section id="apply" className="bg-brand-50 dark:bg-slate-800 px-4 py-16">
         <div className="mx-auto max-w-lg text-center">
           <span className="text-5xl">✅</span>
-          <h2 className="mt-4 text-2xl font-extrabold text-brand-900">
+          <h2 className="mt-4 text-2xl font-extrabold text-brand-900 dark:text-white">
             קיבלנו — מחזירים תוך שעות
           </h2>
-          <p className="mt-2 text-slate-600">
+          <p className="mt-2 text-slate-600 dark:text-slate-400">
             הפרטים שלכם אצלנו. צוות הגיוס יתקשר בהקדם עם הצעות עבודה
             שמתאימות לכם. רוצים לזרז? דברו איתנו ישירות:
           </p>
@@ -669,12 +669,12 @@ function QuickApplicationForm() {
   }
 
   return (
-    <section id="apply" className="bg-brand-50 px-4 py-16">
+    <section id="apply" className="bg-brand-50 dark:bg-slate-800 px-4 py-16">
       <div className="mx-auto max-w-lg">
-        <h2 className="text-center text-3xl font-extrabold text-brand-900">
+        <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
           30 שניות — וההרפתקה מתחילה
         </h2>
-        <p className="mt-2 text-center text-slate-500">
+        <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
           השאירו שם, טלפון ותחום — ונחזור עם הצעת עבודה אישית תוך שעות
         </p>
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -686,7 +686,7 @@ function QuickApplicationForm() {
             onChange={(e) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
           <input
             type="tel"
@@ -696,7 +696,7 @@ function QuickApplicationForm() {
             onChange={(e) =>
               setFormData({ ...formData, phone: e.target.value })
             }
-            className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
           <select
             required
@@ -704,7 +704,7 @@ function QuickApplicationForm() {
             onChange={(e) =>
               setFormData({ ...formData, field: e.target.value })
             }
-            className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-500 dark:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           >
             <option value="">בחרו תחום עיסוק</option>
             <option value="hotels">מלונאות</option>

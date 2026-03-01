@@ -199,8 +199,8 @@ const EMPLOYER_TESTIMONIALS = [
 
 function CellValue({ value }: { value: boolean | string }) {
   if (value === true) return <span className="text-green-600 font-bold">✓</span>;
-  if (value === false) return <span className="text-slate-300">—</span>;
-  return <span className="text-sm text-slate-700">{value}</span>;
+  if (value === false) return <span className="text-slate-300 dark:text-slate-600">—</span>;
+  return <span className="text-sm text-slate-700 dark:text-slate-300">{value}</span>;
 }
 
 // ─── Page ────────────────────────────────────────────────────────────────────
@@ -209,9 +209,9 @@ export default function EmployersPage() {
   return (
     <>
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-slate-100 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="/" className="text-xl font-bold text-brand-900">
+          <a href="/" className="text-xl font-bold text-brand-900 dark:text-white">
             ברק שירותים
           </a>
           <nav className="hidden items-center gap-6 md:flex">
@@ -221,8 +221,8 @@ export default function EmployersPage() {
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
                   link.active
-                    ? "text-brand-600"
-                    : "text-slate-600 hover:text-brand-600"
+                    ? "text-brand-600 dark:text-brand-400"
+                    : "text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400"
                 }`}
               >
                 {link.label}
@@ -275,15 +275,15 @@ export default function EmployersPage() {
         </section>
 
         {/* ── Trust Bar ────────────────────────────────────────────── */}
-        <section className="bg-brand-50 px-4 py-10">
+        <section className="bg-brand-50 dark:bg-slate-800 px-4 py-10">
           <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 md:grid-cols-4">
             {TRUST_STATS.map((stat) => (
               <div key={stat.label} className="text-center">
                 <span className="text-2xl">{stat.icon}</span>
-                <p className="mt-1 text-3xl font-extrabold text-brand-900">
+                <p className="mt-1 text-3xl font-extrabold text-brand-900 dark:text-white">
                   {stat.value}
                 </p>
-                <p className="text-sm text-slate-600">{stat.label}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -292,23 +292,23 @@ export default function EmployersPage() {
         {/* ── Problem Section ──────────────────────────────────────── */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               עדיין מגייסים בשיטות של 2010?
             </h2>
-            <p className="mt-2 text-center text-slate-500">
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
               רוב המעסיקים באילת מבזבזים זמן וכסף על תהליכי גיוס שבורים
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {PAIN_POINTS.map((pain) => (
                 <div
                   key={pain.title}
-                  className="rounded-xl border border-red-100 bg-red-50/50 p-6 text-center"
+                  className="rounded-xl border border-red-100 dark:border-red-800 bg-red-50/50 dark:bg-red-950/50 p-6 text-center"
                 >
                   <span className="text-3xl">{pain.icon}</span>
-                  <h3 className="mt-3 text-lg font-bold text-slate-900">
+                  <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-slate-100">
                     {pain.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                     {pain.description}
                   </p>
                 </div>
@@ -318,12 +318,12 @@ export default function EmployersPage() {
         </section>
 
         {/* ── How AI Works ─────────────────────────────────────────── */}
-        <section className="bg-slate-50 px-4 py-16">
+        <section className="bg-slate-50 dark:bg-slate-800 px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               משיחה של 5 דקות — לעובד במשמרת
             </h2>
-            <p className="mt-2 text-center text-slate-500">
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
               3 צעדים. 48 שעות. אפס כאב ראש.
             </p>
             <div className="mt-10 grid gap-8 md:grid-cols-3">
@@ -333,12 +333,12 @@ export default function EmployersPage() {
                     {step.step}
                   </div>
                   {i < PROCESS_STEPS.length - 1 && (
-                    <div className="absolute start-1/2 top-7 hidden w-full border-t-2 border-dashed border-brand-200 md:block" />
+                    <div className="absolute start-1/2 top-7 hidden w-full border-t-2 border-dashed border-brand-200 dark:border-brand-800 md:block" />
                   )}
-                  <h3 className="mt-4 text-lg font-bold text-brand-900">
+                  <h3 className="mt-4 text-lg font-bold text-brand-900 dark:text-white">
                     {step.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                     {step.description}
                   </p>
                 </div>
@@ -350,23 +350,23 @@ export default function EmployersPage() {
         {/* ── AI Features ──────────────────────────────────────────── */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               מה ה-AI שלנו חוסך לכם?
             </h2>
-            <p className="mt-2 text-center text-slate-500">
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
               6 כלים שעובדים 24/7 — כדי שהצוות שלכם יתעסק בעבודה, לא בגיוס
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {AI_FEATURES.map((feat) => (
                 <div
                   key={feat.title}
-                  className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                  className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-shadow hover:shadow-md"
                 >
                   <span className="text-3xl">{feat.icon}</span>
-                  <h3 className="mt-3 text-lg font-bold text-brand-900">
+                  <h3 className="mt-3 text-lg font-bold text-brand-900 dark:text-white">
                     {feat.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
                     {feat.description}
                   </p>
                 </div>
@@ -376,16 +376,16 @@ export default function EmployersPage() {
         </section>
 
         {/* ── Pricing Tiers ────────────────────────────────────────── */}
-        <section id="pricing" className="bg-slate-50 px-4 py-16">
+        <section id="pricing" className="bg-slate-50 dark:bg-slate-800 px-4 py-16">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               משלמים רק על תוצאות
             </h2>
-            <p className="mt-2 text-center text-slate-500">
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
               בלי חוזים ארוכי טווח. לא מרוצים מההשמה? מחליפים בחינם.
             </p>
-            <div className="mx-auto mt-6 max-w-xl rounded-lg border border-brand-200 bg-brand-50 px-6 py-4 text-center">
-              <p className="text-sm font-medium text-brand-900">
+            <div className="mx-auto mt-6 max-w-xl rounded-lg border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-slate-800 px-6 py-4 text-center">
+              <p className="text-sm font-medium text-brand-900 dark:text-white">
                 💡 מעסיק ממוצע באילת מבזבז <strong>8,000-12,000 ₪</strong> על
                 פרסום מודעות, סינון קורות חיים וראיונות לכל משרה.
                 <br />
@@ -397,10 +397,10 @@ export default function EmployersPage() {
               {PRICING_TIERS.map((tier) => (
                 <div
                   key={tier.name}
-                  className={`rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md ${
+                  className={`rounded-2xl bg-white dark:bg-slate-900 p-8 shadow-sm transition-shadow hover:shadow-md ${
                     tier.highlighted
                       ? "relative border-2 border-brand-600 lg:scale-105"
-                      : "border border-slate-100"
+                      : "border border-slate-100 dark:border-slate-700"
                   }`}
                 >
                   {tier.highlighted && (
@@ -408,16 +408,16 @@ export default function EmployersPage() {
                       הכי פופולרי
                     </span>
                   )}
-                  <h3 className="text-xl font-bold text-brand-900">
+                  <h3 className="text-xl font-bold text-brand-900 dark:text-white">
                     {tier.name}
                   </h3>
-                  <p className="mt-1 text-sm text-slate-500">{tier.description}</p>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{tier.description}</p>
                   <div className="mt-4">
-                    <span className="text-4xl font-extrabold text-brand-900">
+                    <span className="text-4xl font-extrabold text-brand-900 dark:text-white">
                       {tier.price}
                     </span>
                     {tier.unit && (
-                      <span className="mr-1 text-sm text-slate-500">
+                      <span className="mr-1 text-sm text-slate-500 dark:text-slate-400">
                         {tier.unit}
                       </span>
                     )}
@@ -426,7 +426,7 @@ export default function EmployersPage() {
                     {tier.features.map((feat) => (
                       <li
                         key={feat}
-                        className="flex items-start gap-2 text-sm text-slate-700"
+                        className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300"
                       >
                         <span className="mt-0.5 text-green-500">✓</span>
                         {feat}
@@ -438,7 +438,7 @@ export default function EmployersPage() {
                     className={`mt-8 block rounded-lg py-3 text-center text-sm font-bold transition-colors ${
                       tier.highlighted
                         ? "bg-brand-600 text-white hover:bg-brand-700"
-                        : "border border-brand-600 text-brand-600 hover:bg-brand-50"
+                        : "border border-brand-600 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900"
                     }`}
                   >
                     {tier.cta}
@@ -452,23 +452,23 @@ export default function EmployersPage() {
         {/* ── Comparison Table ─────────────────────────────────────── */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               השוואת מסלולים
             </h2>
             <div className="mt-10 overflow-x-auto">
               <table className="w-full min-w-[500px] text-sm">
                 <thead>
-                  <tr className="border-b-2 border-slate-200">
-                    <th className="py-3 text-right font-bold text-brand-900">
+                  <tr className="border-b-2 border-slate-200 dark:border-slate-700">
+                    <th className="py-3 text-right font-bold text-brand-900 dark:text-white">
                       תכונה
                     </th>
-                    <th className="py-3 text-center font-bold text-brand-900">
+                    <th className="py-3 text-center font-bold text-brand-900 dark:text-white">
                       ארגוני
                     </th>
-                    <th className="py-3 text-center font-bold text-brand-600">
+                    <th className="py-3 text-center font-bold text-brand-600 dark:text-brand-400">
                       מקצועי
                     </th>
-                    <th className="py-3 text-center font-bold text-brand-900">
+                    <th className="py-3 text-center font-bold text-brand-900 dark:text-white">
                       בסיסי
                     </th>
                   </tr>
@@ -477,15 +477,15 @@ export default function EmployersPage() {
                   {COMPARISON_FEATURES.map((row) => (
                     <tr
                       key={row.feature}
-                      className="border-b border-slate-100"
+                      className="border-b border-slate-100 dark:border-slate-700"
                     >
-                      <td className="py-3 text-right text-slate-700">
+                      <td className="py-3 text-right text-slate-700 dark:text-slate-300">
                         {row.feature}
                       </td>
                       <td className="py-3 text-center">
                         <CellValue value={row.enterprise} />
                       </td>
-                      <td className="py-3 text-center bg-brand-50/50">
+                      <td className="py-3 text-center bg-brand-50/50 dark:bg-slate-800/50">
                         <CellValue value={row.pro} />
                       </td>
                       <td className="py-3 text-center">
@@ -500,31 +500,31 @@ export default function EmployersPage() {
         </section>
 
         {/* ── Employer Testimonials ────────────────────────────────── */}
-        <section className="bg-slate-50 px-4 py-16">
+        <section className="bg-slate-50 dark:bg-slate-800 px-4 py-16">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               למה 50+ מעסיקים באילת בחרו בנו?
             </h2>
-            <p className="mt-2 text-center text-slate-500">
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
               מלונות, חנויות וחברות אבטחה — כולם חסכו זמן, כסף ותחלופת עובדים
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {EMPLOYER_TESTIMONIALS.map((t) => (
                 <div
                   key={t.name}
-                  className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm"
+                  className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm"
                 >
-                  <span className="mb-3 inline-block rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
+                  <span className="mb-3 inline-block rounded-full bg-green-50 dark:bg-green-950 px-3 py-1 text-xs font-bold text-green-700">
                     {t.metric}
                   </span>
                   <div className="mb-3 text-yellow-400">
                     {"★".repeat(t.stars)}
                   </div>
-                  <p className="text-sm leading-relaxed text-slate-600">
+                  <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                     &ldquo;{t.quote}&rdquo;
                   </p>
-                  <div className="mt-4 border-t border-slate-100 pt-3">
-                    <p className="font-bold text-brand-900">{t.name}</p>
+                  <div className="mt-4 border-t border-slate-100 dark:border-slate-700 pt-3">
+                    <p className="font-bold text-brand-900 dark:text-white">{t.name}</p>
                     <p className="text-xs text-slate-400">{t.role}</p>
                   </div>
                 </div>
@@ -536,10 +536,10 @@ export default function EmployersPage() {
         {/* ── FAQ ──────────────────────────────────────────────────── */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-center text-3xl font-extrabold text-brand-900">
+            <h2 className="text-center text-3xl font-extrabold text-brand-900 dark:text-white">
               שאלות נפוצות למעסיקים
             </h2>
-            <p className="mt-2 text-center text-slate-500">
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">
               הכל שקוף — תהליך, מחירים ותנאים
             </p>
             <div className="mt-10">

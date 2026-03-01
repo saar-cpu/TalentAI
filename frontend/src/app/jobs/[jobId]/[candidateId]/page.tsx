@@ -40,23 +40,23 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-brand-50 to-white">
+    <main className="min-h-screen bg-gradient-to-br from-brand-50 to-white dark:from-slate-900 dark:to-slate-800">
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-6 pt-24 pb-12 text-center">
-        <p className="text-sm font-medium uppercase tracking-widest text-brand-600">
+        <p className="text-sm font-medium uppercase tracking-widest text-brand-600 dark:text-brand-400">
           Opportunity crafted for you
         </p>
-        <h1 className="mt-4 text-5xl font-extrabold tracking-tight text-brand-900">
+        <h1 className="mt-4 text-5xl font-extrabold tracking-tight text-brand-900 dark:text-white">
           {data.headline}
         </h1>
-        <p className="mt-6 text-xl leading-relaxed text-slate-600">
+        <p className="mt-6 text-xl leading-relaxed text-slate-600 dark:text-slate-400">
           {data.subheadline}
         </p>
       </section>
 
       {/* Why You Fit */}
       <section className="mx-auto max-w-3xl px-6 py-12">
-        <h2 className="text-2xl font-bold text-brand-900">
+        <h2 className="text-2xl font-bold text-brand-900 dark:text-white">
           Why You&apos;re a Great Fit
         </h2>
         <ul className="mt-6 space-y-4">
@@ -65,7 +65,7 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
               <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
                 {i + 1}
               </span>
-              <span className="text-slate-700">{point}</span>
+              <span className="text-slate-700 dark:text-slate-300">{point}</span>
             </li>
           ))}
         </ul>
@@ -73,16 +73,16 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
 
       {/* Personalized Benefits */}
       <section className="mx-auto max-w-3xl px-6 py-12">
-        <h2 className="text-2xl font-bold text-brand-900">
+        <h2 className="text-2xl font-bold text-brand-900 dark:text-white">
           What&apos;s In It For You
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-1">
           {(data.personalizedBenefits ?? []).map((benefit, i) => (
             <div
               key={i}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm"
             >
-              <p className="text-slate-700">{benefit}</p>
+              <p className="text-slate-700 dark:text-slate-300">{benefit}</p>
             </div>
           ))}
         </div>
