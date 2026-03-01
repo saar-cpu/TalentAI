@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { label: "ראשי", href: "#" },
   { label: "משרות", href: "#jobs" },
   { label: "אודות", href: "#about" },
-  { label: "בלוג", href: "#blog" },
+  { label: "בלוג", href: "/blog" },
 ];
 
 const TOOL_LINKS = [
@@ -572,12 +572,14 @@ function BlogPreviewCard({
   title,
   excerpt,
   date,
+  href,
 }: {
   title: string;
   excerpt: string;
   date: string;
+  href?: string;
 }) {
-  return (
+  const card = (
     <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       <p className="text-xs text-gray-400">{date}</p>
       <h3 className="mt-2 text-lg font-bold text-brand-900">{title}</h3>
@@ -587,6 +589,10 @@ function BlogPreviewCard({
       </span>
     </div>
   );
+  if (href) {
+    return <a href={href}>{card}</a>;
+  }
+  return card;
 }
 
 function BlogPreview() {
@@ -606,8 +612,17 @@ function BlogPreview() {
               title={post.title}
               excerpt={post.excerpt}
               date={post.date}
+              href={post.slug === "guide-moving-to-eilat" ? `/blog/${post.slug}` : undefined}
             />
           ))}
+        </div>
+        <div className="mt-8 text-center">
+          <a
+            href="/blog"
+            className="text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            כל המדריכים ←
+          </a>
         </div>
       </div>
     </section>
@@ -767,7 +782,7 @@ function Footer() {
               </a>
             </li>
             <li>
-              <a href="#blog" className="hover:text-white">
+              <a href="/blog" className="hover:text-white">
                 בלוג
               </a>
             </li>
