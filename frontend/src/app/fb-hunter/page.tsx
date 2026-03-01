@@ -47,25 +47,25 @@ export default function FbHunterPage() {
   return (
     <main dir="rtl" className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4 text-center">
+      <div className="border-b border-slate-200 bg-white px-4 py-4 text-center">
         <a href="/" className="text-sm text-brand-600 hover:underline">
           &rarr; חזרה לדף הראשי
         </a>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900">
           Facebook Hunter Agent
         </h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-slate-600">
           ניתוח פוסטים מפייסבוק ויצירת תגובות אותנטיות לגיוס מועמדים
         </p>
       </div>
 
       {/* Input area */}
-      <div className="border-b border-gray-100 bg-white px-4 py-5">
+      <div className="border-b border-slate-100 bg-white px-4 py-5">
         <div className="mx-auto max-w-2xl">
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">טקסט הפוסט מפייסבוק</span>
+            <span className="text-sm font-medium text-slate-700">טקסט הפוסט מפייסבוק</span>
             <textarea
-              className="mt-2 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm leading-relaxed focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+              className="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3 text-sm leading-relaxed focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
               rows={4}
               placeholder="הדבק/י כאן את טקסט הפוסט מפייסבוק..."
               value={postText}
@@ -78,13 +78,12 @@ export default function FbHunterPage() {
             <button
               onClick={handleAnalyze}
               disabled={!postText.trim() || loading}
-              className="rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading && <Spinner />}
               {loading ? "מנתח..." : "נתח פוסט"}
             </button>
 
-            <span className="text-xs text-gray-400">או נסה דוגמה:</span>
+            <span className="text-xs text-slate-400">או נסה דוגמה:</span>
           </div>
 
           {/* Example posts */}
@@ -94,7 +93,7 @@ export default function FbHunterPage() {
                 key={i}
                 onClick={() => loadExample(ex)}
                 disabled={loading}
-                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors disabled:opacity-50 max-w-[200px] truncate"
+                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 hover:border-slate-300 transition-colors disabled:opacity-50 max-w-[200px] truncate"
               >
                 {ex.slice(0, 40)}…
               </button>
@@ -113,8 +112,29 @@ export default function FbHunterPage() {
       {/* Results */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="mx-auto max-w-2xl space-y-4">
+          {loading && (
+            <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <div className="border-b border-slate-100 bg-slate-50 px-4 py-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-8 w-8 animate-pulse rounded-full bg-slate-200" />
+                  <div className="h-3 w-24 animate-pulse rounded bg-slate-200" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
+                  <div className="h-3 w-3/4 animate-pulse rounded bg-slate-200" />
+                </div>
+              </div>
+              <div className="px-4 py-3 space-y-2">
+                <div className="h-5 w-16 animate-pulse rounded-full bg-slate-200" />
+                <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
+                <div className="h-3 w-5/6 animate-pulse rounded bg-slate-200" />
+                <div className="h-3 w-2/3 animate-pulse rounded bg-slate-200" />
+              </div>
+            </div>
+          )}
+
           {results.length === 0 && !loading && (
-            <p className="text-center text-sm text-gray-400 py-12">
+            <p className="text-center text-sm text-slate-400 py-12">
               הדבק/י פוסט מפייסבוק כדי לקבל תגובה מותאמת לגיוס
             </p>
           )}
@@ -122,17 +142,17 @@ export default function FbHunterPage() {
           {results.map((result, i) => (
             <div
               key={i}
-              className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden"
+              className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden"
             >
               {/* Original post */}
-              <div className="border-b border-gray-100 bg-gray-50 px-4 py-3">
+              <div className="border-b border-slate-100 bg-slate-50 px-4 py-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">
+                  <div className="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-bold">
                     f
                   </div>
-                  <span className="text-xs font-medium text-gray-500">פוסט מפייסבוק</span>
+                  <span className="text-xs font-medium text-slate-500">פוסט מפייסבוק</span>
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">{result.postText}</p>
+                <p className="text-sm text-slate-700 leading-relaxed">{result.postText}</p>
               </div>
 
               {/* Analysis result */}
@@ -146,7 +166,7 @@ export default function FbHunterPage() {
                     </div>
                     <div className="rounded-lg bg-brand-50 border border-brand-100 px-4 py-3">
                       <p className="text-xs font-medium text-brand-600 mb-1">תגובה מוצעת:</p>
-                      <p className="text-sm text-gray-800 leading-relaxed">{result.response}</p>
+                      <p className="text-sm text-slate-800 leading-relaxed">{result.response}</p>
                     </div>
                     <button
                       onClick={() => navigator.clipboard.writeText(result.response)}
@@ -157,10 +177,10 @@ export default function FbHunterPage() {
                   </>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500">
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
                       לא רלוונטי
                     </span>
-                    <span className="text-xs text-gray-400">הפוסט לא קשור לגיוס עובדים</span>
+                    <span className="text-xs text-slate-400">הפוסט לא קשור לגיוס עובדים</span>
                   </div>
                 )}
               </div>

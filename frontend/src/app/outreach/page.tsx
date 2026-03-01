@@ -28,27 +28,27 @@ export default function OutreachPage() {
   return (
     <main dir="rtl" className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4 text-center">
+      <div className="border-b border-slate-200 bg-white px-4 py-4 text-center">
         <a href="/" className="text-sm text-brand-600 hover:underline">
           &rarr; חזרה לדף הראשי
         </a>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900">
           {mode === "quick" ? "הגשה מהירה" : "צ׳אט סינון מועמדים"}
         </h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-slate-600">
           {mode === "quick"
             ? "מלא/י פרטים ונמצא לך עבודה באילת תוך שניות"
             : "סינון מועמדים בסגנון WhatsApp מבוסס AI"}
         </p>
 
         {/* Mode toggle */}
-        <div className="mt-3 inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5">
+        <div className="mt-3 inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
           <button
             onClick={() => setMode("quick")}
             className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
               mode === "quick"
                 ? "bg-white text-brand-700 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                : "text-slate-500 hover:text-slate-700"
             }`}
           >
             הגשה מהירה
@@ -58,7 +58,7 @@ export default function OutreachPage() {
             className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
               mode === "chat"
                 ? "bg-white text-brand-700 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                : "text-slate-500 hover:text-slate-700"
             }`}
           >
             צ׳אט עם מגייס/ת
@@ -128,8 +128,8 @@ function QuickApplyForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">הפרטים התקבלו!</h2>
-              <p className="mt-2 text-sm text-gray-600">{result.message}</p>
+              <h2 className="text-2xl font-bold text-slate-900">הפרטים התקבלו!</h2>
+              <p className="mt-2 text-sm text-slate-600">{result.message}</p>
             </>
           ) : (
             <>
@@ -138,27 +138,27 @@ function QuickApplyForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">תודה על ההתעניינות</h2>
-              <p className="mt-2 text-sm text-gray-600">{result.message}</p>
+              <h2 className="text-2xl font-bold text-slate-900">תודה על ההתעניינות</h2>
+              <p className="mt-2 text-sm text-slate-600">{result.message}</p>
             </>
           )}
 
           {/* Matched job cards */}
           {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
             <div className="mt-6">
-              <p className="mb-3 text-xs font-medium text-gray-500">משרות מתאימות שנמצאו</p>
+              <p className="mb-3 text-xs font-medium text-slate-500">משרות מתאימות שנמצאו</p>
               <div className="grid gap-2 sm:grid-cols-3">
                 {result.matchedJobs.map((job) => (
                   <div
                     key={job.id}
                     className="rounded-xl border border-green-200 bg-white p-3 text-right shadow-sm"
                   >
-                    <p className="text-sm font-semibold text-gray-900">{job.title}</p>
-                    <p className="mt-0.5 text-xs text-gray-500">{job.employer}</p>
+                    <p className="text-sm font-semibold text-slate-900">{job.title}</p>
+                    <p className="mt-0.5 text-xs text-slate-500">{job.employer}</p>
                     <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
                     {job.match_score != null && (
                       <div className="mt-2 flex items-center gap-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-gray-200">
+                        <div className="h-1.5 flex-1 rounded-full bg-slate-200">
                           <div
                             className={`h-1.5 rounded-full ${
                               job.match_score >= 80 ? "bg-green-500" :
@@ -167,7 +167,7 @@ function QuickApplyForm() {
                             style={{ width: `${job.match_score}%` }}
                           />
                         </div>
-                        <span className="text-xs font-bold text-gray-700">{job.match_score}%</span>
+                        <span className="text-xs font-bold text-slate-700">{job.match_score}%</span>
                       </div>
                     )}
                   </div>
@@ -185,11 +185,11 @@ function QuickApplyForm() {
       <div className="mx-auto w-full max-w-md">
         {/* Progress bar */}
         <div className="mb-6">
-          <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">
+          <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
             <span>{filledSteps} מתוך {totalSteps} שלבים</span>
             <span>{Math.round((filledSteps / totalSteps) * 100)}%</span>
           </div>
-          <div className="h-2 rounded-full bg-gray-200">
+          <div className="h-2 rounded-full bg-slate-200">
             <div
               className="h-2 rounded-full bg-brand-500 transition-all duration-300"
               style={{ width: `${(filledSteps / totalSteps) * 100}%` }}
@@ -201,22 +201,22 @@ function QuickApplyForm() {
           {/* Name + Phone */}
           <div className="grid grid-cols-2 gap-3">
             <label>
-              <span className="text-sm font-medium text-gray-700">שם מלא *</span>
+              <span className="text-sm font-medium text-slate-700">שם מלא *</span>
               <input
                 type="text"
                 required
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="ישראל ישראלי"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-gray-700">טלפון *</span>
+              <span className="text-sm font-medium text-slate-700">טלפון *</span>
               <input
                 type="tel"
                 required
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="050-1234567"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -226,7 +226,7 @@ function QuickApplyForm() {
 
           {/* Relocate */}
           <fieldset>
-            <legend className="text-sm font-medium text-gray-700">מוכן/ה לעבור לאילת? *</legend>
+            <legend className="text-sm font-medium text-slate-700">מוכן/ה לעבור לאילת? *</legend>
             <div className="mt-2 flex gap-3">
               <button
                 type="button"
@@ -234,7 +234,7 @@ function QuickApplyForm() {
                 className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                   relocate === true
                     ? "border-brand-500 bg-brand-50 text-brand-700"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                 }`}
               >
                 כן, בהחלט
@@ -245,7 +245,7 @@ function QuickApplyForm() {
                 className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                   relocate === false
                     ? "border-red-300 bg-red-50 text-red-700"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                 }`}
               >
                 לא כרגע
@@ -256,7 +256,7 @@ function QuickApplyForm() {
           {/* Housing — only show if relocate=true */}
           {relocate === true && (
             <fieldset>
-              <legend className="text-sm font-medium text-gray-700">צריך/ה מגורים מסובסדים? *</legend>
+              <legend className="text-sm font-medium text-slate-700">צריך/ה מגורים מסובסדים? *</legend>
               <div className="mt-2 flex gap-2">
                 {[
                   { value: "need", label: "כן, צריך/ה" },
@@ -270,7 +270,7 @@ function QuickApplyForm() {
                     className={`flex-1 rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
                       housing === opt.value
                         ? "border-brand-500 bg-brand-50 text-brand-700"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                     }`}
                   >
                     {opt.label}
@@ -282,12 +282,12 @@ function QuickApplyForm() {
 
           {/* Field of interest */}
           <label>
-            <span className="text-sm font-medium text-gray-700">תחום עבודה מועדף *</span>
+            <span className="text-sm font-medium text-slate-700">תחום עבודה מועדף *</span>
             <select
               required
               value={field}
               onChange={(e) => setField(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white"
+              className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white"
             >
               <option value="">בחר/י תחום...</option>
               {FIELD_OPTIONS.map((opt) => (
@@ -300,19 +300,19 @@ function QuickApplyForm() {
 
           {/* CV / Skills (optional) */}
           <label>
-            <span className="text-sm font-medium text-gray-700">כישורים וניסיון <span className="text-gray-400 font-normal">(לא חובה)</span></span>
+            <span className="text-sm font-medium text-slate-700">כישורים וניסיון <span className="text-slate-400 font-normal">(לא חובה)</span></span>
             <textarea
               rows={3}
               value={cvText}
               onChange={(e) => setCvText(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               placeholder="ספר/י בקצרה על ניסיון עבודה, כישורים, שפות..."
             />
           </label>
 
           {/* Start date */}
           <fieldset>
-            <legend className="text-sm font-medium text-gray-700">מתי יכול/ה להגיע? *</legend>
+            <legend className="text-sm font-medium text-slate-700">מתי יכול/ה להגיע? *</legend>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {START_OPTIONS.map((opt) => (
                 <button
@@ -322,7 +322,7 @@ function QuickApplyForm() {
                   className={`rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
                     startDate === opt.value
                       ? "border-brand-500 bg-brand-50 text-brand-700"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                   }`}
                 >
                   {opt.label}
@@ -354,7 +354,7 @@ function QuickApplyForm() {
           </button>
 
           {/* Benefits reminder */}
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-gray-400">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
             <span>מגורים מסובסדים</span>
             <span>ארוחות</span>
             <span>הסעות בחינם</span>
@@ -424,7 +424,7 @@ function ChatMode() {
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="mx-auto max-w-2xl space-y-3">
           {messages.length === 0 && (
-            <p className="text-center text-sm text-gray-400 py-12">
+            <p className="text-center text-sm text-slate-400 py-12">
               שלח/י הודעה כדי להתחיל את השיחה
             </p>
           )}
@@ -437,7 +437,7 @@ function ChatMode() {
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"
                     ? "bg-green-500 text-white rounded-bl-md"
-                    : "bg-gray-100 text-gray-800 rounded-br-md"
+                    : "bg-slate-100 text-slate-800 rounded-br-md"
                 }`}
               >
                 {msg.content}
@@ -446,8 +446,10 @@ function ChatMode() {
           ))}
           {loading && (
             <div className="flex justify-end">
-              <div className="rounded-2xl rounded-br-md bg-gray-100 px-4 py-2.5 text-sm text-gray-400 flex items-center gap-2">
-                <Spinner /> מקליד/ה…
+              <div className="w-[60%] space-y-2 rounded-2xl rounded-br-md bg-slate-100 px-4 py-3">
+                <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
+                <div className="h-3 w-4/5 animate-pulse rounded bg-slate-200" />
+                <div className="h-3 w-2/3 animate-pulse rounded bg-slate-200" />
               </div>
             </div>
           )}
@@ -474,19 +476,19 @@ function ChatMode() {
       {screeningComplete && candidateFit === "good_fit" && matchedJobs && matchedJobs.length > 0 && (
         <div className="border-t border-green-100 bg-green-50/50 px-4 py-4">
           <div className="mx-auto max-w-2xl">
-            <p className="mb-3 text-center text-xs font-medium text-gray-500">משרות מתאימות שנמצאו</p>
+            <p className="mb-3 text-center text-xs font-medium text-slate-500">משרות מתאימות שנמצאו</p>
             <div className="grid gap-2 sm:grid-cols-3">
               {matchedJobs.map((job) => (
                 <div
                   key={job.id}
                   className="rounded-xl border border-green-200 bg-white p-3 text-right shadow-sm"
                 >
-                  <p className="text-sm font-semibold text-gray-900">{job.title}</p>
-                  <p className="mt-0.5 text-xs text-gray-500">{job.employer}</p>
+                  <p className="text-sm font-semibold text-slate-900">{job.title}</p>
+                  <p className="mt-0.5 text-xs text-slate-500">{job.employer}</p>
                   <p className="mt-1 text-xs font-medium text-brand-600">{job.salary_range}</p>
                   {job.match_score != null && (
                     <div className="mt-2 flex items-center gap-1.5">
-                      <div className="h-1.5 flex-1 rounded-full bg-gray-200">
+                      <div className="h-1.5 flex-1 rounded-full bg-slate-200">
                         <div
                           className={`h-1.5 rounded-full ${
                             job.match_score >= 80 ? "bg-green-500" :
@@ -495,7 +497,7 @@ function ChatMode() {
                           style={{ width: `${job.match_score}%` }}
                         />
                       </div>
-                      <span className="text-xs font-bold text-gray-700">{job.match_score}%</span>
+                      <span className="text-xs font-bold text-slate-700">{job.match_score}%</span>
                     </div>
                   )}
                 </div>
@@ -513,7 +515,7 @@ function ChatMode() {
       )}
 
       {/* Input bar */}
-      <div className="border-t border-gray-200 bg-white px-4 py-3">
+      <div className="border-t border-slate-200 bg-white px-4 py-3">
         <form
           className="mx-auto flex max-w-2xl gap-2"
           onSubmit={(e) => {
@@ -523,7 +525,7 @@ function ChatMode() {
         >
           <input
             type="text"
-            className="flex-1 rounded-full border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+            className="flex-1 rounded-full border border-slate-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
             placeholder={screeningComplete ? "הסינון הושלם" : "כתוב/י הודעה…"}
             value={input}
             onChange={(e) => setInput(e.target.value)}

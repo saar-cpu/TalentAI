@@ -5,11 +5,11 @@ import type { Lead } from "@/types";
 import { fetchLeads } from "@/lib/api";
 
 const STATUS_COLORS: Record<string, string> = {
-  "חדש": "bg-blue-100 text-blue-700",
+  "חדש": "bg-indigo-100 text-indigo-700",
   "מעקב": "bg-yellow-100 text-yellow-700",
-  "New Lead": "bg-blue-100 text-blue-700",
+  "New Lead": "bg-indigo-100 text-indigo-700",
   "active": "bg-green-100 text-green-700",
-  "closed": "bg-gray-100 text-gray-500",
+  "closed": "bg-slate-100 text-slate-500",
 };
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -73,9 +73,9 @@ export default function DashboardPage() {
   };
 
   return (
-    <main dir="rtl" className="min-h-screen bg-gray-50">
+    <main dir="rtl" className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4">
+      <div className="border-b border-slate-200 bg-white px-4 py-4">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center justify-between">
             <div>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
             <button
               onClick={loadLeads}
               disabled={loading}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
             >
               {loading ? "טוען..." : "רענן"}
             </button>
@@ -99,7 +99,7 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-6xl px-4 py-4">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatCard label="סה״כ לידים" value={stats.total} color="bg-brand-600" />
-          <StatCard label="לידים חדשים" value={stats.new} color="bg-blue-500" />
+          <StatCard label="לידים חדשים" value={stats.new} color="bg-indigo-500" />
           <StatCard label="פעילים" value={stats.active} color="bg-green-500" />
           <StatCard label="מ-WhatsApp" value={stats.whatsapp} color="bg-emerald-500" />
         </div>
@@ -111,12 +111,12 @@ export default function DashboardPage() {
           <input
             type="text"
             placeholder="חיפוש לפי שם, טלפון, תפקיד..."
-            className="flex-1 min-w-[200px] rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="flex-1 min-w-[200px] rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -139,30 +139,38 @@ export default function DashboardPage() {
 
       {/* Table */}
       <div className="mx-auto max-w-6xl px-4 pb-8">
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">שם</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">טלפון</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">תפקיד</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">מיקום</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">מקור</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">סטטוס</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">תאריך</th>
+                <tr className="border-b border-slate-100 bg-slate-50">
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">שם</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">טלפון</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">תפקיד</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">מיקום</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">מקור</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">סטטוס</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-600">תאריך</th>
                 </tr>
               </thead>
               <tbody>
                 {loading && !leads.length ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
-                      טוען לידים...
-                    </td>
-                  </tr>
+                  <>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <tr key={i} className="border-b border-slate-50">
+                        <td className="px-4 py-3"><div className="h-4 w-24 animate-pulse rounded bg-slate-200" /></td>
+                        <td className="px-4 py-3"><div className="h-4 w-28 animate-pulse rounded bg-slate-200" /></td>
+                        <td className="px-4 py-3"><div className="h-4 w-20 animate-pulse rounded bg-slate-200" /></td>
+                        <td className="px-4 py-3"><div className="h-4 w-16 animate-pulse rounded bg-slate-200" /></td>
+                        <td className="px-4 py-3"><div className="h-4 w-20 animate-pulse rounded bg-slate-200" /></td>
+                        <td className="px-4 py-3"><div className="h-5 w-14 animate-pulse rounded-full bg-slate-200" /></td>
+                        <td className="px-4 py-3"><div className="h-4 w-24 animate-pulse rounded bg-slate-200" /></td>
+                      </tr>
+                    ))}
+                  </>
                 ) : filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
+                    <td colSpan={7} className="px-4 py-12 text-center text-slate-400">
                       {searchQuery ? "לא נמצאו תוצאות" : "אין לידים עדיין"}
                     </td>
                   </tr>
@@ -170,29 +178,29 @@ export default function DashboardPage() {
                   filtered.map((lead) => (
                     <tr
                       key={lead.id}
-                      className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                      className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
                     >
-                      <td className="px-4 py-3 font-medium text-gray-900">{lead.name}</td>
-                      <td className="px-4 py-3 text-gray-600 direction-ltr" dir="ltr">
+                      <td className="px-4 py-3 font-medium text-slate-900">{lead.name}</td>
+                      <td className="px-4 py-3 text-slate-600 direction-ltr" dir="ltr">
                         {lead.phone}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{lead.jobTitle || "—"}</td>
-                      <td className="px-4 py-3 text-gray-600">{lead.location || "—"}</td>
+                      <td className="px-4 py-3 text-slate-600">{lead.jobTitle || "—"}</td>
+                      <td className="px-4 py-3 text-slate-600">{lead.location || "—"}</td>
                       <td className="px-4 py-3">
-                        <span className="text-gray-500 text-xs">
+                        <span className="text-slate-500 text-xs">
                           {SOURCE_LABELS[lead.source ?? ""] || lead.source || "—"}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         <span
                           className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                            STATUS_COLORS[lead.status ?? ""] || "bg-gray-100 text-gray-600"
+                            STATUS_COLORS[lead.status ?? ""] || "bg-slate-100 text-slate-600"
                           }`}
                         >
                           {lead.status || "—"}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
+                      <td className="px-4 py-3 text-slate-500 text-xs whitespace-nowrap">
                         {formatDate(lead.createdAt)}
                       </td>
                     </tr>
@@ -204,7 +212,7 @@ export default function DashboardPage() {
 
           {/* Footer */}
           {filtered.length > 0 && (
-            <div className="border-t border-gray-100 bg-gray-50 px-4 py-2 text-xs text-gray-500">
+            <div className="border-t border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-500">
               מציג {filtered.length} מתוך {leads.length} לידים
             </div>
           )}
@@ -224,11 +232,11 @@ function StatCard({
   color: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${color} text-white text-sm font-bold`}>
         {value}
       </div>
-      <p className="mt-2 text-sm font-medium text-gray-600">{label}</p>
+      <p className="mt-2 text-sm font-medium text-slate-600">{label}</p>
     </div>
   );
 }

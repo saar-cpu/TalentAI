@@ -49,7 +49,7 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
         <h1 className="mt-4 text-5xl font-extrabold tracking-tight text-brand-900">
           {data.headline}
         </h1>
-        <p className="mt-6 text-xl leading-relaxed text-gray-600">
+        <p className="mt-6 text-xl leading-relaxed text-slate-600">
           {data.subheadline}
         </p>
       </section>
@@ -65,7 +65,7 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
               <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
                 {i + 1}
               </span>
-              <span className="text-gray-700">{point}</span>
+              <span className="text-slate-700">{point}</span>
             </li>
           ))}
         </ul>
@@ -80,9 +80,9 @@ export default async function PersonalizedLandingPage({ params }: PageProps) {
           {(data.personalizedBenefits ?? []).map((benefit, i) => (
             <div
               key={i}
-              className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
             >
-              <p className="text-gray-700">{benefit}</p>
+              <p className="text-slate-700">{benefit}</p>
             </div>
           ))}
         </div>

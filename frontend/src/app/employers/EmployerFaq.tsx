@@ -46,7 +46,7 @@ export default function EmployerFaq() {
   return (
     <div>
       {FAQ_ITEMS.map((item, i) => (
-        <div key={i} className="border-b border-gray-200">
+        <div key={i} className="border-b border-slate-200">
           <button
             className="flex w-full items-center justify-between py-4 text-right"
             onClick={() => setOpenIndex(openIndex === i ? null : i)}
@@ -55,12 +55,12 @@ export default function EmployerFaq() {
             <span className="text-base font-semibold text-brand-900">
               {item.question}
             </span>
-            <span className="ms-4 shrink-0 text-xl text-gray-400">
+            <span className="ms-4 shrink-0 text-xl text-slate-400">
               {openIndex === i ? "−" : "+"}
             </span>
           </button>
           {openIndex === i && (
-            <p className="pb-4 text-sm leading-relaxed text-gray-600">
+            <p className="pb-4 text-sm leading-relaxed text-slate-600">
               {item.answer}
             </p>
           )}

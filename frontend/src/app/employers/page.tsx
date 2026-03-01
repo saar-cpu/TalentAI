@@ -199,8 +199,8 @@ const EMPLOYER_TESTIMONIALS = [
 
 function CellValue({ value }: { value: boolean | string }) {
   if (value === true) return <span className="text-green-600 font-bold">✓</span>;
-  if (value === false) return <span className="text-gray-300">—</span>;
-  return <span className="text-sm text-gray-700">{value}</span>;
+  if (value === false) return <span className="text-slate-300">—</span>;
+  return <span className="text-sm text-slate-700">{value}</span>;
 }
 
 // ─── Page ────────────────────────────────────────────────────────────────────
@@ -209,7 +209,7 @@ export default function EmployersPage() {
   return (
     <>
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <a href="/" className="text-xl font-bold text-brand-900">
             ברק שירותים
@@ -222,7 +222,7 @@ export default function EmployersPage() {
                 className={`text-sm font-medium transition-colors ${
                   link.active
                     ? "text-brand-600"
-                    : "text-gray-600 hover:text-brand-600"
+                    : "text-slate-600 hover:text-brand-600"
                 }`}
               >
                 {link.label}
@@ -250,7 +250,7 @@ export default function EmployersPage() {
               <br className="hidden md:block" />
               — בלי לסנן אלפי קורות חיים
             </h1>
-            <p className="mt-4 text-lg text-blue-100 md:text-xl">
+            <p className="mt-4 text-lg text-indigo-100 md:text-xl">
               ה-AI שלנו מסנן, מתאים ומדרג מועמדים — ואנחנו מסדרים להם דירה,
               ארוחות והסעות. אתם מקבלים עובדים מוכנים למשמרת, לא ערימת קורות חיים.
             </p>
@@ -268,7 +268,7 @@ export default function EmployersPage() {
                 ראו מסלולים ומחירים
               </a>
             </div>
-            <p className="mt-4 text-sm text-blue-200">
+            <p className="mt-4 text-sm text-indigo-200">
               ללא התחייבות. משלמים רק על השמה מוצלחת.
             </p>
           </div>
@@ -283,7 +283,7 @@ export default function EmployersPage() {
                 <p className="mt-1 text-3xl font-extrabold text-brand-900">
                   {stat.value}
                 </p>
-                <p className="text-sm text-gray-600">{stat.label}</p>
+                <p className="text-sm text-slate-600">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -295,7 +295,7 @@ export default function EmployersPage() {
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
               עדיין מגייסים בשיטות של 2010?
             </h2>
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-2 text-center text-slate-500">
               רוב המעסיקים באילת מבזבזים זמן וכסף על תהליכי גיוס שבורים
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -305,10 +305,10 @@ export default function EmployersPage() {
                   className="rounded-xl border border-red-100 bg-red-50/50 p-6 text-center"
                 >
                   <span className="text-3xl">{pain.icon}</span>
-                  <h3 className="mt-3 text-lg font-bold text-gray-900">
+                  <h3 className="mt-3 text-lg font-bold text-slate-900">
                     {pain.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {pain.description}
                   </p>
                 </div>
@@ -318,12 +318,12 @@ export default function EmployersPage() {
         </section>
 
         {/* ── How AI Works ─────────────────────────────────────────── */}
-        <section className="bg-gray-50 px-4 py-16">
+        <section className="bg-slate-50 px-4 py-16">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
               משיחה של 5 דקות — לעובד במשמרת
             </h2>
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-2 text-center text-slate-500">
               3 צעדים. 48 שעות. אפס כאב ראש.
             </p>
             <div className="mt-10 grid gap-8 md:grid-cols-3">
@@ -338,7 +338,7 @@ export default function EmployersPage() {
                   <h3 className="mt-4 text-lg font-bold text-brand-900">
                     {step.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {step.description}
                   </p>
                 </div>
@@ -353,20 +353,20 @@ export default function EmployersPage() {
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
               מה ה-AI שלנו חוסך לכם?
             </h2>
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-2 text-center text-slate-500">
               6 כלים שעובדים 24/7 — כדי שהצוות שלכם יתעסק בעבודה, לא בגיוס
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {AI_FEATURES.map((feat) => (
                 <div
                   key={feat.title}
-                  className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                  className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
                 >
                   <span className="text-3xl">{feat.icon}</span>
                   <h3 className="mt-3 text-lg font-bold text-brand-900">
                     {feat.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-500">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500">
                     {feat.description}
                   </p>
                 </div>
@@ -376,12 +376,12 @@ export default function EmployersPage() {
         </section>
 
         {/* ── Pricing Tiers ────────────────────────────────────────── */}
-        <section id="pricing" className="bg-gray-50 px-4 py-16">
+        <section id="pricing" className="bg-slate-50 px-4 py-16">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
               משלמים רק על תוצאות
             </h2>
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-2 text-center text-slate-500">
               בלי חוזים ארוכי טווח. לא מרוצים מההשמה? מחליפים בחינם.
             </p>
             <div className="mx-auto mt-6 max-w-xl rounded-lg border border-brand-200 bg-brand-50 px-6 py-4 text-center">
@@ -400,7 +400,7 @@ export default function EmployersPage() {
                   className={`rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md ${
                     tier.highlighted
                       ? "relative border-2 border-brand-600 lg:scale-105"
-                      : "border border-gray-100"
+                      : "border border-slate-100"
                   }`}
                 >
                   {tier.highlighted && (
@@ -411,13 +411,13 @@ export default function EmployersPage() {
                   <h3 className="text-xl font-bold text-brand-900">
                     {tier.name}
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">{tier.description}</p>
+                  <p className="mt-1 text-sm text-slate-500">{tier.description}</p>
                   <div className="mt-4">
                     <span className="text-4xl font-extrabold text-brand-900">
                       {tier.price}
                     </span>
                     {tier.unit && (
-                      <span className="mr-1 text-sm text-gray-500">
+                      <span className="mr-1 text-sm text-slate-500">
                         {tier.unit}
                       </span>
                     )}
@@ -426,7 +426,7 @@ export default function EmployersPage() {
                     {tier.features.map((feat) => (
                       <li
                         key={feat}
-                        className="flex items-start gap-2 text-sm text-gray-700"
+                        className="flex items-start gap-2 text-sm text-slate-700"
                       >
                         <span className="mt-0.5 text-green-500">✓</span>
                         {feat}
@@ -458,7 +458,7 @@ export default function EmployersPage() {
             <div className="mt-10 overflow-x-auto">
               <table className="w-full min-w-[500px] text-sm">
                 <thead>
-                  <tr className="border-b-2 border-gray-200">
+                  <tr className="border-b-2 border-slate-200">
                     <th className="py-3 text-right font-bold text-brand-900">
                       תכונה
                     </th>
@@ -477,9 +477,9 @@ export default function EmployersPage() {
                   {COMPARISON_FEATURES.map((row) => (
                     <tr
                       key={row.feature}
-                      className="border-b border-gray-100"
+                      className="border-b border-slate-100"
                     >
-                      <td className="py-3 text-right text-gray-700">
+                      <td className="py-3 text-right text-slate-700">
                         {row.feature}
                       </td>
                       <td className="py-3 text-center">
@@ -500,19 +500,19 @@ export default function EmployersPage() {
         </section>
 
         {/* ── Employer Testimonials ────────────────────────────────── */}
-        <section className="bg-gray-50 px-4 py-16">
+        <section className="bg-slate-50 px-4 py-16">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
               למה 50+ מעסיקים באילת בחרו בנו?
             </h2>
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-2 text-center text-slate-500">
               מלונות, חנויות וחברות אבטחה — כולם חסכו זמן, כסף ותחלופת עובדים
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {EMPLOYER_TESTIMONIALS.map((t) => (
                 <div
                   key={t.name}
-                  className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
+                  className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm"
                 >
                   <span className="mb-3 inline-block rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
                     {t.metric}
@@ -520,12 +520,12 @@ export default function EmployersPage() {
                   <div className="mb-3 text-yellow-400">
                     {"★".repeat(t.stars)}
                   </div>
-                  <p className="text-sm leading-relaxed text-gray-600">
+                  <p className="text-sm leading-relaxed text-slate-600">
                     &ldquo;{t.quote}&rdquo;
                   </p>
-                  <div className="mt-4 border-t border-gray-100 pt-3">
+                  <div className="mt-4 border-t border-slate-100 pt-3">
                     <p className="font-bold text-brand-900">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.role}</p>
+                    <p className="text-xs text-slate-400">{t.role}</p>
                   </div>
                 </div>
               ))}
@@ -539,7 +539,7 @@ export default function EmployersPage() {
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
               שאלות נפוצות למעסיקים
             </h2>
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-2 text-center text-slate-500">
               הכל שקוף — תהליך, מחירים ותנאים
             </p>
             <div className="mt-10">
@@ -557,7 +557,7 @@ export default function EmployersPage() {
             <h2 className="text-3xl font-extrabold">
               המשמרת הבאה לא צריכה להיות ריקה
             </h2>
-            <p className="mt-3 text-lg text-blue-100">
+            <p className="mt-3 text-lg text-indigo-100">
               שלחו דרישות משרה עכשיו — ותוך 48 שעות נשלח מועמדים מסוננים.
               <br />
               בלי התחייבות. בלי חוזים. משלמים רק על השמה מוצלחת.
@@ -578,7 +578,7 @@ export default function EmployersPage() {
                 📞 {PHONE_NUMBER}
               </a>
             </div>
-            <p className="mt-4 text-sm text-blue-200">
+            <p className="mt-4 text-sm text-indigo-200">
               ✉️{" "}
               <a href={`mailto:${EMAIL}`} className="underline hover:text-white">
                 {EMAIL}
@@ -606,10 +606,10 @@ export default function EmployersPage() {
           <a href="/" className="text-lg font-bold">
             ברק שירותים
           </a>
-          <p className="mt-2 text-sm text-blue-200">
+          <p className="mt-2 text-sm text-indigo-200">
             20+ שנה של השמת עובדים באילת. גיוס חכם מבוסס AI.
           </p>
-          <div className="mt-4 flex items-center justify-center gap-6 text-sm text-blue-200">
+          <div className="mt-4 flex items-center justify-center gap-6 text-sm text-indigo-200">
             <a href="/" className="hover:text-white">
               ראשי
             </a>
@@ -620,7 +620,7 @@ export default function EmployersPage() {
               בלוג
             </a>
           </div>
-          <div className="mt-6 border-t border-white/20 pt-6 text-sm text-blue-300">
+          <div className="mt-6 border-t border-white/20 pt-6 text-sm text-indigo-300">
             © {new Date().getFullYear()} ברק שירותים — כל הזכויות שמורות
           </div>
         </div>

@@ -22,7 +22,7 @@ export default function GuideMovingToEilatPage() {
   return (
     <>
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <Link href="/" className="text-xl font-bold text-brand-900">
             ברק שירותים
@@ -30,7 +30,7 @@ export default function GuideMovingToEilatPage() {
           <nav className="hidden items-center gap-6 md:flex">
             <Link
               href="/"
-              className="text-sm font-medium text-gray-600 hover:text-brand-600"
+              className="text-sm font-medium text-slate-600 hover:text-brand-600"
             >
               ראשי
             </Link>
@@ -58,7 +58,7 @@ export default function GuideMovingToEilatPage() {
 
       <main className="mx-auto max-w-3xl px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="mb-6 text-sm text-gray-400">
+        <nav className="mb-6 text-sm text-slate-400">
           <Link href="/" className="hover:text-brand-600">
             ראשי
           </Link>
@@ -67,7 +67,7 @@ export default function GuideMovingToEilatPage() {
             בלוג
           </Link>
           {" / "}
-          <span className="text-gray-600">מעבר לאילת אחרי צבא</span>
+          <span className="text-slate-600">מעבר לאילת אחרי צבא</span>
         </nav>
 
         {/* Hero */}
@@ -78,11 +78,11 @@ export default function GuideMovingToEilatPage() {
           <h1 className="mt-3 text-3xl font-extrabold leading-tight text-brand-900 md:text-4xl">
             השתחררת? המדריך המלא למעבר לאילת ב-2026
           </h1>
-          <p className="mt-3 text-lg text-gray-500">
+          <p className="mt-3 text-lg text-slate-500">
             דירה, עבודה, חברים, ים — תוך שבוע. כל מה שאף אחד לא מספר על
             המעבר לאילת אחרי צבא, כולל מספרים אמיתיים.
           </p>
-          <div className="mt-4 flex items-center gap-4 text-sm text-gray-400">
+          <div className="mt-4 flex items-center gap-4 text-sm text-slate-400">
             <span>15 בפברואר 2026</span>
             <span>·</span>
             <span>קריאה של 8 דקות</span>
@@ -90,7 +90,7 @@ export default function GuideMovingToEilatPage() {
         </header>
 
         {/* ── Article body ── */}
-        <article className="prose-article space-y-10 text-gray-700 leading-relaxed">
+        <article className="prose-article space-y-10 text-slate-700 leading-relaxed">
           {/* 1. למה דווקא אילת */}
           <section>
             <h2 className="text-2xl font-bold text-brand-900">
@@ -172,7 +172,7 @@ export default function GuideMovingToEilatPage() {
               דירה מרוהטת ומוכנה למגורים — בלי ערבים, בלי חוזה שנתי, ובלי
               להסתבך. מגיעים עם תיק, נכנסים, מתחילים לעבוד.
             </p>
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-sm">
                 <thead className="bg-brand-50 text-brand-900">
                   <tr>
@@ -187,7 +187,7 @@ export default function GuideMovingToEilatPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-100">
                   <tr>
                     <td className="px-4 py-3">דירה משותפת (3-4 שותפים)</td>
                     <td className="px-4 py-3 font-semibold text-brand-600">
@@ -218,7 +218,7 @@ export default function GuideMovingToEilatPage() {
                 </tbody>
               </table>
             </div>
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-slate-500">
               לשם השוואה: שכירות ממוצעת לחדר בתל אביב — 2,500-3,500 ש״ח.
               באילת דרכנו — 300-600 ש״ח, כולל הכל. ההפרש? נשאר בכיס.
             </p>
@@ -310,7 +310,7 @@ export default function GuideMovingToEilatPage() {
               הסיפור האמיתי של אילת הוא לא כמה מרוויחים — אלא כמה נשאר.
               בואו נשווה עובד טיפוסי באילת מול תל אביב:
             </p>
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-sm">
                 <thead className="bg-brand-50 text-brand-900">
                   <tr>
@@ -325,7 +325,7 @@ export default function GuideMovingToEilatPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-100">
                   <tr>
                     <td className="px-4 py-3">שכר ברוטו</td>
                     <td className="px-4 py-3">7,500 ש״ח</td>
@@ -357,7 +357,7 @@ export default function GuideMovingToEilatPage() {
                     </td>
                     <td className="px-4 py-3 text-red-500">−400 ש״ח</td>
                   </tr>
-                  <tr className="bg-gray-50 font-bold">
+                  <tr className="bg-slate-50 font-bold">
                     <td className="px-4 py-3">נשאר בכיס</td>
                     <td className="px-4 py-3 text-green-600 text-lg">
                       6,040 ש״ח
@@ -369,7 +369,7 @@ export default function GuideMovingToEilatPage() {
                 </tbody>
               </table>
             </div>
-            <p className="mt-2 text-xs text-gray-400">
+            <p className="mt-2 text-xs text-slate-400">
               * ניכוי מופחת בזכות נקודות זיכוי נוספות לעובדי אזור מועדף.
               הנתונים להמחשה — השכר בפועל תלוי בתפקיד ובשעות.
             </p>
@@ -486,7 +486,7 @@ export default function GuideMovingToEilatPage() {
             <h2 className="text-2xl font-extrabold md:text-3xl">
               מוכנים? ככה מתחילים
             </h2>
-            <p className="mt-3 text-blue-100">
+            <p className="mt-3 text-indigo-100">
               3 דרכים להגיש מועמדות — בחרו מה שהכי נוח לכם:
             </p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
@@ -511,7 +511,7 @@ export default function GuideMovingToEilatPage() {
                 📞 {PHONE_NUMBER}
               </a>
             </div>
-            <p className="mt-4 text-sm text-blue-200">
+            <p className="mt-4 text-sm text-indigo-200">
               שולחים פרטים — מקבלים שיחה תוך שעות עם הצעת עבודה אישית.
             </p>
           </section>
@@ -519,7 +519,7 @@ export default function GuideMovingToEilatPage() {
       </main>
 
       {/* Sticky bottom CTA bar */}
-      <div className="sticky bottom-0 z-40 border-t border-gray-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
+      <div className="sticky bottom-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
         <Link
           href="/outreach"
           className="block w-full rounded-lg bg-brand-600 py-3 text-center text-base font-bold text-white hover:bg-brand-700"
@@ -529,7 +529,7 @@ export default function GuideMovingToEilatPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-brand-900 px-4 py-8 text-center text-sm text-blue-300">
+      <footer className="bg-brand-900 px-4 py-8 text-center text-sm text-indigo-300">
         <p>
           © {new Date().getFullYear()} ברק שירותים — כל הזכויות שמורות
         </p>

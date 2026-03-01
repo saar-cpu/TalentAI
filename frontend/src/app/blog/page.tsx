@@ -41,7 +41,7 @@ export default function BlogPage() {
   return (
     <>
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <Link href="/" className="text-xl font-bold text-brand-900">
             ברק שירותים
@@ -49,7 +49,7 @@ export default function BlogPage() {
           <nav className="hidden items-center gap-6 md:flex">
             <Link
               href="/"
-              className="text-sm font-medium text-gray-600 hover:text-brand-600"
+              className="text-sm font-medium text-slate-600 hover:text-brand-600"
             >
               ראשי
             </Link>
@@ -76,7 +76,7 @@ export default function BlogPage() {
           <h1 className="text-3xl font-extrabold text-brand-900 md:text-4xl">
             מדריכים שחוסכים טעויות
           </h1>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-slate-500">
             מה שהיינו רוצים שמישהו יספר לנו לפני שעברנו לאילת
           </p>
         </div>
@@ -85,17 +85,17 @@ export default function BlogPage() {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {BLOG_POSTS.map((post) => {
             const content = (
-              <div className="group rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+              <div className="group rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
                 <div className="flex items-center gap-2">
                   <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-600">
                     {post.tag}
                   </span>
-                  <span className="text-xs text-gray-400">{post.date}</span>
+                  <span className="text-xs text-slate-400">{post.date}</span>
                 </div>
                 <h2 className="mt-3 text-lg font-bold text-brand-900 group-hover:text-brand-600 transition-colors">
                   {post.title}
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-gray-500">
+                <p className="mt-2 text-sm leading-relaxed text-slate-500">
                   {post.excerpt}
                 </p>
                 <span className="mt-4 inline-block text-sm font-semibold text-brand-600">
@@ -126,7 +126,7 @@ export default function BlogPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-brand-900 px-4 py-8 text-center text-sm text-blue-300">
+      <footer className="bg-brand-900 px-4 py-8 text-center text-sm text-indigo-300">
         <p>
           © {new Date().getFullYear()} ברק שירותים — כל הזכויות שמורות
         </p>
