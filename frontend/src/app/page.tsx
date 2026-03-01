@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { label: "ראשי", href: "#" },
   { label: "משרות", href: "#jobs" },
   { label: "אודות", href: "#about" },
+  { label: "למעסיקים", href: "/employers" },
   { label: "בלוג", href: "/blog" },
 ];
 
@@ -779,6 +780,11 @@ function Footer() {
             <li>
               <a href="#faq" className="hover:text-white">
                 שאלות נפוצות
+              </a>
+            </li>
+            <li>
+              <a href="/employers" className="hover:text-white">
+                למעסיקים
               </a>
             </li>
             <li>
