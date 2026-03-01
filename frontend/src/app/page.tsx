@@ -666,19 +666,24 @@ function HeroSection() {
 
         {/* Headline */}
         <h1 className="mt-6 text-center text-4xl font-black leading-tight tracking-tight md:text-5xl lg:text-6xl">
-          עבודה, דירה וארוחות —{" "}
+          ברק שירותים מסדרים לכם עבודה, דירה וארוחות באילת –{" "}
           <span className="bg-gradient-to-l from-indigo-200 to-white bg-clip-text text-transparent">
-            תוך 3 ימים באילת
+            תוך 3 ימים.
           </span>
         </h1>
 
-        <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-indigo-100/90 md:text-xl">
-          דירה מרוהטת מ-400 ₪. ארוחות ב-5 ₪ ליום. הסעות חינם. מענק 9,550 ₪.
-          בחרו איך להגיש מועמדות:
+        <p className="mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-indigo-100/90 md:text-xl">
+          דירה מרוהטת מ-400 ₪ · 3 ארוחות ב-5 ₪ ליום · הסעות חינם · מענק 9,550 ₪
+        </p>
+
+        <p className="mx-auto mt-4 max-w-2xl text-center text-base font-semibold text-white md:text-lg">
+          הדרך לחיים החדשים שלכם באילת מתחילה כאן.
+          <br className="hidden sm:block" />
+          בחרו את הדרך המהירה ביותר עבורכם להגשת מועמדות:
         </p>
 
         {/* 3-widget grid */}
-        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           <HeroCvWidget />
           <HeroChatWidget />
           <HeroVoiceWidget />
