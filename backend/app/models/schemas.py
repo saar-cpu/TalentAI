@@ -51,6 +51,10 @@ class QuickApplyResponse(BaseModel):
     matched_jobs: list[dict] | None = None
 
 
+class VoiceApplyRequest(BaseModel):
+    transcript: str
+
+
 class FbPostRequest(BaseModel):
     post_text: str
 

@@ -52,7 +52,7 @@ const SYSTEM_PROMPT = `CRITICAL DIRECTIVE: You MUST think, speak, and generate t
 const ASSISTANT_CONFIG = {
   model: {
     provider: "anthropic" as const,
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-20250514" as const,
     messages: [{ role: "system" as const, content: SYSTEM_PROMPT }],
   },
   voice: {
@@ -62,7 +62,7 @@ const ASSISTANT_CONFIG = {
   firstMessage: "אהלן, מדבר תומר מברק שירותים, מה קורה?",
   transcriber: {
     provider: "openai" as const,
-    model: "whisper-1" as const,
+    model: "gpt-4o-mini-transcribe" as const,
     language: "he" as const,
   },
 };

@@ -7,11 +7,13 @@ from app.models.schemas import (
     QuickApplyResponse,
     ScreeningChatRequest,
     ScreeningChatResponse,
+    VoiceApplyRequest,
 )
 from app.services.crm import save_lead_to_supabase
 from app.services.cv_scorer import score_cv_match
 from app.services.job_matcher import match_jobs, normalize_field
 from app.services.outreach_agent import screen_candidate, extract_field_from_history
+from app.services.voice_extractor import extract_application_from_transcript
 
 router = APIRouter()
 
@@ -115,5 +117,76 @@ async def screen(request: ScreeningChatRequest):
                 response.matched_jobs = await score_cv_match(skills_text, response.matched_jobs)
 
         return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/voice-apply", response_model=QuickApplyResponse)
+async def voice_apply(request: VoiceApplyRequest):
+    try:
+        # Extract structured data from the voice transcript
+        data = await extract_application_from_transcript(request.transcript)
+
+        name = data["name"]
+        phone = data["phone"]
+        field_raw = data["field"]
+        relocate = data["relocate"]
+        start_date = data["start_date"]
+        cv_text = data.get("cv_text", "")
+
+        # Disqualify if not willing to relocate
+        if not relocate:
+            return QuickApplyResponse(
+                success=True,
+                fit="not_a_fit",
+                message="תודה על השיחה! כרגע אנחנו מגייסים לעבודה באילת. אם זה יהיה רלוונטי בעתיד, נשמח לשמוע ממך!",
+            )
+
+        # Disqualify vague start date
+        if start_date == "not_sure":
+            return QuickApplyResponse(
+                success=True,
+                fit="not_a_fit",
+                message="תודה על השיחה! כשתדע/י מתי את/ה יכול/ה להגיע, חזור/י אלינו ונסדר הכל.",
+            )
+
+        # Match jobs
+        field = normalize_field(field_raw) or field_raw
+        jobs = match_jobs(field)
+
+        # Score CV match if transcript contained skills info
+        if jobs and cv_text.strip():
+            jobs = await score_cv_match(cv_text, jobs)
+
+        # Build success message
+        if jobs:
+            job_mentions = " ו".join(
+                f"{j['title']} ב{j['employer']}" for j in jobs[:2]
+            )
+            message = (
+                f"מעולה {name}! יש לנו כרגע {job_mentions} — "
+                "המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב לסגור פרטים. להתראות באילת!"
+            )
+        else:
+            message = (
+                f"תודה {name}! קיבלנו את הפרטים. "
+                "המגייס/ת שלנו יצור/תיצור איתך קשר בקרוב לסגור פרטים. להתראות באילת!"
+            )
+
+        # Save to CRM
+        if phone:
+            await save_lead_to_supabase(
+                name=name,
+                phone=phone,
+                desired_role=field,
+                location="אילת",
+            )
+
+        return QuickApplyResponse(
+            success=True,
+            fit="good_fit",
+            message=message,
+            matched_jobs=jobs if jobs else None,
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

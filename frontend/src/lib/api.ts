@@ -102,6 +102,31 @@ export async function submitQuickApply(
   };
 }
 
+export async function submitVoiceApply(
+  transcript: string
+): Promise<QuickApplyResponse> {
+  const res = await fetch(`${API_BASE}/voice-apply`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ transcript }),
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const detail = body?.detail ?? `Voice apply failed: ${res.status}`;
+    throw new Error(detail);
+  }
+
+  const raw = await res.json();
+
+  return {
+    success: raw.success,
+    fit: raw.fit,
+    message: raw.message,
+    matchedJobs: raw.matched_jobs ?? null,
+  };
+}
+
 export async function analyzeFbPost(postText: string): Promise<FbPostResponse> {
   const res = await fetch(`${API_BASE}/analyze-fb-post`, {
     method: "POST",
