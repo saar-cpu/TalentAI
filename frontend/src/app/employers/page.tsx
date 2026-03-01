@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import EmployerFaq from "./EmployerFaq";
 
 export const metadata: Metadata = {
-  title: "למעסיקים — גיוס עובדים באילת עם AI | ברק שירותים",
+  title: "למעסיקים — מלאו משרות תוך 48 שעות עם AI | ברק שירותים",
   description:
-    "מועמדים מסוננים, מותאמים ומוכנים — תוך 48 שעות. גיוס מבוסס AI למלונות, קמעונאות, אבטחה ומסעדנות באילת. 50+ מעסיקים סומכים עלינו.",
+    "מועמדים מסוננים ומותאמים תוך 48 שעות. גיוס AI למלונות, קמעונאות, אבטחה ומסעדנות באילת. 50+ מעסיקים, 85% שימור, השמה מ-2,500 ₪. ללא התחייבות.",
 };
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -22,10 +22,10 @@ const NAV_LINKS = [
 ];
 
 const TRUST_STATS = [
-  { value: "50+", label: "מעסיקים פעילים", icon: "🏢" },
+  { value: "50+", label: "מעסיקים פעילים באילת", icon: "🏢" },
   { value: "1,000+", label: "השמות מוצלחות", icon: "✅" },
-  { value: "3 ימים", label: "זמן אספקה ממוצע", icon: "⚡" },
-  { value: "96%", label: "שביעות רצון", icon: "⭐" },
+  { value: "3 ימים", label: "ממשרה פתוחה לעובד במשמרת", icon: "⚡" },
+  { value: "85%", label: "שימור אחרי 6 חודשים", icon: "📈" },
 ];
 
 const PAIN_POINTS = [
@@ -54,124 +54,125 @@ const PAIN_POINTS = [
 const PROCESS_STEPS = [
   {
     step: "01",
-    title: "שלחו דרישות",
-    description: "ספרו לנו איזה תפקיד, כמה עובדים, ומתי צריך. שיחה של 5 דקות.",
+    title: "שיחה של 5 דקות",
+    description: "ספרו לנו איזה תפקיד, כמה עובדים, ומתי צריך. בלי טפסים ארוכים.",
   },
   {
     step: "02",
-    title: "ה-AI מסנן ומתאים",
-    description: "המערכת סורקת את מאגר המועמדים, מסננת לפי כישורים ומתאימה לדרישות שלכם.",
+    title: "AI סורק ומתאים",
+    description: "המערכת מסננת אלפי מועמדים, מדרגת לפי התאמה, ובונה רשימה קצרה עם ציון לכל מועמד.",
   },
   {
     step: "03",
-    title: "מועמדים מוכנים",
-    description: "תוך 48 שעות מקבלים פרופילים מותאמים. אתם רק בוחרים ומראיינים.",
+    title: "עובדים במשמרת",
+    description: "תוך 48 שעות מקבלים מועמדים מסוננים — עם דירה, ארוחות והסעות מסודרים. אתם רק מאשרים.",
   },
 ];
 
 const AI_FEATURES = [
   {
     icon: "🤖",
-    title: "צ׳אטבוט סינון חכם",
-    description: "AI שמנהל שיחת סינון בעברית עם כל מועמד — זמינות, ניסיון, העדפות — לפני שמגיע אליכם.",
+    title: "0 שעות סינון ידני",
+    description: "צ׳אטבוט AI מנהל שיחת סינון בעברית עם כל מועמד — זמינות, ניסיון, העדפות — ומעביר אליכם רק מתאימים.",
   },
   {
     icon: "🎯",
-    title: "התאמת משרות אוטומטית",
-    description: "אלגוריתם שמתאים בין דרישות המשרה לכישורי המועמד ומדרג לפי אחוז התאמה.",
+    title: "90% דיוק בהתאמה",
+    description: "אלגוריתם שמדרג כל מועמד לפי ציון התאמה לדרישות שלכם. בלי ניחושים — רק מספרים.",
   },
   {
     icon: "📱",
-    title: "דפי נחיתה ממוקדים",
-    description: "דפי גיוס ייעודיים לכל קמפיין — עם טופס מהיר שממיר ב-15 שניות במקום דקות.",
+    title: "15 שניות להגשת מועמדות",
+    description: "דפי גיוס ייעודיים לכל קמפיין עם טופס מהיר שממיר — במקום טפסים של 5 דקות שמועמדים נוטשים.",
   },
   {
     icon: "🔍",
-    title: "Facebook Hunter",
-    description: "AI שמזהה פוסטים של מחפשי עבודה ברשתות חברתיות ומגיב עם הצעה מותאמת.",
+    title: "מועמדים שלא פרסמתם עליהם",
+    description: "AI שמזהה פוסטים של מחפשי עבודה ברשתות חברתיות ומגיב עם הצעה מותאמת — לפני המתחרים.",
   },
   {
     icon: "📞",
-    title: "Voice AI לשימור",
-    description: "סוכן קולי בעברית שמתקשר למועמדים שנשרו, מחדש עניין ומחזיר אותם לתהליך.",
+    title: "40% פחות נשירת מועמדים",
+    description: "סוכן קולי בעברית שמתקשר למועמדים שהפסיקו להגיב, מחדש עניין ומחזיר אותם לתהליך.",
   },
   {
     icon: "📊",
-    title: "דשבורד בזמן אמת",
-    description: "מעקב אחרי כל הלידים, סטטוסים ושלבי גיוס — הכל במקום אחד, בלי אקסלים.",
+    title: "שקיפות מלאה בזמן אמת",
+    description: "דשבורד עם כל הלידים, סטטוסים ושלבי גיוס — הכל במקום אחד, בלי אקסלים ובלי שיחות סטטוס.",
   },
 ];
 
 const PRICING_TIERS = [
   {
-    name: "בסיסי",
-    price: "2,500 ₪",
-    unit: "להשמה",
-    description: "למעסיקים עם צרכים נקודתיים",
+    name: "ארגוני",
+    price: "מותאם אישית",
+    unit: "",
+    description: "לרשתות מלונות וארגונים עם 10+ משרות",
     features: [
-      "סינון מועמדים ידני",
-      "התאמה לפי דרישות בסיסיות",
-      "עד 5 מועמדים למשרה",
-      "תמיכה טלפונית",
-      "אחריות 14 יום",
+      "כל התכונות של מקצועי",
+      "גיוס בכמויות (10+ משרות במקביל)",
+      "API לחיבור למערכות HR קיימות",
+      "SLA מובטח על זמני אספקה",
+      "דוחות אנליטיקה ותחזיות",
+      "הדרכת מנהלי גיוס",
+      "תמחור volume — ככל שמגייסים יותר, משלמים פחות",
     ],
     highlighted: false,
-    cta: "התחילו עכשיו",
+    cta: "תאמו שיחת ייעוץ",
   },
   {
     name: "מקצועי",
     price: "1,490 ₪",
     unit: "לחודש + 1,500 ₪ להשמה",
-    description: "הפתרון המלא לגיוס שוטף",
+    description: "למעסיקים שמגייסים כל חודש ורוצים AI שעובד בשבילם",
     features: [
-      "סינון AI אוטומטי",
-      "התאמה חכמה לפי ציון",
+      "סינון AI אוטומטי — 0 שעות סינון ידני",
+      "התאמה חכמה עם ציון לכל מועמד",
       "מועמדים ללא הגבלה",
-      "מנהל לקוח ייעודי",
-      "אחריות 30 יום + החלפה",
+      "מנהל לקוח ייעודי שמכיר את העסק שלכם",
+      "אחריות 30 יום — לא מתאים? מחליפים בחינם",
       "דשבורד בזמן אמת",
-      "קמפיינים ממוקדים",
+      "קמפיינים ממוקדים ברשתות חברתיות",
     ],
     highlighted: true,
-    cta: "הצטרפו עכשיו",
+    cta: "קבלו מועמדים תוך 48 שעות",
   },
   {
-    name: "ארגוני",
-    price: "מותאם אישית",
-    unit: "",
-    description: "לרשתות מלונות וארגונים גדולים",
+    name: "בסיסי",
+    price: "2,500 ₪",
+    unit: "להשמה",
+    description: "צריכים עובד אחד או שניים? משלמים רק כשמוצאים",
     features: [
-      "כל התכונות של מקצועי",
-      "גיוס בכמויות (10+ משרות)",
-      "API למערכות HR",
-      "SLA זמני אספקה",
-      "דוחות אנליטיקה מתקדמים",
-      "הדרכת מנהלים",
-      "תמחור volume מוזל",
+      "סינון מועמדים על ידי הצוות שלנו",
+      "התאמה לפי דרישות המשרה",
+      "עד 5 מועמדים למשרה",
+      "תמיכה טלפונית",
+      "אחריות 14 יום",
     ],
     highlighted: false,
-    cta: "דברו איתנו",
+    cta: "שלחו דרישות משרה",
   },
 ];
 
 const COMPARISON_FEATURES = [
-  { feature: "סינון מועמדים", basic: true, pro: "AI", enterprise: "AI" },
-  { feature: "התאמת משרות", basic: "ידני", pro: "אוטומטי", enterprise: "אוטומטי" },
-  { feature: "מועמדים למשרה", basic: "עד 5", pro: "ללא הגבלה", enterprise: "ללא הגבלה" },
-  { feature: "אחריות החלפה", basic: "14 יום", pro: "30 יום", enterprise: "60 יום" },
-  { feature: "מנהל לקוח ייעודי", basic: false, pro: true, enterprise: true },
-  { feature: "דשבורד בזמן אמת", basic: false, pro: true, enterprise: true },
-  { feature: "קמפיינים ממוקדים", basic: false, pro: true, enterprise: true },
-  { feature: "Facebook Hunter", basic: false, pro: true, enterprise: true },
-  { feature: "Voice AI", basic: false, pro: false, enterprise: true },
-  { feature: "API למערכות HR", basic: false, pro: false, enterprise: true },
-  { feature: "SLA זמני אספקה", basic: false, pro: false, enterprise: true },
+  { feature: "סינון מועמדים", enterprise: "AI", pro: "AI", basic: "ידני" },
+  { feature: "התאמת משרות", enterprise: "אוטומטי", pro: "אוטומטי", basic: "ידני" },
+  { feature: "מועמדים למשרה", enterprise: "ללא הגבלה", pro: "ללא הגבלה", basic: "עד 5" },
+  { feature: "אחריות החלפה", enterprise: "60 יום", pro: "30 יום", basic: "14 יום" },
+  { feature: "מנהל לקוח ייעודי", enterprise: true, pro: true, basic: false },
+  { feature: "דשבורד בזמן אמת", enterprise: true, pro: true, basic: false },
+  { feature: "קמפיינים ממוקדים", enterprise: true, pro: true, basic: false },
+  { feature: "Facebook Hunter", enterprise: true, pro: true, basic: false },
+  { feature: "Voice AI", enterprise: true, pro: false, basic: false },
+  { feature: "API למערכות HR", enterprise: true, pro: false, basic: false },
+  { feature: "SLA זמני אספקה", enterprise: true, pro: false, basic: false },
 ];
 
 const EMPLOYER_TESTIMONIALS = [
   {
     name: "רונית כ.",
     role: "מנהלת משאבי אנוש, רשת מלונות",
+    metric: "מ-3 שבועות ל-3 ימים",
     quote:
       "עברנו מחיפוש של 3 שבועות למשרה — ל-3 ימים. ה-AI מסנן בדיוק את מי שאנחנו צריכים, ושיעור השימור עלה ב-40% מאז שהתחלנו לעבוד עם ברק.",
     stars: 5,
@@ -179,6 +180,7 @@ const EMPLOYER_TESTIMONIALS = [
   {
     name: "אבי מ.",
     role: "בעלים, רשת חנויות קמעונאות",
+    metric: "חוסך משרת מגייסת פנימית",
     quote:
       "במקום לקבל 50 קורות חיים ולזרוק 45 — מקבל 5 מועמדים מדויקים שכבר עברו סינון. חוסך לי שעות ביום ומשרה של מגייסת פנימית.",
     stars: 5,
@@ -186,6 +188,7 @@ const EMPLOYER_TESTIMONIALS = [
   {
     name: "דני ש.",
     role: "מנהל אבטחה, קניון",
+    metric: "3 מאבטחים תוך 48 שעות",
     quote:
       "צריך 3 מאבטחים לשישי? מתקשר ביום רביעי ויש. הם מגיעים מוכנים, עם דירה ואוכל מסודרים — אז לא עוזבים אחרי שבוע.",
     stars: 5,
@@ -240,23 +243,23 @@ export default function EmployersPage() {
         <section className="bg-gradient-to-bl from-brand-900 to-brand-700 px-4 py-20 text-center text-white md:py-28">
           <div className="mx-auto max-w-3xl">
             <span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium backdrop-blur">
-              פתרון גיוס מבוסס AI למעסיקים באילת
+              50+ מעסיקים באילת כבר מגייסים ככה
             </span>
             <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl lg:text-6xl">
-              מועמדים מסוננים, מותאמים ומוכנים
+              מלאו משרות תוך 48 שעות
               <br className="hidden md:block" />
-              — תוך 48 שעות
+              — בלי לסנן אלפי קורות חיים
             </h1>
             <p className="mt-4 text-lg text-blue-100 md:text-xl">
-              חסכו שבועות של סינון ותיאומים. ה-AI שלנו מתאים לכם בדיוק את העובדים
-              שאתם צריכים — עם דיור, ארוחות והסעות מסודרים מראש.
+              ה-AI שלנו מסנן, מתאים ומדרג מועמדים — ואנחנו מסדרים להם דירה,
+              ארוחות והסעות. אתם מקבלים עובדים מוכנים למשמרת, לא ערימת קורות חיים.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href="#contact"
                 className="w-full rounded-lg bg-white px-8 py-3.5 text-base font-bold text-brand-700 shadow-lg transition-transform hover:scale-105 sm:w-auto"
               >
-                קבלו הצעת מחיר
+                קבלו מועמדים מותאמים תוך 48 שעות
               </a>
               <a
                 href="#pricing"
@@ -265,6 +268,9 @@ export default function EmployersPage() {
                 ראו מסלולים ומחירים
               </a>
             </div>
+            <p className="mt-4 text-sm text-blue-200">
+              ללא התחייבות. משלמים רק על השמה מוצלחת.
+            </p>
           </div>
         </section>
 
@@ -315,10 +321,10 @@ export default function EmployersPage() {
         <section className="bg-gray-50 px-4 py-16">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
-              איך זה עובד?
+              משיחה של 5 דקות — לעובד במשמרת
             </h2>
             <p className="mt-2 text-center text-gray-500">
-              3 צעדים מדרישות משרה למועמד מוכן
+              3 צעדים. 48 שעות. אפס כאב ראש.
             </p>
             <div className="mt-10 grid gap-8 md:grid-cols-3">
               {PROCESS_STEPS.map((step, i) => (
@@ -345,10 +351,10 @@ export default function EmployersPage() {
         <section className="px-4 py-16">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
-              טכנולוגיה שעובדת בשבילכם
+              מה ה-AI שלנו חוסך לכם?
             </h2>
             <p className="mt-2 text-center text-gray-500">
-              6 כלי AI שמייעלים את הגיוס — ועובדים 24/7
+              6 כלים שעובדים 24/7 — כדי שהצוות שלכם יתעסק בעבודה, לא בגיוס
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {AI_FEATURES.map((feat) => (
@@ -373,11 +379,20 @@ export default function EmployersPage() {
         <section id="pricing" className="bg-gray-50 px-4 py-16">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
-              מסלולים ומחירים
+              משלמים רק על תוצאות
             </h2>
             <p className="mt-2 text-center text-gray-500">
-              משלמים רק על תוצאות. בלי חוזים ארוכי טווח.
+              בלי חוזים ארוכי טווח. לא מרוצים מההשמה? מחליפים בחינם.
             </p>
+            <div className="mx-auto mt-6 max-w-xl rounded-lg border border-brand-200 bg-brand-50 px-6 py-4 text-center">
+              <p className="text-sm font-medium text-brand-900">
+                💡 מעסיק ממוצע באילת מבזבז <strong>8,000-12,000 ₪</strong> על
+                פרסום מודעות, סינון קורות חיים וראיונות לכל משרה.
+                <br />
+                עם ברק — <strong>השמה מלאה מ-2,500 ₪</strong>, כולל סינון, התאמה
+                ואחריות.
+              </p>
+            </div>
             <div className="mt-10 grid items-start gap-6 md:grid-cols-3">
               {PRICING_TIERS.map((tier) => (
                 <div
@@ -448,13 +463,13 @@ export default function EmployersPage() {
                       תכונה
                     </th>
                     <th className="py-3 text-center font-bold text-brand-900">
-                      בסיסי
+                      ארגוני
                     </th>
                     <th className="py-3 text-center font-bold text-brand-600">
                       מקצועי
                     </th>
                     <th className="py-3 text-center font-bold text-brand-900">
-                      ארגוני
+                      בסיסי
                     </th>
                   </tr>
                 </thead>
@@ -468,13 +483,13 @@ export default function EmployersPage() {
                         {row.feature}
                       </td>
                       <td className="py-3 text-center">
-                        <CellValue value={row.basic} />
+                        <CellValue value={row.enterprise} />
                       </td>
                       <td className="py-3 text-center bg-brand-50/50">
                         <CellValue value={row.pro} />
                       </td>
                       <td className="py-3 text-center">
-                        <CellValue value={row.enterprise} />
+                        <CellValue value={row.basic} />
                       </td>
                     </tr>
                   ))}
@@ -488,10 +503,10 @@ export default function EmployersPage() {
         <section className="bg-gray-50 px-4 py-16">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-extrabold text-brand-900">
-              מעסיקים מספרים
+              למה 50+ מעסיקים באילת בחרו בנו?
             </h2>
             <p className="mt-2 text-center text-gray-500">
-              מלונות, חנויות וחברות אבטחה — כולם חסכו זמן וכסף
+              מלונות, חנויות וחברות אבטחה — כולם חסכו זמן, כסף ותחלופת עובדים
             </p>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {EMPLOYER_TESTIMONIALS.map((t) => (
@@ -499,6 +514,9 @@ export default function EmployersPage() {
                   key={t.name}
                   className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
                 >
+                  <span className="mb-3 inline-block rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
+                    {t.metric}
+                  </span>
                   <div className="mb-3 text-yellow-400">
                     {"★".repeat(t.stars)}
                   </div>
@@ -537,10 +555,12 @@ export default function EmployersPage() {
         >
           <div className="mx-auto max-w-2xl">
             <h2 className="text-3xl font-extrabold">
-              מוכנים לגייס חכם יותר?
+              המשמרת הבאה לא צריכה להיות ריקה
             </h2>
             <p className="mt-3 text-lg text-blue-100">
-              שלחו הודעה, התקשרו או כתבו — ונחזור עם הצעה מותאמת תוך שעות
+              שלחו דרישות משרה עכשיו — ותוך 48 שעות נשלח מועמדים מסוננים.
+              <br />
+              בלי התחייבות. בלי חוזים. משלמים רק על השמה מוצלחת.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
