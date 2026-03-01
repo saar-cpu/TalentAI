@@ -14,8 +14,7 @@ export default function SeoJobsGrid({ jobs }: { jobs: MatchedJob[] }) {
           <motion.div
             key={job.id}
             initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08, duration: 0.4 }}
             className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm hover:shadow-md transition-shadow"
           >

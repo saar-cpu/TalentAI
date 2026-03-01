@@ -238,10 +238,12 @@ export default async function SeoPage({
               key={faq.q}
               className="group rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
             >
-              <summary className="cursor-pointer px-5 py-4 text-base font-semibold text-slate-900 dark:text-white list-none flex items-center justify-between">
-                {faq.q}
+              <summary className="cursor-pointer px-5 py-4 text-base font-semibold text-slate-900 dark:text-white [list-style:none] [&::-webkit-details-marker]:hidden flex items-center justify-between gap-3">
+                <span>{faq.q}</span>
                 <svg
-                  className="h-5 w-5 shrink-0 text-slate-400 transition-transform group-open:rotate-180"
+                  width="20"
+                  height="20"
+                  className="shrink-0 text-slate-400 transition-transform group-open:rotate-180"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
