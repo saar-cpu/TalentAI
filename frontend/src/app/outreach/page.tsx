@@ -5,6 +5,8 @@ import type { ChatMessage, MatchedJob, QuickApplyResponse } from "@/types";
 import { sendScreeningMessage, submitQuickApply, submitVoiceApply } from "@/lib/api";
 import AnimatedCard from "@/components/AnimatedCard";
 import { Skeleton } from "@/components/Skeleton";
+import { FomoStrip } from "@/components/FomoBadges";
+import { getFomoData } from "@/lib/fomo";
 import Vapi from "@vapi-ai/web";
 
 const FIELD_OPTIONS = [
@@ -176,6 +178,7 @@ function MatchedJobCards({ jobs }: { jobs: MatchedJob[] }) {
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
                 </div>
               )}
+              <FomoStrip fomo={getFomoData(job.id)} />
             </div>
           </AnimatedCard>
         ))}

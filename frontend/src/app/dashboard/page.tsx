@@ -5,6 +5,9 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import type { Lead, MatchedJob } from "@/types";
 import { fetchLeads } from "@/lib/api";
 import { Skeleton } from "@/components/Skeleton";
+import ProfileStrength from "@/components/ProfileStrength";
+import { FomoBadges } from "@/components/FomoBadges";
+import { getFomoData } from "@/lib/fomo";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -692,6 +695,9 @@ function CandidateView() {
         </div>
       </div>
 
+      {/* Profile Strength */}
+      <ProfileStrength />
+
       {/* Summary cards */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <motion.div
@@ -794,6 +800,8 @@ function CandidateView() {
                   />
                 </div>
               </div>
+
+              <FomoBadges fomo={getFomoData(job.id)} />
             </motion.div>
           ))}
         </div>

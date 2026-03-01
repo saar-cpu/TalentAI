@@ -5,6 +5,10 @@ import { motion, useInView } from "framer-motion";
 import AnimatedCard from "@/components/AnimatedCard";
 import { Skeleton } from "@/components/Skeleton";
 import { submitQuickApply, sendScreeningMessage } from "@/lib/api";
+import { FomoStrip } from "@/components/FomoBadges";
+import { getFomoDataByIndex } from "@/lib/fomo";
+import { CATEGORY_TO_SLUG } from "@/lib/seo-pages";
+import Link from "next/link";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -727,18 +731,22 @@ function JobCategoryCard({
   title,
   roles,
   hook,
+  index,
 }: {
   emoji: string;
   title: string;
   roles: string[];
   hook: string;
+  index: number;
 }) {
+  const fomo = getFomoDataByIndex(index);
   return (
     <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-shadow hover:shadow-md">
       <span className="text-3xl">{emoji}</span>
       <h3 className="mt-3 text-lg font-bold text-brand-900 dark:text-white">{title}</h3>
       <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{hook}</p>
       <p className="mt-2 text-xs text-slate-400">{roles.join(" · ")}</p>
+      <FomoStrip fomo={fomo} />
     </div>
   );
 }
@@ -763,16 +771,29 @@ function JobCategories({ loading }: { loading: boolean }) {
                   <Skeleton className="h-3 w-2/3" />
                 </div>
               ))
-            : JOB_CATEGORIES.map((cat, i) => (
-                <AnimatedCard key={cat.title} index={i}>
+            : JOB_CATEGORIES.map((cat, i) => {
+                const slug = CATEGORY_TO_SLUG[cat.title];
+                const card = (
                   <JobCategoryCard
                     emoji={cat.emoji}
                     title={cat.title}
                     roles={cat.roles}
                     hook={cat.hook}
+                    index={i}
                   />
-                </AnimatedCard>
-              ))}
+                );
+                return (
+                  <AnimatedCard key={cat.title} index={i}>
+                    {slug ? (
+                      <Link href={`/jobs/${slug}`} className="block">
+                        {card}
+                      </Link>
+                    ) : (
+                      card
+                    )}
+                  </AnimatedCard>
+                );
+              })}
         </div>
       </div>
     </section>
