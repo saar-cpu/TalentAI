@@ -34,7 +34,7 @@ const BLOG_POSTS = [
     date: "20 בינואר 2026",
     slug: "eilat-salary-guide-2026",
     tag: "שכר ומענקים",
-    ready: false,
+    ready: true,
   },
 ];
 

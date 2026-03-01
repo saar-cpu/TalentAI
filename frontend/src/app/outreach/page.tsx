@@ -4,9 +4,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import type { ChatMessage, MatchedJob, QuickApplyResponse } from "@/types";
 import { sendScreeningMessage, submitQuickApply, submitVoiceApply } from "@/lib/api";
 import AnimatedCard from "@/components/AnimatedCard";
+import { Skeleton } from "@/components/Skeleton";
 import Vapi from "@vapi-ai/web";
-
-type Mode = "quick" | "chat" | "voice";
 
 const FIELD_OPTIONS = [
   { value: "מלונאות", label: "מלונאות (מלונות, קבלה, חדרנות)" },
@@ -25,7 +24,12 @@ const START_OPTIONS = [
 ];
 
 export default function OutreachPage() {
-  const [mode, setMode] = useState<Mode>("quick");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <main dir="rtl" className="flex min-h-screen flex-col bg-gradient-to-br from-brand-50 via-white to-brand-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
@@ -35,53 +39,148 @@ export default function OutreachPage() {
           &rarr; חזרה לדף הראשי
         </a>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-900 dark:text-white">
-          {mode === "quick" ? "הגשה מהירה" : mode === "chat" ? "צ׳אט סינון מועמדים" : "שיחה קולית"}
+          הגשת מועמדות
         </h1>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          {mode === "quick"
-            ? "מלא/י פרטים ונמצא לך עבודה באילת תוך שניות"
-            : mode === "chat"
-              ? "סינון מועמדים בסגנון WhatsApp מבוסס AI"
-              : "ספר/י למגייס/ת שלנו מה את/ה מחפש/ת — בשיחה קצרה"}
+          בחרו את הדרך הנוחה לכם — טופס מהיר, צ׳אט עם מגייס/ת, או שיחה קולית
         </p>
-
-        {/* Mode toggle */}
-        <div className="mt-3 inline-flex rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-0.5">
-          <button
-            onClick={() => setMode("quick")}
-            className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
-              mode === "quick"
-                ? "bg-white dark:bg-slate-900 text-brand-700 shadow-sm"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-            }`}
-          >
-            הגשה מהירה
-          </button>
-          <button
-            onClick={() => setMode("chat")}
-            className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
-              mode === "chat"
-                ? "bg-white dark:bg-slate-900 text-brand-700 shadow-sm"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-            }`}
-          >
-            צ׳אט עם מגייס/ת
-          </button>
-          <button
-            onClick={() => setMode("voice")}
-            className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${
-              mode === "voice"
-                ? "bg-white dark:bg-slate-900 text-brand-700 shadow-sm"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-            }`}
-          >
-            שיחה קולית
-          </button>
-        </div>
       </div>
 
-      {mode === "quick" ? <QuickApplyForm /> : mode === "chat" ? <ChatMode /> : <VoiceApplyMode />}
+      {/* 3-Panel Grid */}
+      <div className="flex-1 px-4 py-6">
+        {mounted ? (
+          <div className="mx-auto max-w-7xl grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Panel 1: Quick Apply */}
+            <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm flex flex-col">
+              <div className="border-b border-slate-100 dark:border-slate-700 px-5 py-3">
+                <h2 className="text-lg font-bold text-brand-900 dark:text-white flex items-center gap-2">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-900 text-sm">📝</span>
+                  הגשה מהירה
+                </h2>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">מלא/י פרטים ונמצא לך עבודה תוך שניות</p>
+              </div>
+              <div className="flex-1 p-5">
+                <QuickApplyForm />
+              </div>
+            </div>
+
+            {/* Panel 2: Chat */}
+            <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm flex flex-col">
+              <div className="border-b border-slate-100 dark:border-slate-700 px-5 py-3">
+                <h2 className="text-lg font-bold text-brand-900 dark:text-white flex items-center gap-2">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900 text-sm">💬</span>
+                  צ׳אט עם מגייס/ת
+                </h2>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">סינון מועמדים בסגנון WhatsApp</p>
+              </div>
+              <div className="flex-1 flex flex-col">
+                <ChatMode />
+              </div>
+            </div>
+
+            {/* Panel 3: Voice */}
+            <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm flex flex-col md:col-span-2 lg:col-span-1">
+              <div className="border-b border-slate-100 dark:border-slate-700 px-5 py-3">
+                <h2 className="text-lg font-bold text-brand-900 dark:text-white flex items-center gap-2">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-900 text-sm">🎙️</span>
+                  שיחה קולית
+                </h2>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">ספר/י למגייס/ת מה את/ה מחפש/ת</p>
+              </div>
+              <div className="flex-1 flex flex-col">
+                <VoiceApplyMode />
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Skeleton loading state */
+          <div className="mx-auto max-w-7xl grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Quick Apply skeleton */}
+            <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-7 w-7 rounded-lg" />
+                <Skeleton className="h-5 w-24" />
+              </div>
+              <Skeleton className="h-3 w-40" />
+              <Skeleton className="h-2 w-full rounded-full" />
+              <div className="grid grid-cols-2 gap-3">
+                <Skeleton className="h-10 w-full rounded-lg" />
+                <Skeleton className="h-10 w-full rounded-lg" />
+              </div>
+              <Skeleton className="h-10 w-full rounded-lg" />
+              <Skeleton className="h-10 w-full rounded-lg" />
+              <Skeleton className="h-10 w-full rounded-lg" />
+              <Skeleton className="h-20 w-full rounded-lg" />
+              <Skeleton className="h-12 w-full rounded-xl" />
+            </div>
+            {/* Chat skeleton */}
+            <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 space-y-3">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-7 w-7 rounded-lg" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+              <Skeleton className="h-3 w-40" />
+              <div className="mt-8 space-y-3">
+                <div className="flex justify-end"><Skeleton className="h-10 w-3/4 rounded-2xl" /></div>
+                <div className="flex justify-start"><Skeleton className="h-8 w-1/2 rounded-2xl" /></div>
+                <div className="flex justify-end"><Skeleton className="h-12 w-2/3 rounded-2xl" /></div>
+                <div className="flex justify-start"><Skeleton className="h-8 w-2/5 rounded-2xl" /></div>
+              </div>
+              <div className="mt-auto pt-4 flex gap-2">
+                <Skeleton className="flex-1 h-10 rounded-full" />
+                <Skeleton className="h-10 w-16 rounded-full" />
+              </div>
+            </div>
+            {/* Voice skeleton */}
+            <div className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 flex flex-col items-center space-y-4 md:col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-2 self-start">
+                <Skeleton className="h-7 w-7 rounded-lg" />
+                <Skeleton className="h-5 w-24" />
+              </div>
+              <Skeleton className="h-3 w-44 self-start" />
+              <Skeleton className="h-28 w-28 rounded-full mt-6" />
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+          </div>
+        )}
+      </div>
     </main>
+  );
+}
+
+/* ===================== MATCHED JOBS (shared) ===================== */
+
+function MatchedJobCards({ jobs }: { jobs: MatchedJob[] }) {
+  return (
+    <div className="mt-4">
+      <p className="mb-2 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
+      <div className="grid gap-2">
+        {jobs.map((job, i) => (
+          <AnimatedCard key={job.id} index={i}>
+            <div className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm">
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
+              <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
+              {job.match_score != null && (
+                <div className="mt-2 flex items-center gap-1.5">
+                  <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div
+                      className={`h-1.5 rounded-full ${
+                        job.match_score >= 80 ? "bg-green-500" :
+                        job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
+                      }`}
+                      style={{ width: `${job.match_score}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
+                </div>
+              )}
+            </div>
+          </AnimatedCard>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -133,209 +232,124 @@ function QuickApplyForm() {
 
   if (result) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-        <div className="mx-auto w-full max-w-md text-center">
-          {result.fit === "good_fit" ? (
-            <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">הפרטים התקבלו!</h2>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
-            </>
-          ) : (
-            <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
-                <svg className="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">תודה על ההתעניינות</h2>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
-            </>
-          )}
-
-          {/* Matched job cards */}
-          {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
-            <div className="mt-6">
-              <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
-              <div className="grid gap-2 sm:grid-cols-3">
-                {result.matchedJobs.map((job, i) => (
-                  <AnimatedCard key={job.id} index={i}>
-                    <div
-                      className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
-                    >
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
-                      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
-                      <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
-                      {job.match_score != null && (
-                        <div className="mt-2 flex items-center gap-1.5">
-                          <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
-                            <div
-                              className={`h-1.5 rounded-full ${
-                                job.match_score >= 80 ? "bg-green-500" :
-                                job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
-                              }`}
-                              style={{ width: `${job.match_score}%` }}
-                            />
-                          </div>
-                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
-                        </div>
-                      )}
-                    </div>
-                  </AnimatedCard>
-                ))}
-              </div>
+      <div className="py-4 text-center">
+        {result.fit === "good_fit" ? (
+          <>
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+              <svg className="h-7 w-7 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
             </div>
-          )}
-        </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">הפרטים התקבלו!</h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
+          </>
+        ) : (
+          <>
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
+              <svg className="h-7 w-7 text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">תודה על ההתעניינות</h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
+          </>
+        )}
+
+        {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
+          <MatchedJobCards jobs={result.matchedJobs} />
+        )}
       </div>
     );
   }
 
   return (
-    <div className="flex-1 px-4 py-8">
-      <div className="mx-auto w-full max-w-md">
-        {/* Progress bar */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
-            <span>{filledSteps} מתוך {totalSteps} שלבים</span>
-            <span>{Math.round((filledSteps / totalSteps) * 100)}%</span>
-          </div>
-          <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700">
-            <div
-              className="h-2 rounded-full bg-brand-500 transition-all duration-300"
-              style={{ width: `${(filledSteps / totalSteps) * 100}%` }}
+    <>
+      {/* Progress bar */}
+      <div className="mb-5">
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+          <span>{filledSteps} מתוך {totalSteps} שלבים</span>
+          <span>{Math.round((filledSteps / totalSteps) * 100)}%</span>
+        </div>
+        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700">
+          <div
+            className="h-2 rounded-full bg-brand-500 transition-all duration-300"
+            style={{ width: `${(filledSteps / totalSteps) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name + Phone */}
+        <div className="grid grid-cols-2 gap-3">
+          <label>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">שם מלא *</span>
+            <input
+              type="text"
+              required
+              className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              placeholder="ישראל ישראלי"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
-          </div>
+          </label>
+          <label>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">טלפון *</span>
+            <input
+              type="tel"
+              required
+              className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              placeholder="050-1234567"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </label>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Name + Phone */}
-          <div className="grid grid-cols-2 gap-3">
-            <label>
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">שם מלא *</span>
-              <input
-                type="text"
-                required
-                className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="ישראל ישראלי"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <label>
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">טלפון *</span>
-              <input
-                type="tel"
-                required
-                className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="050-1234567"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </label>
-          </div>
-
-          {/* Relocate */}
-          <fieldset>
-            <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">מוכן/ה לעבור לאילת? *</legend>
-            <div className="mt-2 flex gap-3">
-              <button
-                type="button"
-                onClick={() => setRelocate(true)}
-                className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
-                  relocate === true
-                    ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
-                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
-                }`}
-              >
-                כן, בהחלט
-              </button>
-              <button
-                type="button"
-                onClick={() => setRelocate(false)}
-                className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
-                  relocate === false
-                    ? "border-red-300 bg-red-50 dark:bg-red-950 text-red-700"
-                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
-                }`}
-              >
-                לא כרגע
-              </button>
-            </div>
-          </fieldset>
-
-          {/* Housing — only show if relocate=true */}
-          {relocate === true && (
-            <fieldset>
-              <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">צריך/ה מגורים מסובסדים? *</legend>
-              <div className="mt-2 flex gap-2">
-                {[
-                  { value: "need", label: "כן, צריך/ה" },
-                  { value: "have", label: "יש לי מקום" },
-                  { value: "flexible", label: "גמיש/ה" },
-                ].map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => setHousing(opt.value)}
-                    className={`flex-1 rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
-                      housing === opt.value
-                        ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
-                        : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-          )}
-
-          {/* Field of interest */}
-          <label>
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">תחום עבודה מועדף *</span>
-            <select
-              required
-              value={field}
-              onChange={(e) => setField(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+        {/* Relocate */}
+        <fieldset>
+          <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">מוכן/ה לעבור לאילת? *</legend>
+          <div className="mt-2 flex gap-3">
+            <button
+              type="button"
+              onClick={() => setRelocate(true)}
+              className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                relocate === true
+                  ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
+                  : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
+              }`}
             >
-              <option value="">בחר/י תחום...</option>
-              {FIELD_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </label>
+              כן, בהחלט
+            </button>
+            <button
+              type="button"
+              onClick={() => setRelocate(false)}
+              className={`flex-1 rounded-lg border-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                relocate === false
+                  ? "border-red-300 bg-red-50 dark:bg-red-950 text-red-700"
+                  : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
+              }`}
+            >
+              לא כרגע
+            </button>
+          </div>
+        </fieldset>
 
-          {/* CV / Skills (optional) */}
-          <label>
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">כישורים וניסיון <span className="text-slate-400 font-normal">(לא חובה)</span></span>
-            <textarea
-              rows={3}
-              value={cvText}
-              onChange={(e) => setCvText(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              placeholder="ספר/י בקצרה על ניסיון עבודה, כישורים, שפות..."
-            />
-          </label>
-
-          {/* Start date */}
+        {/* Housing — only show if relocate=true */}
+        {relocate === true && (
           <fieldset>
-            <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">מתי יכול/ה להגיע? *</legend>
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              {START_OPTIONS.map((opt) => (
+            <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">צריך/ה מגורים מסובסדים? *</legend>
+            <div className="mt-2 flex gap-2">
+              {[
+                { value: "need", label: "כן, צריך/ה" },
+                { value: "have", label: "יש לי מקום" },
+                { value: "flexible", label: "גמיש/ה" },
+              ].map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setStartDate(opt.value)}
-                  className={`rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
-                    startDate === opt.value
+                  onClick={() => setHousing(opt.value)}
+                  className={`flex-1 rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
+                    housing === opt.value
                       ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
                       : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
                   }`}
@@ -345,39 +359,90 @@ function QuickApplyForm() {
               ))}
             </div>
           </fieldset>
+        )}
 
-          {/* Error */}
-          {error && (
-            <div className="rounded-lg bg-red-50 dark:bg-red-950 p-3 text-center text-sm text-red-700">
-              {error}
-            </div>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={!name || !phone || relocate === null || (!housing && relocate) || !field || !startDate || loading}
-            className="w-full rounded-xl bg-brand-600 px-6 py-3.5 text-base font-bold text-white shadow-lg hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        {/* Field of interest */}
+        <label>
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">תחום עבודה מועדף *</span>
+          <select
+            required
+            value={field}
+            onChange={(e) => setField(e.target.value)}
+            className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Spinner /> שולח/ת...
-              </span>
-            ) : (
-              "מצא/י לי עבודה באילת"
-            )}
-          </button>
+            <option value="">בחר/י תחום...</option>
+            {FIELD_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
 
-          {/* Benefits reminder */}
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
-            <span>מגורים מסובסדים</span>
-            <span>ארוחות</span>
-            <span>הסעות בחינם</span>
-            <span>עבודה מועדפת</span>
+        {/* CV / Skills (optional) */}
+        <label>
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">כישורים וניסיון <span className="text-slate-400 font-normal">(לא חובה)</span></span>
+          <textarea
+            rows={2}
+            value={cvText}
+            onChange={(e) => setCvText(e.target.value)}
+            className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            placeholder="ספר/י בקצרה על ניסיון עבודה, כישורים, שפות..."
+          />
+        </label>
+
+        {/* Start date */}
+        <fieldset>
+          <legend className="text-sm font-medium text-slate-700 dark:text-slate-300">מתי יכול/ה להגיע? *</legend>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {START_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setStartDate(opt.value)}
+                className={`rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${
+                  startDate === opt.value
+                    ? "border-brand-500 bg-brand-50 dark:bg-slate-800 text-brand-700"
+                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
-        </form>
-      </div>
-    </div>
+        </fieldset>
+
+        {/* Error */}
+        {error && (
+          <div className="rounded-lg bg-red-50 dark:bg-red-950 p-3 text-center text-sm text-red-700">
+            {error}
+          </div>
+        )}
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={!name || !phone || relocate === null || (!housing && relocate) || !field || !startDate || loading}
+          className="w-full rounded-xl bg-brand-600 px-6 py-3.5 text-base font-bold text-white shadow-lg hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <Spinner /> שולח/ת...
+            </span>
+          ) : (
+            "מצא/י לי עבודה באילת"
+          )}
+        </button>
+
+        {/* Benefits reminder */}
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
+          <span>מגורים מסובסדים</span>
+          <span>ארוחות</span>
+          <span>הסעות בחינם</span>
+          <span>עבודה מועדפת</span>
+        </div>
+      </form>
+    </>
   );
 }
 
@@ -436,10 +501,10 @@ function ChatMode() {
   return (
     <>
       {/* Chat area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="mx-auto max-w-2xl space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-4" style={{ maxHeight: "400px" }}>
+        <div className="space-y-3">
           {messages.length === 0 && (
-            <p className="text-center text-sm text-slate-400 py-12">
+            <p className="text-center text-sm text-slate-400 py-8">
               שלח/י הודעה כדי להתחיל את השיחה
             </p>
           )}
@@ -449,7 +514,7 @@ function ChatMode() {
               className={`flex ${msg.role === "user" ? "justify-start" : "justify-end"}`}
             >
               <div
-                className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"
                     ? "bg-green-500 text-white rounded-bl-md"
                     : "bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-br-md"
@@ -489,37 +554,8 @@ function ChatMode() {
 
       {/* Matched job cards */}
       {screeningComplete && candidateFit === "good_fit" && matchedJobs && matchedJobs.length > 0 && (
-        <div className="border-t border-green-100 dark:border-green-800 bg-green-50/50 dark:bg-green-950/50 px-4 py-4">
-          <div className="mx-auto max-w-2xl">
-            <p className="mb-3 text-center text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
-            <div className="grid gap-2 sm:grid-cols-3">
-              {matchedJobs.map((job, i) => (
-                <AnimatedCard key={job.id} index={i}>
-                  <div
-                    className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
-                  >
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
-                    <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
-                    {job.match_score != null && (
-                      <div className="mt-2 flex items-center gap-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
-                          <div
-                            className={`h-1.5 rounded-full ${
-                              job.match_score >= 80 ? "bg-green-500" :
-                              job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
-                            }`}
-                            style={{ width: `${job.match_score}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
-                      </div>
-                    )}
-                  </div>
-                </AnimatedCard>
-              ))}
-            </div>
-          </div>
+        <div className="border-t border-green-100 dark:border-green-800 bg-green-50/50 dark:bg-green-950/50 px-4 py-3">
+          <MatchedJobCards jobs={matchedJobs} />
         </div>
       )}
 
@@ -531,9 +567,9 @@ function ChatMode() {
       )}
 
       {/* Input bar */}
-      <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3">
+      <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 mt-auto">
         <form
-          className="mx-auto flex max-w-2xl gap-2"
+          className="flex gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             handleSend();
@@ -628,7 +664,6 @@ function VoiceApplyMode() {
     setLoading(true);
     setError(null);
 
-    // Build full transcript from all messages
     const transcript = transcriptMessages
       .map((m) => `${m.role === "user" ? "מועמד" : "מגייס"}: ${m.text}`)
       .join("\n");
@@ -702,142 +737,107 @@ function VoiceApplyMode() {
     }
   }, []);
 
-  // Show result
   if (result) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-        <div className="mx-auto w-full max-w-md text-center">
-          {result.fit === "good_fit" ? (
-            <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">הפרטים התקבלו!</h2>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
-            </>
-          ) : (
-            <>
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
-                <svg className="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">תודה על השיחה</h2>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
-            </>
-          )}
-
-          {/* Matched job cards */}
-          {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
-            <div className="mt-6">
-              <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">משרות מתאימות שנמצאו</p>
-              <div className="grid gap-2 sm:grid-cols-3">
-                {result.matchedJobs.map((job, i) => (
-                  <AnimatedCard key={job.id} index={i}>
-                    <div
-                      className="rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-slate-900 p-3 text-right shadow-sm"
-                    >
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
-                      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{job.employer}</p>
-                      <p className="mt-1 text-xs font-medium text-brand-600 dark:text-brand-400">{job.salary_range}</p>
-                      {job.match_score != null && (
-                        <div className="mt-2 flex items-center gap-1.5">
-                          <div className="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700">
-                            <div
-                              className={`h-1.5 rounded-full ${
-                                job.match_score >= 80 ? "bg-green-500" :
-                                job.match_score >= 60 ? "bg-yellow-500" : "bg-orange-400"
-                              }`}
-                              style={{ width: `${job.match_score}%` }}
-                            />
-                          </div>
-                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{job.match_score}%</span>
-                        </div>
-                      )}
-                    </div>
-                  </AnimatedCard>
-                ))}
-              </div>
+      <div className="p-5 text-center">
+        {result.fit === "good_fit" ? (
+          <>
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+              <svg className="h-7 w-7 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
             </div>
-          )}
-        </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">הפרטים התקבלו!</h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
+          </>
+        ) : (
+          <>
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
+              <svg className="h-7 w-7 text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">תודה על השיחה</h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{result.message}</p>
+          </>
+        )}
+
+        {result.fit === "good_fit" && result.matchedJobs && result.matchedJobs.length > 0 && (
+          <MatchedJobCards jobs={result.matchedJobs} />
+        )}
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center px-4 py-8">
-      <div className="mx-auto w-full max-w-md text-center">
-        {/* Call button */}
-        <div className="mt-8">
-          <button
-            onClick={callActive ? stopCall : startCall}
-            disabled={status.type === "connecting" || loading}
-            className={`inline-flex h-32 w-32 items-center justify-center rounded-full text-5xl transition-all ${
-              callActive
-                ? "animate-pulse bg-red-500 hover:bg-red-600"
-                : status.type === "connecting" || loading
-                  ? "bg-slate-400 cursor-not-allowed"
-                  : "bg-green-500 hover:bg-green-600 hover:scale-105"
-            }`}
-          >
-            {callActive ? "🔴" : "📞"}
-          </button>
-        </div>
-
-        <p className={`mt-4 text-sm font-semibold ${
-          status.type === "active" ? "text-green-500" :
-          status.type === "error" ? "text-red-500" :
-          status.type === "connecting" || status.type === "processing" ? "text-yellow-500" :
-          "text-slate-500 dark:text-slate-400"
-        }`}>
-          {status.text}
-        </p>
-
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="mt-6 space-y-2">
-            <div className="h-4 w-3/4 mx-auto animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
-            <div className="h-4 w-1/2 mx-auto animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
-            <div className="h-4 w-2/3 mx-auto animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
-          </div>
-        )}
-
-        {/* Error */}
-        {error && (
-          <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-950 p-3 text-center text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {/* Live transcript */}
-        {messages.length > 0 && (
-          <div className="mt-6 rounded-xl bg-slate-100 dark:bg-slate-700 p-4 text-right" style={{ maxHeight: 300, overflowY: "auto" }}>
-            <h3 className="mb-3 text-xs text-slate-400">תמלול שיחה</h3>
-            {messages.map((msg, i) => (
-              <div key={i} className="mb-2 text-sm leading-relaxed">
-                <span
-                  className={`font-bold ${msg.role === "assistant" ? "text-brand-500" : "text-green-500"}`}
-                >
-                  {msg.role === "assistant" ? "מגייס/ת" : "את/ה"}:
-                </span>{" "}
-                {msg.text}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Info */}
-        {!callActive && !loading && !result && messages.length === 0 && (
-          <div className="mt-8 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
-            <span>שיחה של דקה</span>
-            <span>בעברית</span>
-            <span>נמצא לך עבודה</span>
-          </div>
-        )}
+    <div className="flex-1 flex flex-col items-center p-5 text-center">
+      {/* Call button */}
+      <div className="mt-6">
+        <button
+          onClick={callActive ? stopCall : startCall}
+          disabled={status.type === "connecting" || loading}
+          className={`inline-flex h-28 w-28 items-center justify-center rounded-full text-5xl transition-all ${
+            callActive
+              ? "animate-pulse bg-red-500 hover:bg-red-600"
+              : status.type === "connecting" || loading
+                ? "bg-slate-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600 hover:scale-105"
+          }`}
+        >
+          {callActive ? "🔴" : "📞"}
+        </button>
       </div>
+
+      <p className={`mt-4 text-sm font-semibold ${
+        status.type === "active" ? "text-green-500" :
+        status.type === "error" ? "text-red-500" :
+        status.type === "connecting" || status.type === "processing" ? "text-yellow-500" :
+        "text-slate-500 dark:text-slate-400"
+      }`}>
+        {status.text}
+      </p>
+
+      {/* Loading skeleton */}
+      {loading && (
+        <div className="mt-6 space-y-2 w-full">
+          <Skeleton className="h-4 w-3/4 mx-auto" />
+          <Skeleton className="h-4 w-1/2 mx-auto" />
+          <Skeleton className="h-4 w-2/3 mx-auto" />
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-950 p-3 text-center text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {/* Live transcript */}
+      {messages.length > 0 && (
+        <div className="mt-4 w-full rounded-xl bg-slate-100 dark:bg-slate-700 p-4 text-right" style={{ maxHeight: 250, overflowY: "auto" }}>
+          <h3 className="mb-3 text-xs text-slate-400">תמלול שיחה</h3>
+          {messages.map((msg, i) => (
+            <div key={i} className="mb-2 text-sm leading-relaxed">
+              <span
+                className={`font-bold ${msg.role === "assistant" ? "text-brand-500" : "text-green-500"}`}
+              >
+                {msg.role === "assistant" ? "מגייס/ת" : "את/ה"}:
+              </span>{" "}
+              {msg.text}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Info */}
+      {!callActive && !loading && !result && messages.length === 0 && (
+        <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
+          <span>שיחה של דקה</span>
+          <span>בעברית</span>
+          <span>נמצא לך עבודה</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import AnimatedCard from "@/components/AnimatedCard";
+import { Skeleton } from "@/components/Skeleton";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -361,19 +362,27 @@ function HeroSection() {
   );
 }
 
-function TrustBar() {
+function TrustBar({ loading }: { loading: boolean }) {
   return (
     <section className="bg-brand-50 dark:bg-slate-800 px-4 py-10">
       <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 md:grid-cols-4">
-        {TRUST_STATS.map((stat) => (
-          <div key={stat.label} className="text-center">
-            <span className="text-2xl">{stat.emoji}</span>
-            <p className="mt-1 text-3xl font-extrabold text-brand-900 dark:text-white">
-              {stat.value}
-            </p>
-            <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center space-y-2">
+                <Skeleton className="h-8 w-8 rounded-full" />
+                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+            ))
+          : TRUST_STATS.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <span className="text-2xl">{stat.emoji}</span>
+                <p className="mt-1 text-3xl font-extrabold text-brand-900 dark:text-white">
+                  {stat.value}
+                </p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
+              </div>
+            ))}
       </div>
     </section>
   );
@@ -400,7 +409,7 @@ function JobCategoryCard({
   );
 }
 
-function JobCategories() {
+function JobCategories({ loading }: { loading: boolean }) {
   return (
     <section id="jobs" className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
@@ -411,16 +420,25 @@ function JobCategories() {
           50+ מעסיקים פעילים. משרות פתוחות עכשיו. בחרו תחום — ונתאים לכם עבודה.
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {JOB_CATEGORIES.map((cat, i) => (
-            <AnimatedCard key={cat.title} index={i}>
-              <JobCategoryCard
-                emoji={cat.emoji}
-                title={cat.title}
-                roles={cat.roles}
-                hook={cat.hook}
-              />
-            </AnimatedCard>
-          ))}
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 space-y-3">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-3 w-2/3" />
+                </div>
+              ))
+            : JOB_CATEGORIES.map((cat, i) => (
+                <AnimatedCard key={cat.title} index={i}>
+                  <JobCategoryCard
+                    emoji={cat.emoji}
+                    title={cat.title}
+                    roles={cat.roles}
+                    hook={cat.hook}
+                  />
+                </AnimatedCard>
+              ))}
         </div>
       </div>
     </section>
@@ -447,7 +465,7 @@ function BenefitCard({
   );
 }
 
-function WhyBarak() {
+function WhyBarak({ loading }: { loading: boolean }) {
   return (
     <section id="about" className="bg-slate-50 dark:bg-slate-800 px-4 py-16">
       <div className="mx-auto max-w-6xl">
@@ -458,15 +476,25 @@ function WhyBarak() {
           מה שמעסיקים אחרים מבטיחים, אנחנו מסדרים עוד לפני שמגיעים
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {BENEFITS.map((b, i) => (
-            <AnimatedCard key={b.title} index={i}>
-              <BenefitCard
-                emoji={b.emoji}
-                title={b.title}
-                description={b.description}
-              />
-            </AnimatedCard>
-          ))}
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 space-y-3">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-3 w-3/4" />
+                </div>
+              ))
+            : BENEFITS.map((b, i) => (
+                <AnimatedCard key={b.title} index={i}>
+                  <BenefitCard
+                    emoji={b.emoji}
+                    title={b.title}
+                    description={b.description}
+                  />
+                </AnimatedCard>
+              ))}
         </div>
       </div>
     </section>
@@ -498,7 +526,7 @@ function TestimonialCard({
   );
 }
 
-function Testimonials() {
+function Testimonials({ loading }: { loading: boolean }) {
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
@@ -509,16 +537,29 @@ function Testimonials() {
           עובדים אמיתיים, מספרים אמיתיים, בלי פילטרים
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
-            <AnimatedCard key={t.name} index={i}>
-              <TestimonialCard
-                name={t.name}
-                role={t.role}
-                quote={t.quote}
-                stars={t.stars}
-              />
-            </AnimatedCard>
-          ))}
+          {loading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 space-y-3">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <div className="border-t border-slate-100 dark:border-slate-700 pt-3 space-y-1">
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-3 w-28" />
+                  </div>
+                </div>
+              ))
+            : TESTIMONIALS.map((t, i) => (
+                <AnimatedCard key={t.name} index={i}>
+                  <TestimonialCard
+                    name={t.name}
+                    role={t.role}
+                    quote={t.quote}
+                    stars={t.stars}
+                  />
+                </AnimatedCard>
+              ))}
         </div>
       </div>
     </section>
@@ -600,7 +641,7 @@ function BlogPreviewCard({
   return card;
 }
 
-function BlogPreview() {
+function BlogPreview({ loading }: { loading: boolean }) {
   return (
     <section id="blog" className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
@@ -611,16 +652,26 @@ function BlogPreview() {
           מה שהיינו רוצים שמישהו יספר לנו לפני שעברנו לאילת
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {BLOG_POSTS.map((post, i) => (
-            <AnimatedCard key={post.slug} index={i}>
-              <BlogPreviewCard
-                title={post.title}
-                excerpt={post.excerpt}
-                date={post.date}
-                href={post.slug === "guide-moving-to-eilat" ? `/blog/${post.slug}` : undefined}
-              />
-            </AnimatedCard>
-          ))}
+          {loading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 space-y-3">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+              ))
+            : BLOG_POSTS.map((post, i) => (
+                <AnimatedCard key={post.slug} index={i}>
+                  <BlogPreviewCard
+                    title={post.title}
+                    excerpt={post.excerpt}
+                    date={post.date}
+                    href={post.slug === "guide-moving-to-eilat" || post.slug === "eilat-salary-guide-2026" ? `/blog/${post.slug}` : undefined}
+                  />
+                </AnimatedCard>
+              ))}
         </div>
         <div className="mt-8 text-center">
           <a
@@ -831,17 +882,26 @@ function Footer() {
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const loading = !mounted;
+
   return (
     <>
       <Header />
       <main>
         <HeroSection />
-        <TrustBar />
-        <JobCategories />
-        <WhyBarak />
-        <Testimonials />
+        <TrustBar loading={loading} />
+        <JobCategories loading={loading} />
+        <WhyBarak loading={loading} />
+        <Testimonials loading={loading} />
         <FaqSection />
-        <BlogPreview />
+        <BlogPreview loading={loading} />
         <QuickApplicationForm />
       </main>
       <Footer />

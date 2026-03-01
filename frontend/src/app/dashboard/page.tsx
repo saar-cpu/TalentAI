@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Lead } from "@/types";
 import { fetchLeads } from "@/lib/api";
+import { Skeleton } from "@/components/Skeleton";
 
 const STATUS_COLORS: Record<string, string> = {
-  "חדש": "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300",
+  "חדש": "bg-brand-100 dark:bg-brand-900 text-brand-700 dark:text-brand-300",
   "מעקב": "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300",
-  "New Lead": "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300",
+  "New Lead": "bg-brand-100 dark:bg-brand-900 text-brand-700 dark:text-brand-300",
   "active": "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300",
   "closed": "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400",
 };
@@ -98,34 +99,50 @@ export default function DashboardPage() {
       {/* Stats */}
       <div className="mx-auto max-w-6xl px-4 py-4">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard label="סה״כ לידים" value={stats.total} color="bg-brand-600" />
-          <StatCard label="לידים חדשים" value={stats.new} color="bg-indigo-500" />
-          <StatCard label="פעילים" value={stats.active} color="bg-green-500" />
-          <StatCard label="מ-WhatsApp" value={stats.whatsapp} color="bg-emerald-500" />
+          {loading && !leads.length
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm space-y-2">
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+              ))
+            : <>
+                <StatCard label="סה״כ לידים" value={stats.total} color="bg-brand-600" />
+                <StatCard label="לידים חדשים" value={stats.new} color="bg-brand-500" />
+                <StatCard label="פעילים" value={stats.active} color="bg-green-500" />
+                <StatCard label="מ-WhatsApp" value={stats.whatsapp} color="bg-green-600" />
+              </>}
         </div>
       </div>
 
       {/* Filters */}
       <div className="mx-auto max-w-6xl px-4 pb-3">
-        <div className="flex flex-wrap gap-3">
-          <input
-            type="text"
-            placeholder="חיפוש לפי שם, טלפון, תפקיד..."
-            className="flex-1 min-w-[200px] rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <select
-            className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-white dark:bg-slate-900 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="">כל הסטטוסים</option>
-            <option value="חדש">חדש</option>
-            <option value="מעקב">מעקב</option>
-            <option value="New Lead">New Lead</option>
-          </select>
-        </div>
+        {loading && !leads.length ? (
+          <div className="flex flex-wrap gap-3">
+            <Skeleton className="flex-1 min-w-[200px] h-10 rounded-lg" />
+            <Skeleton className="h-10 w-32 rounded-lg" />
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-3">
+            <input
+              type="text"
+              placeholder="חיפוש לפי שם, טלפון, תפקיד..."
+              className="flex-1 min-w-[200px] rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <select
+              className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-white dark:bg-slate-900 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">כל הסטטוסים</option>
+              <option value="חדש">חדש</option>
+              <option value="מעקב">מעקב</option>
+              <option value="New Lead">New Lead</option>
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Error */}
