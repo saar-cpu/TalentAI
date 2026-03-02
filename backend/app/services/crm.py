@@ -26,6 +26,7 @@ async def save_lead_to_supabase(
     desired_role: str | None = None,
     location: str | None = None,
     source: str = "whatsapp_screening",
+    lead_source: str | None = None,
 ) -> bool:
     """Insert a qualified lead into the Supabase `leads` table.
 
@@ -40,9 +41,11 @@ async def save_lead_to_supabase(
         "job_title": desired_role,
         "location": location or "אילת",
         "source": source,
-        "status": "חדש",
+        "status": "NEW_LEAD",
         "recruitment_status": "active",
     }
+    if lead_source:
+        lead_data["lead_source"] = lead_source
 
     client = _get_supabase()
     if client is None:

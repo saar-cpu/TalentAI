@@ -180,11 +180,64 @@ export async function fetchLeads(
         jobTitle: (l.job_title as string) ?? null,
         location: (l.location as string) ?? null,
         source: (l.source as string) ?? null,
-        status: (l.status as string) ?? null,
+        status: (l.status as string) ?? "NEW_LEAD",
         recruitmentStatus: (l.recruitment_status as string) ?? null,
+        leadSource: (l.lead_source as string) ?? null,
+        screeningScore: (l.screening_score as number) ?? null,
+        humanApproved: (l.human_approved as boolean) ?? false,
         createdAt: l.created_at as string,
       })
     ),
     count: raw.count,
   };
+}
+
+export async function updateLead(
+  leadId: string,
+  data: { leadSource?: string }
+): Promise<void> {
+  const body: Record<string, string> = {};
+  if (data.leadSource !== undefined) body.lead_source = data.leadSource;
+
+  const res = await fetch(`${API_BASE}/leads/${leadId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const raw = await res.json().catch(() => null);
+    throw new Error(raw?.detail ?? `Failed to update lead: ${res.status}`);
+  }
+}
+
+export interface TransitionResult {
+  success: boolean;
+  lead_id: string;
+  previous_status: string;
+  new_status: string;
+}
+
+export async function changeLeadStatus(
+  leadId: string,
+  newStatus: string,
+  changedBy: string = "dashboard_user",
+  notes?: string
+): Promise<TransitionResult> {
+  const res = await fetch(`${API_BASE}/leads/${leadId}/transition`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      new_status: newStatus,
+      changed_by: changedBy,
+      notes: notes ?? null,
+    }),
+  });
+
+  if (!res.ok) {
+    const raw = await res.json().catch(() => null);
+    throw new Error(raw?.detail ?? `Status transition failed: ${res.status}`);
+  }
+
+  return res.json();
 }

@@ -3,15 +3,24 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import type { Lead, MatchedJob } from "@/types";
-import { fetchLeads } from "@/lib/api";
+import { fetchLeads, updateLead } from "@/lib/api";
 import { Skeleton } from "@/components/Skeleton";
 import ProfileStrength from "@/components/ProfileStrength";
 import { FomoBadges } from "@/components/FomoBadges";
 import { getFomoData } from "@/lib/fomo";
+import { ToastProvider } from "@/components/Toast";
+import KanbanBoard from "@/components/KanbanBoard";
+import {
+  STATUS_LABELS,
+  STATUS_COLORS as SM_STATUS_COLORS,
+  LEAD_STATUSES,
+  isLeadStatus,
+} from "@/lib/stateMachine";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type TabKey = "employer" | "candidate";
+type ViewMode = "table" | "kanban";
 type SortKey = "matchScore" | "createdAt";
 type SortDir = "asc" | "desc";
 
@@ -24,13 +33,15 @@ interface AugmentedLead extends Lead {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const STATUS_COLORS: Record<string, string> = {
-  "חדש": "bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300",
-  "מעקב": "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-300",
-  "New Lead": "bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300",
-  active: "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300",
-  closed: "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400",
-};
+function getStatusColor(status: string): string {
+  if (isLeadStatus(status)) return SM_STATUS_COLORS[status];
+  return "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400";
+}
+
+function getStatusLabel(status: string): string {
+  if (isLeadStatus(status)) return STATUS_LABELS[status];
+  return status;
+}
 
 const CHANNEL_CONFIG: Record<string, { label: string; className: string }> = {
   quick_apply: {
@@ -45,6 +56,24 @@ const CHANNEL_CONFIG: Record<string, { label: string; className: string }> = {
     label: "שיחה קולית",
     className: "bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300",
   },
+};
+
+const LEAD_SOURCE_OPTIONS = [
+  "פייסבוק",
+  "לינקדאין",
+  "חבר מביא חבר",
+  "אתר החברה",
+  "קמפיין ממומן",
+  "אחר",
+];
+
+const LEAD_SOURCE_COLORS: Record<string, string> = {
+  "פייסבוק": "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",
+  "לינקדאין": "bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300",
+  "חבר מביא חבר": "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300",
+  "אתר החברה": "bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300",
+  "קמפיין ממומן": "bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300",
+  "אחר": "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300",
 };
 
 const MOCK_RECOMMENDED_JOBS: MatchedJob[] = [
@@ -118,12 +147,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>("employer");
+  const [viewMode, setViewMode] = useState<ViewMode>("kanban");
   const [statusFilter, setStatusFilter] = useState("");
   const [channelFilter, setChannelFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("matchScore");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [editingLead, setEditingLead] = useState<AugmentedLead | null>(null);
 
   const loadLeads = useCallback(async () => {
     setLoading(true);
@@ -196,6 +227,7 @@ export default function DashboardPage() {
   const isInitialLoad = loading && !leads.length;
 
   return (
+    <ToastProvider>
     <main dir="rtl" className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-4 py-4">
@@ -238,14 +270,46 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Right: refresh */}
-            <button
-              onClick={loadLeads}
-              disabled={loading}
-              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
-            >
-              {loading ? "טוען..." : "רענן"}
-            </button>
+            {/* Right: view toggle + reports + refresh */}
+            <div className="flex items-center gap-2">
+              {activeTab === "employer" && (
+                <div className="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5">
+                  <button
+                    onClick={() => setViewMode("kanban")}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                      viewMode === "kanban"
+                        ? "bg-white dark:bg-slate-700 text-brand-700 dark:text-white shadow-sm"
+                        : "text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    קנבן
+                  </button>
+                  <button
+                    onClick={() => setViewMode("table")}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                      viewMode === "table"
+                        ? "bg-white dark:bg-slate-700 text-brand-700 dark:text-white shadow-sm"
+                        : "text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    טבלה
+                  </button>
+                </div>
+              )}
+              <a
+                href="/reports"
+                className="rounded-lg border border-brand-300 dark:border-brand-600 bg-brand-50 dark:bg-brand-900/30 px-4 py-2 text-sm font-medium text-brand-700 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors"
+              >
+                דוחות
+              </a>
+              <button
+                onClick={loadLeads}
+                disabled={loading}
+                className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+              >
+                {loading ? "טוען..." : "רענן"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -281,47 +345,6 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              {/* Filters */}
-              <div className="mt-4">
-                {isInitialLoad ? (
-                  <div className="flex flex-wrap gap-3">
-                    <Skeleton className="flex-1 min-w-[200px] h-10 rounded-lg" />
-                    <Skeleton className="h-10 w-32 rounded-lg" />
-                    <Skeleton className="h-10 w-32 rounded-lg" />
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-3">
-                    <input
-                      type="text"
-                      placeholder="חיפוש לפי שם, טלפון, תחום..."
-                      className="flex-1 min-w-[200px] rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-slate-100 px-4 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <select
-                      className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                      <option value="">כל הסטטוסים</option>
-                      <option value="חדש">חדש</option>
-                      <option value="מעקב">מעקב</option>
-                      <option value="New Lead">New Lead</option>
-                    </select>
-                    <select
-                      className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                      value={channelFilter}
-                      onChange={(e) => setChannelFilter(e.target.value)}
-                    >
-                      <option value="">כל הערוצים</option>
-                      <option value="quick_apply">טופס מהיר</option>
-                      <option value="chat">צ׳אט</option>
-                      <option value="voice">שיחה קולית</option>
-                    </select>
-                  </div>
-                )}
-              </div>
-
               {/* Error */}
               {error && (
                 <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-700 dark:text-red-300">
@@ -329,66 +352,131 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Table */}
-              <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
-                        <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">שם</th>
-                        <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">טלפון</th>
-                        <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">תחום</th>
-                        <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">ערוץ</th>
-                        <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">סטטוס</th>
-                        <SortableHeader label="התאמה" sortKey="matchScore" currentSort={sortKey} currentDir={sortDir} onSort={handleSort} />
-                        <SortableHeader label="תאריך" sortKey="createdAt" currentSort={sortKey} currentDir={sortDir} onSort={handleSort} />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {isInitialLoad ? (
-                        Array.from({ length: 7 }).map((_, i) => (
-                          <tr key={i} className="border-b border-slate-50 dark:border-slate-700">
-                            <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
-                            <td className="px-4 py-3"><Skeleton className="h-4 w-28" /></td>
-                            <td className="px-4 py-3"><Skeleton className="h-4 w-16" /></td>
-                            <td className="px-4 py-3"><Skeleton className="h-5 w-16 rounded-full" /></td>
-                            <td className="px-4 py-3"><Skeleton className="h-5 w-14 rounded-full" /></td>
-                            <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <Skeleton className="h-2 w-20 rounded-full" />
-                                <Skeleton className="h-4 w-8" />
-                              </div>
-                            </td>
-                            <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
-                          </tr>
-                        ))
-                      ) : displayedLeads.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="px-4 py-12 text-center text-slate-400 dark:text-slate-500">
-                            {searchQuery || channelFilter ? "לא נמצאו תוצאות" : "אין מועמדים עדיין"}
-                          </td>
-                        </tr>
-                      ) : (
-                        displayedLeads.map((lead, i) => (
-                          <LeadRow
-                            key={lead.id}
-                            lead={lead}
-                            index={i}
-                            expanded={expandedId === lead.id}
-                            onToggle={() => setExpandedId(expandedId === lead.id ? null : lead.id)}
-                          />
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+              {/* Kanban View */}
+              {viewMode === "kanban" ? (
+                <div className="mt-4">
+                  {isInitialLoad ? (
+                    <div className="flex gap-3 overflow-hidden">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div key={i} className="flex-shrink-0 w-56 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-3 space-y-2">
+                          <Skeleton className="h-5 w-20 rounded-full" />
+                          <Skeleton className="h-20 w-full rounded-lg" />
+                          <Skeleton className="h-20 w-full rounded-lg" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <KanbanBoard leads={leads} onRefresh={loadLeads} />
+                  )}
                 </div>
-
-                {displayedLeads.length > 0 && (
-                  <div className="border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-4 py-2 text-xs text-slate-500 dark:text-slate-400">
-                    מציג {displayedLeads.length} מתוך {augmentedLeads.length} מועמדים
+              ) : (
+                <>
+                  {/* Filters (table view only) */}
+                  <div className="mt-4">
+                    {isInitialLoad ? (
+                      <div className="flex flex-wrap gap-3">
+                        <Skeleton className="flex-1 min-w-[200px] h-10 rounded-lg" />
+                        <Skeleton className="h-10 w-32 rounded-lg" />
+                        <Skeleton className="h-10 w-32 rounded-lg" />
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-3">
+                        <input
+                          type="text"
+                          placeholder="חיפוש לפי שם, טלפון, תחום..."
+                          className="flex-1 min-w-[200px] rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-slate-100 px-4 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <select
+                          className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          value={statusFilter}
+                          onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                          <option value="">כל הסטטוסים</option>
+                          {LEAD_STATUSES.map((s) => (
+                            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
+                          ))}
+                        </select>
+                        <select
+                          className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          value={channelFilter}
+                          onChange={(e) => setChannelFilter(e.target.value)}
+                        >
+                          <option value="">כל הערוצים</option>
+                          <option value="quick_apply">טופס מהיר</option>
+                          <option value="chat">צ׳אט</option>
+                          <option value="voice">שיחה קולית</option>
+                        </select>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+
+                  {/* Table */}
+                  <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
+                            <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">שם</th>
+                            <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">טלפון</th>
+                            <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">תחום</th>
+                            <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">ערוץ</th>
+                            <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">סטטוס</th>
+                            <th className="px-4 py-3 text-right font-semibold text-slate-600 dark:text-slate-400">מקור</th>
+                            <SortableHeader label="התאמה" sortKey="matchScore" currentSort={sortKey} currentDir={sortDir} onSort={handleSort} />
+                            <SortableHeader label="תאריך" sortKey="createdAt" currentSort={sortKey} currentDir={sortDir} onSort={handleSort} />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {isInitialLoad ? (
+                            Array.from({ length: 7 }).map((_, i) => (
+                              <tr key={i} className="border-b border-slate-50 dark:border-slate-700">
+                                <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                                <td className="px-4 py-3"><Skeleton className="h-4 w-28" /></td>
+                                <td className="px-4 py-3"><Skeleton className="h-4 w-16" /></td>
+                                <td className="px-4 py-3"><Skeleton className="h-5 w-16 rounded-full" /></td>
+                                <td className="px-4 py-3"><Skeleton className="h-5 w-14 rounded-full" /></td>
+                                <td className="px-4 py-3"><Skeleton className="h-5 w-16 rounded-full" /></td>
+                                <td className="px-4 py-3">
+                                  <div className="flex items-center gap-2">
+                                    <Skeleton className="h-2 w-20 rounded-full" />
+                                    <Skeleton className="h-4 w-8" />
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                              </tr>
+                            ))
+                          ) : displayedLeads.length === 0 ? (
+                            <tr>
+                              <td colSpan={8} className="px-4 py-12 text-center text-slate-400 dark:text-slate-500">
+                                {searchQuery || channelFilter ? "לא נמצאו תוצאות" : "אין מועמדים עדיין"}
+                              </td>
+                            </tr>
+                          ) : (
+                            displayedLeads.map((lead, i) => (
+                              <LeadRow
+                                key={lead.id}
+                                lead={lead}
+                                index={i}
+                                expanded={expandedId === lead.id}
+                                onToggle={() => setExpandedId(expandedId === lead.id ? null : lead.id)}
+                                onEdit={() => setEditingLead(lead)}
+                              />
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {displayedLeads.length > 0 && (
+                      <div className="border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-4 py-2 text-xs text-slate-500 dark:text-slate-400">
+                        מציג {displayedLeads.length} מתוך {augmentedLeads.length} מועמדים
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </motion.div>
           ) : (
             <motion.div
@@ -403,7 +491,118 @@ export default function DashboardPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Edit Lead Modal ──────────────────────────────────────── */}
+      <AnimatePresence>
+        {editingLead && (
+          <EditLeadModal
+            lead={editingLead}
+            onClose={() => setEditingLead(null)}
+            onSaved={() => {
+              setEditingLead(null);
+              loadLeads();
+            }}
+          />
+        )}
+      </AnimatePresence>
     </main>
+    </ToastProvider>
+  );
+}
+
+// ─── Edit Lead Modal ──────────────────────────────────────────────────────────
+
+function EditLeadModal({
+  lead,
+  onClose,
+  onSaved,
+}: {
+  lead: AugmentedLead;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [source, setSource] = useState(lead.leadSource || "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSave() {
+    setSaving(true);
+    setError("");
+    try {
+      await updateLead(lead.id, { leadSource: source });
+      onSaved();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "שגיאה בשמירה");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 12 }}
+        transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-2xl"
+        dir="rtl"
+      >
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">עריכת ליד</h3>
+
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+            <span className="font-medium">שם:</span> {lead.name}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+            <span className="font-medium">טלפון:</span> <span dir="ltr">{lead.phone}</span>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              מקור הגעה
+            </label>
+            <select
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              <option value="">לא צוין</option>
+              {LEAD_SOURCE_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          )}
+        </div>
+
+        <div className="mt-6 flex gap-3 justify-start">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
+          >
+            {saving ? "שומר..." : "שמור"}
+          </button>
+          <button
+            onClick={onClose}
+            className="rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            ביטול
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -525,11 +724,13 @@ function LeadRow({
   index,
   expanded,
   onToggle,
+  onEdit,
 }: {
   lead: AugmentedLead;
   index: number;
   expanded: boolean;
   onToggle: () => void;
+  onEdit: () => void;
 }) {
   const ch = CHANNEL_CONFIG[lead.channel];
   return (
@@ -551,12 +752,19 @@ function LeadRow({
         </td>
         <td className="px-4 py-3">
           <span
-            className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              STATUS_COLORS[lead.status ?? ""] || "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-            }`}
+            className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusColor(lead.status)}`}
           >
-            {lead.status || "—"}
+            {getStatusLabel(lead.status)}
           </span>
+        </td>
+        <td className="px-4 py-3">
+          {lead.leadSource ? (
+            <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${LEAD_SOURCE_COLORS[lead.leadSource] || LEAD_SOURCE_COLORS["אחר"]}`}>
+              {lead.leadSource}
+            </span>
+          ) : (
+            <span className="text-xs text-slate-400 dark:text-slate-500">—</span>
+          )}
         </td>
         <td className="px-4 py-3">
           <MatchScoreBar score={lead.matchScore} />
@@ -574,7 +782,7 @@ function LeadRow({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <td colSpan={7} className="px-2 py-2">
+            <td colSpan={8} className="px-2 py-2">
               <div className="rounded-lg bg-slate-50 dark:bg-slate-800/50 p-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -585,13 +793,24 @@ function LeadRow({
                     <p className="text-sm text-slate-600 dark:text-slate-400">
                       <span className="font-medium">מיקום:</span> {lead.location || "אילת"}
                     </p>
-                    <a
-                      href={`tel:${lead.phone}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline"
-                    >
-                      התקשרו: {lead.phone}
-                    </a>
+                    <div className="flex items-center gap-3">
+                      <a
+                        href={`tel:${lead.phone}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline"
+                      >
+                        התקשרו: {lead.phone}
+                      </a>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        עריכה
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <h4 className="text-sm font-bold text-slate-900 dark:text-white">ציון התאמה</h4>
@@ -611,6 +830,9 @@ function LeadRow({
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
                       <span className="font-medium">ערוץ:</span> {CHANNEL_CONFIG[lead.channel].label}
+                    </p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      <span className="font-medium">מקור הגעה:</span> {lead.leadSource || "לא צוין"}
                     </p>
                   </div>
                 </div>

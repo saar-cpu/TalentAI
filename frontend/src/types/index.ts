@@ -97,8 +97,21 @@ export interface Lead {
   jobTitle: string | null;
   location: string | null;
   source: string | null;
-  status: string | null;
+  status: string;
   recruitmentStatus: string | null;
+  leadSource: string | null;
+  screeningScore: number | null;
+  humanApproved: boolean;
+  createdAt: string;
+}
+
+export interface StatusHistoryEntry {
+  id: string;
+  leadId: string;
+  previousStatus: string | null;
+  newStatus: string;
+  changedBy: string;
+  notes: string | null;
   createdAt: string;
 }
 

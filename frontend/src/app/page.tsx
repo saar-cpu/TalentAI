@@ -22,6 +22,7 @@ const NAV_LINKS = [
 
 const TOOL_LINKS = [
   { label: "לוח בקרה", href: "/dashboard" },
+  { label: "דוחות", href: "/reports" },
   { label: "צ׳אט סינון", href: "/outreach" },
   { label: "Facebook Hunter", href: "/fb-hunter" },
   { label: "Voice AI", href: "/voice-test" },
